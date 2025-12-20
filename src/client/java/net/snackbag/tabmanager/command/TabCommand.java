@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
-import net.snackbag.tabmanager.config.ItemGroupSettings;
 
 public class TabCommand {
 
