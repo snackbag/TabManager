@@ -7,7 +7,9 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
+import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
 import net.snackbag.tabmanager.config.ItemGroupSettings;
 
 public class TabCommand {
@@ -38,8 +40,8 @@ public class TabCommand {
     private static int printGroupPairs(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
 
-        ItemGroupSettings.ITEM_GROUPS.forEach(pair -> {
-            player.sendMessage(Text.literal("ItemGroup: " + pair.itemGroup().getDisplayName().getString() + " | ID: " + pair.id().toString()), false);
+        ItemGroups.getGroups().forEach(igroup -> {
+            player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey()), false);
         });
 
         return Command.SINGLE_SUCCESS;
