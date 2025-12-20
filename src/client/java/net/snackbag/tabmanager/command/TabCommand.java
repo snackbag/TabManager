@@ -39,9 +39,9 @@ public class TabCommand {
     private static int printGroupPairs(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
 
-        ItemGroups.getGroups().forEach(igroup -> {
-            player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey()), false);
-        });
+        ItemGroups.getGroups().forEach(igroup ->
+                player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey()), false)
+        );
 
         return Command.SINGLE_SUCCESS;
     }
