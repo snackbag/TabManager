@@ -22,7 +22,6 @@
     ]
   },
   "mixins": [
-    "tabmanager.mixins.json",
     {
       "config": "tabmanager.client.mixins.json",
       "environment": "client"
