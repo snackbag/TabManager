@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "tabmanager",
+  "version": "${version}",
+  "name": "Tab Manager",
+  "description": "A Minecraft Mod to reorder and hide/show tabs in the creative menu",
+  "authors": [
+    "Tobiazsh"
+  ],
+  "contact": {
+    "email": "contact@snackbag.net",
+    "homepage": "https://github.com/snackbag/TabManager",
+    "sources": "https://github.com/snackbag/TabManager",
+    "issues": "https://github.com/snackbag/TabManager/issues"
+  },
+  "license": "ARR",
+  "icon": "assets/tabmanager/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.snackbag.tabmanager.TabManagerClient"
+    ]
+  },
+  "mixins": [
+    "tabmanager.mixins.json",
+    {
+      "config": "tabmanager.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.2",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+  }
+}
