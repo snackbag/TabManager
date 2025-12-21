@@ -4,6 +4,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
+import net.snackbag.tabmanager.config.Config;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,6 +29,20 @@ public class ItemGroupUtility {
         List<ItemGroup> allGroups = ItemGroups.getGroups();
 
         allGroups.forEach(igroup -> ((ItemGroupAccessor)igroup).tabmanager$setTabKey(Registries.ITEM_GROUP.getId(igroup)));
+    }
+
+    public static void applyFilters() {
+        List<ItemGroup> allGroups = ItemGroups.getGroups();
+
+        allGroups.forEach(igroup -> {
+            ItemGroupAccessor accessor = (ItemGroupAccessor) igroup;
+            accessor.tabmanager$resetDisplayItems();
+
+            // Apply all filters that apply to this group
+            Config.INSTANCE.filters.stream()
+                    .filter(filter -> filter.getApplicableGroups().contains(igroup))
+                    .forEach(accessor::tabmanager$applyFilterDisplayItems);
+        });
     }
 
 }
