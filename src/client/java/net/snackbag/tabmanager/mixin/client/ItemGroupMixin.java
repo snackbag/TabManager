@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Mixin(ItemGroup.class)
 abstract public class ItemGroupMixin implements ItemGroupAccessor {
@@ -48,7 +48,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     // The original unmodified display stacks are always kept in the original class (see @Shadow above)
     // This is the modified version with all the filters applied
     @Unique
-    private List<ItemStack> tabmanager$displayStacks = new ArrayList<>();
+    private List<ItemStack> tabmanager$displayStacks = new CopyOnWriteArrayList<>();
 
 
 
@@ -123,7 +123,8 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Override
     public void tabmanager$applyFilterDisplayItems(ItemFilter filter) {
         if (!filter.getApplicableGroups().contains((ItemGroup)(Object)this)) return;
-        tabmanager$displayStacks = (List<ItemStack>) this.displayStacks;
+        tabmanager$displayStacks = new CopyOnWriteArrayList<>();
+        tabmanager$displayStacks.addAll(this.displayStacks);
         for (ItemStack istack : this.tabmanager$displayStacks) {
             if (!tabmanager$displayStacks.contains(istack)) continue; // Avoid removing non-existent
             String itemId = istack.getItem().toString();
@@ -134,6 +135,6 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
 
     @Override
     public void tabmanager$resetDisplayItems() {
-        tabmanager$displayStacks = new ArrayList<>(this.displayStacks);
+        tabmanager$displayStacks = new CopyOnWriteArrayList<>(this.displayStacks);
     }
 }
