@@ -50,8 +50,8 @@ abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
     }
 
     @Override
-    public void tabmanager$setColumn(int c) {
-        column = c;
+    public void tabmanager$setColumn(int column) {
+        this.column = column;
     }
 
     @Override
