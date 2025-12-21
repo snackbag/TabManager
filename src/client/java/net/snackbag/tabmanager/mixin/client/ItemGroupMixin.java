@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
+import java.util.List;
 
 @Mixin(ItemGroup.class)
 abstract public class ItemGroupMixin implements ItemGroupAccessor {
@@ -46,7 +47,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     // The original unmodified display stacks are always kept in the original class (see @Shadow above)
     // This is the modified version with all the filters applied
     @Unique
-    private Collection<ItemStack> tabmanager$displayStacks;
+    private final List<ItemStack> tabmanager$displayStacks = List.of();
 
 
 
