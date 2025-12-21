@@ -67,12 +67,8 @@ public class TabCommand {
         String tabId = StringArgumentType.getString(cmdSource, "id");
         int targetColumn =  IntegerArgumentType.getInteger(cmdSource, "column");
 
-        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(tabId)).findFirst().orElse(null);
-
-        if (targetGroup == null) {
-            player.sendMessage(Text.literal("No group with id '" + tabId + "' was found."), false);
-            return Command.SINGLE_SUCCESS;
-        }
+        ItemGroup targetGroup = getItemGroupOrError(tabId, player);
+        if (targetGroup == null) return  Command.SINGLE_SUCCESS;
 
         player.sendMessage(Text.literal("Setting column for ItemGroup '" + tabId + "': " + targetGroup.getColumn() + " -> " + targetColumn)); // --> "Setting column for ItemGroup 'minecraft:something': 3 -> 4
         ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setColumn(targetColumn);
@@ -96,12 +92,8 @@ public class TabCommand {
             return Command.SINGLE_SUCCESS;
         }
 
-        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(tabId)).findFirst().orElse(null);
-
-        if (targetGroup == null) {
-            player.sendMessage(Text.literal("No group with id '" + tabId + "' was found."), false);
-            return Command.SINGLE_SUCCESS;
-        }
+        ItemGroup targetGroup = getItemGroupOrError(tabId, player);
+        if (targetGroup == null) return  Command.SINGLE_SUCCESS;
 
         ItemGroup.Row currentRow = targetGroup.getRow();
         ItemGroup.Row targetRow = row == 0 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP;
@@ -126,5 +118,24 @@ public class TabCommand {
         );
 
         return Command.SINGLE_SUCCESS;
+    }
+
+
+    // UTILITY METHODS --------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the ItemGroup or errors out and prints an error message in the player's chat.
+     * @return The ItemGroup, or null if non found.
+     */
+    private static @Nullable ItemGroup getItemGroupOrError(String id, PlayerEntity player) {
+        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(tabId)).findFirst().orElse(null);
+
+        if (targetGroup == null) {
+            player.sendMessage(Text.literal("No group with id '" + id + "' was found."), false);
+            return null;
+        }
+
+        return targetGroup;
     }
 }
