@@ -129,7 +129,7 @@ public class TabCommand {
      * @return The ItemGroup, or null if non found.
      */
     private static @Nullable ItemGroup getItemGroupOrError(String id, PlayerEntity player) {
-        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(tabId)).findFirst().orElse(null);
+        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(id)).findFirst().orElse(null);
 
         if (targetGroup == null) {
             player.sendMessage(Text.literal("No group with id '" + id + "' was found."), false);
