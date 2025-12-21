@@ -3,6 +3,7 @@ package net.snackbag.tabmanager.filesystem;
 import net.fabricmc.loader.api.FabricLoader;
 import net.snackbag.tabmanager.TabManagerClient;
 
+import java.io.File;
 import java.nio.file.Path;
 
 public class ConfigDirectory {
@@ -12,6 +13,10 @@ public class ConfigDirectory {
 
     public static Path getConfigDirectory() {
         return FabricLoader.getInstance().getConfigDir().resolve(MOD_CONFIG_DIR);
+    }
+
+    public static File getConfigFile() {
+        return getConfigDirectory().resolve(MOD_CONFIG_FILE).toFile();
     }
 
     public static void ensureConfigDirectoryExists() {
