@@ -27,7 +27,7 @@ public class TabManagerClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
 	}
 
-    private void initialiseItemGroups(){
+    private void initialiseItemGroups() {
         populateItemGroups();
         applyFilters();
     }
