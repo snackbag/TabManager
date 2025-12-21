@@ -44,6 +44,8 @@ public class TabCommand {
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string())
                                         .then(ClientCommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess)).executes(TabCommand::changeTabIcon))))
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
+                        .then(ClientCommandManager.literal("printDisplayStacks")
+                                .then(ClientCommandManager.argument("id",  StringArgumentType.string()).executes(TabCommand::printDisplayStack)))
         );
     }
 
@@ -158,6 +160,25 @@ public class TabCommand {
         ItemGroups.getGroups().forEach(igroup ->
                 player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey() + " | Row: " + igroup.getRow() + " | Column: " + igroup.getColumn()), false)
         );
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    /**
+     * Prints out the displayed items in an item group.
+     * @param cmdSource The Command Source containing the target item group.
+     * @return Always 1
+     */
+    private static int printDisplayStack(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        String tabId = StringArgumentType.getString(cmdSource, "id");
+
+        ItemGroup targetGroup = getItemGroupOrError(tabId, player);
+        if (targetGroup == null) return Command.SINGLE_SUCCESS;
+
+        targetGroup.getDisplayStacks().forEach(istack -> {
+            player.sendMessage(Text.literal("ItemStack: " + istack.toString() + " | Item: " + istack.getItem().toString()), false);
+        });
 
         return Command.SINGLE_SUCCESS;
     }
