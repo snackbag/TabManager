@@ -10,6 +10,7 @@ import net.snackbag.tabmanager.util.ItemGroupUtility;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Config {
 
@@ -18,7 +19,7 @@ public class Config {
     // Always use INSTANCE if the config should be used!
     // Make new instance only for storing Configs!
     public static Config INSTANCE = new Config();
-    public Collection<ItemFilter> filters;
+    public List<ItemFilter> filters = new ArrayList<>();
 
     /**
      * Serializes the config into a JsonObject
@@ -54,7 +55,7 @@ public class Config {
             // Otherwise, we would do conversion here
         }
 
-        Collection<ItemFilter> filters = new ArrayList<>();
+        List<ItemFilter> filters = new ArrayList<>();
 
         JsonArray filtersArray = config.getAsJsonArray("filters");
         filtersArray.forEach(item ->
