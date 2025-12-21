@@ -55,7 +55,7 @@ abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
     }
 
     @Override
-    public void tabmanager$setRow(ItemGroup.Row r) {
-        row = r;
+    public void tabmanager$setRow(ItemGroup.Row row) {
+        this.row = row;
     }
 }
