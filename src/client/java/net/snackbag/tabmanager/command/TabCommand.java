@@ -17,14 +17,15 @@ public class TabCommand {
         dispatcher.register(
                 ClientCommandManager.literal("tabmd") // "tabmd" * "Tab Manager Debug"
                         .then(ClientCommandManager.literal("hide")
-                                .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> modifyTab(src, true))))
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> changeTabVisibility(src, true))))
                         .then(ClientCommandManager.literal("show")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> modifyTab(src, false))))
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> changeTabVisibility(src, false))))
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
         );
     }
 
-    private static int modifyTab(CommandContext<FabricClientCommandSource> cmdSource, boolean hide) {
+    private static int changeTabVisibility(CommandContext<FabricClientCommandSource> cmdSource, boolean hide) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
         String id = StringArgumentType.getString(cmdSource, "id");
 
