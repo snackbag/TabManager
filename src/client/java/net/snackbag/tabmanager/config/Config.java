@@ -2,9 +2,14 @@ package net.snackbag.tabmanager.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.snackbag.tabmanager.exception.ConfigParseException;
 import net.snackbag.tabmanager.util.ItemFilter;
+import net.snackbag.tabmanager.util.ItemGroupUtility;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -62,5 +67,31 @@ public class Config {
         return cfg;
     }
 
-    public static Config
+    /**
+     * Loads the given config and reloads all settings
+     * @param config the config to load
+     */
+    public static void loadConfig(Config config) {
+        Config.INSTANCE = config;
+
+        // Re-apply filters
+        ItemGroupUtility.applyFilters();
+
+        // Reorder, hide/show, etc... here
+    }
+
+    /**
+     * Loads config from a file
+     * @param configFile the file to load from
+     */
+    public static void loadConfigFile(File configFile) throws ConfigParseException, IOException {
+        try (FileInputStream fis = new FileInputStream(configFile)) {
+            byte[] fileContentBytes = fis.readAllBytes();
+            String fileContent = new String(fileContentBytes);
+
+            JsonObject configJson = JsonParser.parseString(fileContent).getAsJsonObject();
+
+            loadConfig(Config.parse(configJson));
+        }
+    }
 }
