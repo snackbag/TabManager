@@ -1,5 +1,6 @@
 package net.snackbag.tabmanager.access;
 
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 
 public interface AdditionalTabInfoAccessor {
@@ -27,4 +28,18 @@ public interface AdditionalTabInfoAccessor {
      * @param hidden True to hide the tab, false to show it.
      */
     void tabmanager$setHidden(boolean hidden);
+
+    /**
+     * Sets the column index for the tab.
+     * This is the position of where the tab is rendered in the creative menu.
+     * @param column The column index.
+     */
+    void tabmanager$setColumn(int column);
+
+    /**
+     * Sets the row index for the tab.
+     * This is the position of where the tab is rendered in the creative menu.
+     * @param row Either ItemGroup.Row.TOP or ItemGroup.Row.BOTTOM. See {@link ItemGroup.Row}.
+     */
+    void tabmanager$setRow(ItemGroup.Row row);
 }

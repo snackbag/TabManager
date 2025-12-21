@@ -2,11 +2,13 @@ package net.snackbag.tabmanager.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
@@ -19,8 +21,13 @@ public class TabCommand {
                         .then(ClientCommandManager.literal("hide")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> changeTabVisibility(src, true))))
                         .then(ClientCommandManager.literal("show")
-                                .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> modifyTab(src, false))))
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> changeTabVisibility(src, false))))
+                        .then(ClientCommandManager.literal("changeCol")
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string())
+                                        .then(ClientCommandManager.argument("column", IntegerArgumentType.integer()).executes(TabCommand::changeTabColumn))))
+                        .then(ClientCommandManager.literal("changeRow")
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string())
+                                        .then(ClientCommandManager.argument("row", IntegerArgumentType.integer()).executes(TabCommand::changeTabRow))))
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
         );
     }
@@ -36,6 +43,51 @@ public class TabCommand {
             ((AdditionalTabInfoAccessor)group).tabmanager$setHidden(hide);
             player.sendMessage(Text.literal("Tab hidden."), false);
         });
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int changeTabColumn(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        String tabId = StringArgumentType.getString(cmdSource, "id");
+        int targetColumn =  IntegerArgumentType.getInteger(cmdSource, "column");
+
+        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(tabId)).findFirst().orElse(null);
+
+        if (targetGroup == null) {
+            player.sendMessage(Text.literal("No group with id '" + tabId + "' was found."), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        player.sendMessage(Text.literal("Setting column for ItemGroup '" + tabId + "': " + targetGroup.getColumn() + " -> " + targetColumn)); // --> "Setting column for ItemGroup 'minecraft:something': 3 -> 4
+        ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setColumn(targetColumn);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int changeTabRow(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        String tabId = StringArgumentType.getString(cmdSource, "id");
+        int row = IntegerArgumentType.getInteger(cmdSource, "row");
+
+        if (row < 0 || row > 1) {
+            player.sendMessage(Text.literal("Invalid row number given. Use 0 for bottom or 1 for top."), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(tabId)).findFirst().orElse(null);
+
+        if (targetGroup == null) {
+            player.sendMessage(Text.literal("No group with id '" + tabId + "' was found."), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        ItemGroup.Row currentRow = targetGroup.getRow();
+        ItemGroup.Row targetRow = row == 0 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP;
+
+        player.sendMessage(Text.literal("Setting row for ItemGroup '" + tabId + "': " + currentRow + " -> " + targetRow)); // --> "Setting row for ItemGroup 'minecraft:something': TOP -> BOTTOM
+
+        ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setRow(targetRow);
 
         return Command.SINGLE_SUCCESS;
     }
