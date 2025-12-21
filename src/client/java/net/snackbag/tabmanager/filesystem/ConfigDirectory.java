@@ -85,7 +85,8 @@ public class ConfigDirectory {
      */
     public static void backupConfigFile() throws IOException {
         ensureConfigDirectoryExists();
-        ensureConfigFileExists();
+        if (ensureConfigFileExists()) return; // No need to proceed further; Config file was non-existent, was created and is now empty
+        ensureBakConfigFileExists();
 
         try (
                 FileInputStream fileInputStream = new FileInputStream(getConfigFile());
