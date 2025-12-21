@@ -90,6 +90,9 @@ public class Config {
     public static void loadConfigFile(File configFile) throws ConfigParseException, IOException {
         try (FileInputStream fis = new FileInputStream(configFile)) {
             byte[] fileContentBytes = fis.readAllBytes();
+
+            if (fileContentBytes.length == 0) return; // Nothing to read
+            
             String fileContent = new String(fileContentBytes);
 
             JsonObject configJson = JsonParser.parseString(fileContent).getAsJsonObject();
