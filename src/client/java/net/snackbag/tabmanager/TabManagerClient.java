@@ -14,4 +14,11 @@ public class TabManagerClient implements ClientModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
 	}
+
+    /*
+    TODO:
+       - Item Masks
+       - GUI feature for reordering (maybe)
+       - Change Icon of Tab
+     */
 }
