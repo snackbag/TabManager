@@ -11,11 +11,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemGroup.class)
 abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
 
+    // SHADOWED FIELDS ---------------------------
+
     @Shadow @Final @Mutable
     private ItemGroup.Row row;
 
     @Shadow @Final @Mutable
     private int column;
+
+    @Shadow
+    private @Nullable ItemStack icon;
+
+
+
+    // UNIQUE FIELDS -----------------------------
 
     @Unique
     private Identifier tabmanager$tabKey;
@@ -23,11 +32,21 @@ abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
     @Unique
     private boolean tabmanager$isHidden = false;
 
+
+    
+
+    // INJECTIONS --------------------------------
+
     @Inject(method = "shouldDisplay", at = @At("HEAD"), cancellable = true)
     private void shouldDisplay(CallbackInfoReturnable<Boolean> cir) {
         if (tabmanager$isHidden)
             cir.setReturnValue(false);
     }
+
+
+
+
+    // GETTERS / SETTERS -------------------------
 
     @Override
     public Identifier tabmanager$getTabKey() {
