@@ -27,11 +27,11 @@ public class TabCommand {
 
     private static int changeTabVisibility(CommandContext<FabricClientCommandSource> cmdSource, boolean hide) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
-        String id = StringArgumentType.getString(cmdSource, "id");
+        String tabId = StringArgumentType.getString(cmdSource, "id");
 
         player.sendMessage(Text.literal("Hiding tab for display name: "), false);
 
-        ItemGroups.getGroups().stream().filter(group -> ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString().equals(id)).forEach(group -> {
+        ItemGroups.getGroups().stream().filter(group -> ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString().equals(tabId)).forEach(group -> {
             player.sendMessage(Text.literal("Found group: " + ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString()), false);
             ((AdditionalTabInfoAccessor)group).tabmanager$setHidden(hide);
             player.sendMessage(Text.literal("Tab hidden."), false);
