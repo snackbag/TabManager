@@ -13,7 +13,7 @@ import java.util.Collection;
 
 public class Config {
 
-    private static final short SERIALIZE_VERSION = 1; // If there will ever bee improvements to the JSON structure, so it's backwards compatible using conversion methods
+    private static final short SERIALIZE_VERSION = 1; // If there will ever be improvements to the JSON structure, so it's backwards compatible using conversion methods
 
     public static Config INSTANCE = new Config();
     public Collection<ItemFilter> filters;
