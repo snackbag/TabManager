@@ -13,6 +13,7 @@ public class Config {
     public static void populateItemGroups() {
         List<ItemGroup> allGroups = ItemGroups.getGroups();
     public static final Config INSTANCE = new Config();
+    public Collection<ItemFilter> filters;
 
         JsonArray filtersArray = config.getAsJsonArray("filters");
         filtersArray.forEach(item ->
