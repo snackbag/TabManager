@@ -47,7 +47,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     // The original unmodified display stacks are always kept in the original class (see @Shadow above)
     // This is the modified version with all the filters applied
     @Unique
-    private final List<ItemStack> tabmanager$displayStacks = List.of();
+    private List<ItemStack> tabmanager$displayStacks = List.of();
 
 
 
