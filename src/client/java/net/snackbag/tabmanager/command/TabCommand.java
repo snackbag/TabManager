@@ -5,21 +5,29 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.ItemStackArgument;
+import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
+import org.jetbrains.annotations.Nullable;
 
 public class TabCommand {
 
     /**
      * Registers the Tab Command
      * @param dispatcher The Command Dispatcher
+     * @param registryAccess The Command Registry Access
      */
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(
                 ClientCommandManager.literal("tabmd") // "tabmd" = "Tab Manager Debug"
                         .then(ClientCommandManager.literal("hide")
@@ -32,6 +40,9 @@ public class TabCommand {
                         .then(ClientCommandManager.literal("changeRow")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string())
                                         .then(ClientCommandManager.argument("row", IntegerArgumentType.integer()).executes(TabCommand::changeTabRow))))
+                        .then(ClientCommandManager.literal("changeIcon")
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string())
+                                        .then(ClientCommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess)).executes(TabCommand::changeTabIcon))))
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
         );
     }
@@ -101,6 +112,37 @@ public class TabCommand {
         player.sendMessage(Text.literal("Setting row for ItemGroup '" + tabId + "': " + currentRow + " -> " + targetRow)); // --> "Setting row for ItemGroup 'minecraft:something': TOP -> BOTTOM
 
         ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setRow(targetRow);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    /**
+     * Changes the icon of a tab in the creative menu
+     * @param cmdSource The command source containing the target tab id and the target item icon
+     * @return Always 1
+     */
+    private static int changeTabIcon(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        String tabId = StringArgumentType.getString(cmdSource, "id");
+        ItemStackArgument stack = ItemStackArgumentType.getItemStackArgument(cmdSource, "item");
+
+        ItemGroup targetGroup = getItemGroupOrError(tabId, player);
+        if (targetGroup == null) return Command.SINGLE_SUCCESS;
+
+        ItemStack currentIcon = targetGroup.getIcon();
+        ItemStack targetIcon;
+
+        try {
+            targetIcon = stack.createStack(1, false);
+        } catch (CommandSyntaxException e) {
+            TabManagerClient.LOGGER.error("Error while creating tab icon for ItemGroup '{}'", tabId, e);
+            player.sendMessage(Text.literal("Error while creating tab icon for ItemGroup '" + tabId + "'. Please check logs."), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        player.sendMessage(Text.literal("Changing Icon for ItemGroup '" + tabId + "': " + currentIcon.getItem().toString() + " -> " + targetIcon.getItem().toString()), false); // --> "Changing Icon for ItemGroup 'minecraft:something': minecraft:iron_ingot -> minecraft:gold_ingot
+
+        ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setIcon(targetIcon);
 
         return Command.SINGLE_SUCCESS;
     }

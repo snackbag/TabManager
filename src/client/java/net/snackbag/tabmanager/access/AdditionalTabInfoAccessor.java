@@ -1,6 +1,7 @@
 package net.snackbag.tabmanager.access;
 
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 public interface AdditionalTabInfoAccessor {
@@ -42,4 +43,10 @@ public interface AdditionalTabInfoAccessor {
      * @param row Either ItemGroup.Row.TOP or ItemGroup.Row.BOTTOM. See {@link ItemGroup.Row}.
      */
     void tabmanager$setRow(ItemGroup.Row row);
+
+    /**
+     * Sets the icon of the ItemGroup
+     * @param istack The {@link ItemStack} for the icon
+     */
+    void tabmanager$setIcon(ItemStack istack);
 }

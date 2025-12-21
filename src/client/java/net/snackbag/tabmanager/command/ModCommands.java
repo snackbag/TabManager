@@ -7,6 +7,6 @@ import net.minecraft.command.CommandRegistryAccess;
 public class ModCommands {
 
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
-        TabCommand.register(dispatcher);
+        TabCommand.register(dispatcher, registryAccess);
     }
 }

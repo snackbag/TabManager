@@ -1,8 +1,10 @@
 package net.snackbag.tabmanager.mixin.client;
 
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,7 +35,7 @@ abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
     private boolean tabmanager$isHidden = false;
 
 
-    
+
 
     // INJECTIONS --------------------------------
 
@@ -76,5 +78,10 @@ abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
     @Override
     public void tabmanager$setRow(ItemGroup.Row row) {
         this.row = row;
+    }
+
+    @Override
+    public void tabmanager$setIcon(ItemStack istack) {
+        this.icon = istack;
     }
 }
