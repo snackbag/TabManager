@@ -6,6 +6,7 @@ import net.snackbag.tabmanager.command.ModCommands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static net.snackbag.tabmanager.util.ItemGroupUtility.applyFilters;
 import static net.snackbag.tabmanager.util.ItemGroupUtility.populateItemGroups;
 
 public class TabManagerClient implements ClientModInitializer {
@@ -16,14 +17,19 @@ public class TabManagerClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 
-        populateItemGroups();
+        initialiseItemGroups();
 
         ClientCommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
 	}
 
+    private void initialiseItemGroups(){
+        populateItemGroups();
+        applyFilters();
+    }
+
+
     /*
     TODO:
-       - Item Masks
        - GUI feature for reordering (maybe)
      */
 }
