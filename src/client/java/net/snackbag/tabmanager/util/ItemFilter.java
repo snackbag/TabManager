@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+/**
+ * Class for filtering OUT items
+ */
 public class ItemFilter {
 
     private static final short SERIALIZE_VERSION = 1; // If there will ever bee improvements to the JSON structure, so it's backwards compatible using conversion methods
