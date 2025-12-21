@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-import static net.snackbag.tabmanager.util.ItemGroupUtility.applyFilters;
 import static net.snackbag.tabmanager.util.ItemGroupUtility.populateItemGroups;
 
 public class TabManagerClient implements ClientModInitializer {
@@ -21,16 +20,11 @@ public class TabManagerClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 
-        initialiseItemGroups();
+        populateItemGroups();
         loadConfig();
 
         ClientCommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
 	}
-
-    private void initialiseItemGroups() {
-        populateItemGroups();
-        applyFilters();
-    }
 
     private void loadConfig() {
         ConfigDirectory.ensureConfigDirectoryExists();
