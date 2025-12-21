@@ -15,10 +15,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
+import net.snackbag.tabmanager.config.Config;
+import net.snackbag.tabmanager.util.ItemFilter;
+import net.snackbag.tabmanager.util.RegexCompiler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.regex.Pattern;
 
 public class TabCommand {
 
@@ -46,6 +52,12 @@ public class TabCommand {
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
                         .then(ClientCommandManager.literal("printDisplayStacks")
                                 .then(ClientCommandManager.argument("id",  StringArgumentType.string()).executes(TabCommand::printDisplayStack)))
+                        .then(ClientCommandManager.literal("applyFilter")
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string())
+                                        .then(ClientCommandManager.literal("regex")
+                                                .then(ClientCommandManager.argument("filter", StringArgumentType.string()).executes(src -> applyFilter(src, true))))
+                                        .then(ClientCommandManager.literal("glob")
+                                                .then(ClientCommandManager.argument("filter", StringArgumentType.string()).executes(src ->  applyFilter(src, false))))))
         );
     }
 
@@ -179,6 +191,23 @@ public class TabCommand {
         targetGroup.getDisplayStacks().forEach(istack -> {
             player.sendMessage(Text.literal("ItemStack: " + istack.toString() + " | Item: " + istack.getItem().toString()), false);
         });
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int applyFilter(CommandContext<FabricClientCommandSource> cmdSource, boolean isRegex) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        String tabId = StringArgumentType.getString(cmdSource, "id");
+        String predicateSource = (isRegex ? "regex:" : "glob:") + StringArgumentType.getString(cmdSource, "filter");
+
+        ItemGroup targetGroup = getItemGroupOrError(tabId, player);
+        if (targetGroup == null) return Command.SINGLE_SUCCESS;
+
+        // Compile the pattern from the raw filter (without the prefix)
+        ItemFilter itemFilter = ItemFilter.parse(predicateSource);
+        itemFilter.addApplicableGroup(targetGroup);
+        Config.INSTANCE.filters.add(itemFilter);
+        Config.reload();
 
         return Command.SINGLE_SUCCESS;
     }
