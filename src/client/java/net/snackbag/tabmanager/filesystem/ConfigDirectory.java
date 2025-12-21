@@ -4,6 +4,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.snackbag.tabmanager.TabManagerClient;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class ConfigDirectory {
@@ -76,4 +79,21 @@ public class ConfigDirectory {
         return true;
     }
 
+    /**
+     * Creates a backup of current config file.
+     * Used for if user loads a custom config
+     */
+    public static void backupConfigFile() throws IOException {
+        ensureConfigDirectoryExists();
+        ensureConfigFileExists();
+
+        try (
+                FileInputStream fileInputStream = new FileInputStream(getConfigFile());
+                FileOutputStream fileOutputStream = new FileOutputStream(MOD_CONFIG_FILE);
+        ) {
+            byte[] fileContent = fileInputStream.readAllBytes();
+            if (fileContent.length == 0) return; // Do nothing if config is empty
+            fileOutputStream.write(fileContent);
+        }
+    }
 }
