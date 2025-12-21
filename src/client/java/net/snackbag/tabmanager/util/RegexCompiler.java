@@ -10,8 +10,16 @@ public class RegexCompiler {
      * @return The regular expression {@link Pattern}
      */
     public static Pattern compileGlob(String pattern) {
-        String regex = Pattern.quote(pattern).replace("\\*", ".*");
-        return Pattern.compile("^" + regex + "$");
+        // Build regex by escaping every character except '*' which we treat as wildcard
+        StringBuilder sb = new StringBuilder();
+        for (char c : pattern.toCharArray()) {
+            if (c == '*') {
+                sb.append(".*");
+            } else {
+                sb.append(Pattern.quote(String.valueOf(c)));
+            }
+        }
+        return Pattern.compile("^" + sb + "$");
     }
 
     /**
