@@ -33,7 +33,7 @@ public class TabManagerClient implements ClientModInitializer {
     }
 
     private void loadConfig() {
-        ConfigDirectory.ensureConfigDirectoryExists()
+        ConfigDirectory.ensureConfigDirectoryExists();
 
         if (!ConfigDirectory.ensureConfigFileExists())
             TabManagerClient.LOGGER.error("Failed to create config file! All changed will be for this session only!");
