@@ -4,6 +4,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
+import net.snackbag.tabmanager.config.Config;
 import net.snackbag.tabmanager.util.ItemFilter;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -65,6 +66,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Inject(method = "updateEntries", at = @At("TAIL"))
     private void updateEntries(ItemGroup.DisplayContext displayContext, CallbackInfo ci) {
         // Apply filters after update here
+        Config.reload();
     }
 
     /**
