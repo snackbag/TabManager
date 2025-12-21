@@ -61,4 +61,6 @@ public class Config {
 
         return cfg;
     }
+
+    public static Config
 }
