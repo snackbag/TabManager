@@ -27,6 +27,7 @@ public class ConfigDirectory {
     }
 
     public static void ensureConfigFileExists() {
+    public static boolean ensureConfigFileExists() {
         Path configFile = getConfigDirectory().resolve(MOD_CONFIG_FILE);
         if (!configFile.toFile().exists()) {
             try {
@@ -36,8 +37,11 @@ public class ConfigDirectory {
                     TabManagerClient.LOGGER.error("File already exists at {}", configFile.toAbsolutePath());
             } catch (Exception e) {
                 TabManagerClient.LOGGER.error("Failed to create config file: {}", e.getMessage());
+                return false;
             }
         }
+
+        return true;
     }
 
 }
