@@ -21,7 +21,7 @@ public class TabCommand {
      */
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(
-                ClientCommandManager.literal("tabmd") // "tabmd" * "Tab Manager Debug"
+                ClientCommandManager.literal("tabmd") // "tabmd" = "Tab Manager Debug"
                         .then(ClientCommandManager.literal("hide")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> changeTabVisibility(src, true))))
                         .then(ClientCommandManager.literal("show")
