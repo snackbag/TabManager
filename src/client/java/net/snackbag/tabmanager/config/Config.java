@@ -7,9 +7,7 @@ import net.snackbag.tabmanager.exception.ConfigParseException;
 import net.snackbag.tabmanager.util.ItemFilter;
 import net.snackbag.tabmanager.util.ItemGroupUtility;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -92,6 +90,14 @@ public class Config {
             JsonObject configJson = JsonParser.parseString(fileContent).getAsJsonObject();
 
             loadConfig(Config.parse(configJson));
+        }
+    }
+
+    public static void writeConfigFile(File configFile) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(configFile)) {
+            String parsedConfig = Config.INSTANCE.serialize().toString();
+            byte[] parsedConfigBytes = parsedConfig.getBytes();
+            fos.write(parsedConfigBytes);
         }
     }
 }
