@@ -3,7 +3,7 @@ package net.snackbag.tabmanager.mixin.client;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
+import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemGroup.class)
-abstract public class ItemGroupMixin implements AdditionalTabInfoAccessor {
+abstract public class ItemGroupMixin implements ItemGroupAccessor {
 
     // SHADOWED FIELDS ---------------------------
 

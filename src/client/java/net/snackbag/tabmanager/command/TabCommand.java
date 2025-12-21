@@ -17,7 +17,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
-import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
+import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import org.jetbrains.annotations.Nullable;
 
 public class TabCommand {
@@ -61,9 +61,9 @@ public class TabCommand {
 
         player.sendMessage(Text.literal("Hiding tab for display name: "), false);
 
-        ItemGroups.getGroups().stream().filter(group -> ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString().equals(tabId)).forEach(group -> {
-            player.sendMessage(Text.literal("Found group: " + ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString()), false);
-            ((AdditionalTabInfoAccessor)group).tabmanager$setHidden(hide);
+        ItemGroups.getGroups().stream().filter(group -> ((ItemGroupAccessor)group).tabmanager$getTabKey().toString().equals(tabId)).forEach(group -> {
+            player.sendMessage(Text.literal("Found group: " + ((ItemGroupAccessor)group).tabmanager$getTabKey().toString()), false);
+            ((ItemGroupAccessor)group).tabmanager$setHidden(hide);
             player.sendMessage(Text.literal("Tab hidden."), false);
         });
 
@@ -84,7 +84,7 @@ public class TabCommand {
         if (targetGroup == null) return Command.SINGLE_SUCCESS;
 
         player.sendMessage(Text.literal("Setting column for ItemGroup '" + tabId + "': " + targetGroup.getColumn() + " -> " + targetColumn)); // --> "Setting column for ItemGroup 'minecraft:something': 3 -> 4
-        ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setColumn(targetColumn);
+        ((ItemGroupAccessor) targetGroup).tabmanager$setColumn(targetColumn);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -113,7 +113,7 @@ public class TabCommand {
 
         player.sendMessage(Text.literal("Setting row for ItemGroup '" + tabId + "': " + currentRow + " -> " + targetRow)); // --> "Setting row for ItemGroup 'minecraft:something': TOP -> BOTTOM
 
-        ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setRow(targetRow);
+        ((ItemGroupAccessor) targetGroup).tabmanager$setRow(targetRow);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -144,7 +144,7 @@ public class TabCommand {
 
         player.sendMessage(Text.literal("Changing Icon for ItemGroup '" + tabId + "': " + currentIcon.getItem().toString() + " -> " + targetIcon.getItem().toString()), false); // --> "Changing Icon for ItemGroup 'minecraft:something': minecraft:iron_ingot -> minecraft:gold_ingot
 
-        ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setIcon(targetIcon);
+        ((ItemGroupAccessor) targetGroup).tabmanager$setIcon(targetIcon);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -158,7 +158,7 @@ public class TabCommand {
         PlayerEntity player = cmdSource.getSource().getPlayer();
 
         ItemGroups.getGroups().forEach(igroup ->
-                player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey() + " | Row: " + igroup.getRow() + " | Column: " + igroup.getColumn()), false)
+                player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((ItemGroupAccessor)igroup).tabmanager$getTabKey() + " | Row: " + igroup.getRow() + " | Column: " + igroup.getColumn()), false)
         );
 
         return Command.SINGLE_SUCCESS;
@@ -192,7 +192,7 @@ public class TabCommand {
      * @return The ItemGroup, or null if non found.
      */
     private static @Nullable ItemGroup getItemGroupOrError(String id, PlayerEntity player) {
-        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((AdditionalTabInfoAccessor) igroup).tabmanager$getTabKey().toString().equals(id)).findFirst().orElse(null);
+        ItemGroup targetGroup = ItemGroups.getGroups().stream().filter(igroup -> ((ItemGroupAccessor) igroup).tabmanager$getTabKey().toString().equals(id)).findFirst().orElse(null);
 
         if (targetGroup == null) {
             player.sendMessage(Text.literal("No group with id '" + id + "' was found."), false);

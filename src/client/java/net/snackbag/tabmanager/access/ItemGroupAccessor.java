@@ -4,7 +4,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-public interface AdditionalTabInfoAccessor {
+public interface ItemGroupAccessor {
 
     /**
      * Gets the unique Identifier key for this tab.
