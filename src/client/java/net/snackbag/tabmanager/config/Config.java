@@ -7,7 +7,7 @@ import net.snackbag.tabmanager.access.ItemGroupAccessor;
 
 import java.util.List;
 
-public class ItemGroupSettings {
+public class Config {
 
     public static void populateItemGroups() {
         List<ItemGroup> allGroups = ItemGroups.getGroups();

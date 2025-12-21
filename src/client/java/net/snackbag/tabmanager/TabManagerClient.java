@@ -3,7 +3,7 @@ package net.snackbag.tabmanager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.snackbag.tabmanager.command.ModCommands;
-import net.snackbag.tabmanager.config.ItemGroupSettings;
+import net.snackbag.tabmanager.config.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +15,7 @@ public class TabManagerClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 
-        ItemGroupSettings.populateItemGroups();
+        Config.populateItemGroups();
 
         ClientCommandRegistrationCallback.EVENT.register(ModCommands::registerCommands);
 	}
