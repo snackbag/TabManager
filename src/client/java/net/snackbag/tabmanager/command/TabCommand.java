@@ -65,10 +65,10 @@ public class TabCommand {
     private static int changeTabColumn(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
         String tabId = StringArgumentType.getString(cmdSource, "id");
-        int targetColumn =  IntegerArgumentType.getInteger(cmdSource, "column");
+        int targetColumn = IntegerArgumentType.getInteger(cmdSource, "column");
 
         ItemGroup targetGroup = getItemGroupOrError(tabId, player);
-        if (targetGroup == null) return  Command.SINGLE_SUCCESS;
+        if (targetGroup == null) return Command.SINGLE_SUCCESS;
 
         player.sendMessage(Text.literal("Setting column for ItemGroup '" + tabId + "': " + targetGroup.getColumn() + " -> " + targetColumn)); // --> "Setting column for ItemGroup 'minecraft:something': 3 -> 4
         ((AdditionalTabInfoAccessor) targetGroup).tabmanager$setColumn(targetColumn);
@@ -93,7 +93,7 @@ public class TabCommand {
         }
 
         ItemGroup targetGroup = getItemGroupOrError(tabId, player);
-        if (targetGroup == null) return  Command.SINGLE_SUCCESS;
+        if (targetGroup == null) return Command.SINGLE_SUCCESS;
 
         ItemGroup.Row currentRow = targetGroup.getRow();
         ItemGroup.Row targetRow = row == 0 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP;
