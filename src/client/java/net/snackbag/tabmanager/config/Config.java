@@ -93,6 +93,11 @@ public class Config {
         }
     }
 
+    /**
+     * Writes current config to given file
+     * @param configFile the file to write to
+     * @throws IOException If file was not found
+     */
     public static void writeConfigFile(File configFile) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
             String parsedConfig = Config.INSTANCE.serialize().toString();
