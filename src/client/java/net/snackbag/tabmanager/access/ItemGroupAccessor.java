@@ -54,10 +54,10 @@ public interface ItemGroupAccessor {
     /**
      * Applies the item filter to determine which items are displayed in this tab.
      */
-    void applyFilterDisplayItems(ItemFilter filter);
+    void tabmanager$applyFilterDisplayItems(ItemFilter filter);
 
     /**
      * Resets the displayed items to the default state (all items).
      */
-    void resetDisplayItems();
+    void tabmanager$resetDisplayItems();
 }

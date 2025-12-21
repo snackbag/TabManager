@@ -117,7 +117,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     }
 
     @Override
-    public void applyFilterDisplayItems(ItemFilter filter) {
+    public void tabmanager$applyFilterDisplayItems(ItemFilter filter) {
         if (!filter.getApplicableGroups().contains((ItemGroup)(Object)this)) return;
         tabmanager$displayStacks.clear();
         for (ItemStack istack : this.displayStacks) {
@@ -129,7 +129,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     }
 
     @Override
-    public void resetDisplayItems() {
+    public void tabmanager$resetDisplayItems() {
         tabmanager$displayStacks.clear();
         tabmanager$displayStacks.addAll(this.displayStacks);
     }
