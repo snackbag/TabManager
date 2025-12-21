@@ -4,11 +4,15 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
+import net.snackbag.tabmanager.util.ItemFilter;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Collection;
 
 @Mixin(ItemGroup.class)
 abstract public class ItemGroupMixin implements ItemGroupAccessor {
@@ -24,6 +28,10 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Shadow
     private @Nullable ItemStack icon;
 
+    // The original unmodified display stacks
+    @Shadow
+    private Collection<ItemStack> displayStacks;
+
 
 
     // UNIQUE FIELDS -----------------------------
@@ -34,15 +42,38 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Unique
     private boolean tabmanager$isHidden = false;
 
+    // The original unmodified display stacks are always kept in the original class (see @Shadow above)
+    // This is the modified version with all the filters applied
+    @Unique
+    private Collection<ItemStack> tabmanager$displayStacks;
+
 
 
 
     // INJECTIONS --------------------------------
 
+    /**
+     * Cancels the display of the tab if it is marked as hidden.
+     */
     @Inject(method = "shouldDisplay", at = @At("HEAD"), cancellable = true)
     private void shouldDisplay(CallbackInfoReturnable<Boolean> cir) {
         if (tabmanager$isHidden)
             cir.setReturnValue(false);
+    }
+
+
+    @Inject(method = "updateEntries", at = @At("TAIL"))
+    private void updateEntries(ItemGroup.DisplayContext displayContext, CallbackInfo ci) {
+        // Apply filters after update here
+    }
+
+    /**
+     * Overrides the display stacks with the filtered ones if they exist.
+     */
+    @Inject(method = "getDisplayStacks", at = @At("HEAD"), cancellable = true)
+    private void getDisplayStacks(CallbackInfoReturnable<Collection<ItemStack>> cir) {
+        if (tabmanager$displayStacks != null)
+            cir.setReturnValue(tabmanager$displayStacks);
     }
 
 
@@ -83,5 +114,23 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Override
     public void tabmanager$setIcon(ItemStack istack) {
         this.icon = istack;
+    }
+
+    @Override
+    public void applyFilterDisplayItems(ItemFilter filter) {
+        if (!filter.getApplicableGroups().contains((ItemGroup)(Object)this)) return;
+        tabmanager$displayStacks.clear();
+        for (ItemStack istack : this.displayStacks) {
+            if (tabmanager$displayStacks.contains(istack)) continue; // Avoid duplicates
+            String itemId = istack.getItem().toString();
+            if (itemId != null && filter.matches(itemId))
+                tabmanager$displayStacks.add(istack);
+        }
+    }
+
+    @Override
+    public void resetDisplayItems() {
+        tabmanager$displayStacks.clear();
+        tabmanager$displayStacks.addAll(this.displayStacks);
     }
 }
