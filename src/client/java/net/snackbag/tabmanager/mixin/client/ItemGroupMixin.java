@@ -123,12 +123,12 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Override
     public void tabmanager$applyFilterDisplayItems(ItemFilter filter) {
         if (!filter.getApplicableGroups().contains((ItemGroup)(Object)this)) return;
-        tabmanager$displayStacks = new ArrayList<>();
-        for (ItemStack istack : this.displayStacks) {
-            if (tabmanager$displayStacks.contains(istack)) continue; // Avoid duplicates
+        tabmanager$displayStacks = (List<ItemStack>) this.displayStacks;
+        for (ItemStack istack : this.tabmanager$displayStacks) {
+            if (!tabmanager$displayStacks.contains(istack)) continue; // Avoid removing non-existent
             String itemId = istack.getItem().toString();
             if (itemId != null && filter.matches(itemId))
-                tabmanager$displayStacks.add(istack);
+                tabmanager$displayStacks.remove(istack);
         }
     }
 
