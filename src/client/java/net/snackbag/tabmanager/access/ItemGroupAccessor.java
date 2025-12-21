@@ -3,6 +3,7 @@ package net.snackbag.tabmanager.access;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.snackbag.tabmanager.util.ItemFilter;
 
 public interface ItemGroupAccessor {
 
@@ -49,4 +50,14 @@ public interface ItemGroupAccessor {
      * @param istack The {@link ItemStack} for the icon
      */
     void tabmanager$setIcon(ItemStack istack);
+
+    /**
+     * Applies the item filter to determine which items are displayed in this tab.
+     */
+    void applyFilterDisplayItems(ItemFilter filter);
+
+    /**
+     * Resets the displayed items to the default state (all items).
+     */
+    void resetDisplayItems();
 }
