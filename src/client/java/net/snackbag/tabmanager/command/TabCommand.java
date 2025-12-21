@@ -122,7 +122,7 @@ public class TabCommand {
         PlayerEntity player = cmdSource.getSource().getPlayer();
 
         ItemGroups.getGroups().forEach(igroup ->
-                player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey()), false)
+                player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " + ((AdditionalTabInfoAccessor)igroup).tabmanager$getTabKey() + " | Row: " + igroup.getRow() + " | Column: " + igroup.getColumn()), false)
         );
 
         return Command.SINGLE_SUCCESS;
