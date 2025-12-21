@@ -17,21 +17,24 @@ public class TabCommand {
         dispatcher.register(
                 ClientCommandManager.literal("tabmd") // "tabmd" * "Tab Manager Debug"
                         .then(ClientCommandManager.literal("hide")
-                                .then(ClientCommandManager.argument("displayName", StringArgumentType.string()).executes(TabCommand::hideTab)))
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> modifyTab(src, true))))
+                        .then(ClientCommandManager.literal("show")
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string()).executes(src -> modifyTab(src, false))))
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
         );
     }
 
-    private static int hideTab(CommandContext<FabricClientCommandSource> cmdSource) {
+    private static int modifyTab(CommandContext<FabricClientCommandSource> cmdSource, boolean hide) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
-        String displayName = StringArgumentType.getString(cmdSource, "displayName");
+        String id = StringArgumentType.getString(cmdSource, "id");
 
         player.sendMessage(Text.literal("Hiding tab for display name: "), false);
 
-//        ItemGroups.getGroups().stream().filter(group -> group.getDisplayName().getString().equals(displayName)).forEach(group -> {
-//            player.sendMessage(Text.literal("Found group: " + group.getDisplayName().getString()), false);
-//            group.shouldDisplay()
-//        });
+        ItemGroups.getGroups().stream().filter(group -> ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString().equals(id)).forEach(group -> {
+            player.sendMessage(Text.literal("Found group: " + ((AdditionalTabInfoAccessor)group).tabmanager$getTabKey().toString()), false);
+            ((AdditionalTabInfoAccessor)group).tabmanager$setHidden(hide);
+            player.sendMessage(Text.literal("Tab hidden."), false);
+        });
 
         return Command.SINGLE_SUCCESS;
     }
