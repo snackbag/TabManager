@@ -23,6 +23,10 @@ public class ConfigDirectory {
     public static File getBakConfigFile() {
         return getConfigDirectory().resolve(MOD_CONFIG_FILE_BAK).toFile();
     }
+
+    /**
+     * Ensures the config directory exists
+     */
     public static void ensureConfigDirectoryExists() {
         Path configDir = getConfigDirectory();
         if (!configDir.toFile().exists()) {
@@ -30,7 +34,10 @@ public class ConfigDirectory {
         }
     }
 
-    public static void ensureConfigFileExists() {
+    /**
+     * Ensures the config file exists.
+     * @return true if successful, otherwise false
+     */
     public static boolean ensureConfigFileExists() {
         Path configFile = getConfigDirectory().resolve(MOD_CONFIG_FILE);
         if (!configFile.toFile().exists()) {
