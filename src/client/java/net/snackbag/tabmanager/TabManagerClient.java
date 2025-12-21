@@ -24,6 +24,5 @@ public class TabManagerClient implements ClientModInitializer {
     TODO:
        - Item Masks
        - GUI feature for reordering (maybe)
-       - Change Icon of Tab
      */
 }
