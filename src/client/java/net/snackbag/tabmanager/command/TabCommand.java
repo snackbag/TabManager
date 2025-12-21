@@ -15,6 +15,10 @@ import net.snackbag.tabmanager.access.AdditionalTabInfoAccessor;
 
 public class TabCommand {
 
+    /**
+     * Registers the Tab Command
+     * @param dispatcher The Command Dispatcher
+     */
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(
                 ClientCommandManager.literal("tabmd") // "tabmd" * "Tab Manager Debug"
@@ -32,6 +36,12 @@ public class TabCommand {
         );
     }
 
+    /**
+     * Changes the visibility status of the given tab.
+     * @param cmdSource The commands source containing the tab id.
+     * @param hide The target visibility status.
+     * @return Always 1
+     */
     private static int changeTabVisibility(CommandContext<FabricClientCommandSource> cmdSource, boolean hide) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
         String tabId = StringArgumentType.getString(cmdSource, "id");
@@ -47,6 +57,11 @@ public class TabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    /**
+     * Changes the column of the given tab.
+     * @param cmdSource The command source containing the tab id and the target column index.
+     * @return Always 1
+     */
     private static int changeTabColumn(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
         String tabId = StringArgumentType.getString(cmdSource, "id");
@@ -65,6 +80,12 @@ public class TabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    /**
+     * Changes the row of the given tab.
+     * @param cmdSource The command source containing the tab id and the target row index. 0 = BOTTOM; 1 = TOP
+     * @return Always 1
+     * @see ItemGroup.Row
+     */
     private static int changeTabRow(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
         String tabId = StringArgumentType.getString(cmdSource, "id");
@@ -92,6 +113,11 @@ public class TabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    /**
+     * Prints out the available ItemGroups along with their IDs.
+     * @param cmdSource The command source containing the player.
+     * @return Always 1
+     */
     private static int printGroupPairs(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
 
