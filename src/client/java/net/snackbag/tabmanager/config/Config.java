@@ -65,17 +65,20 @@ public class Config {
         return cfg;
     }
 
+    public static void reload() {
+        // Re-apply filters
+        ItemGroupUtility.applyFilters();
+
+        // Reorder, hide/show, etc... here
+    }
+
     /**
      * Loads the given config and reloads all settings
      * @param config the config to load
      */
     public static void loadConfig(Config config) {
         Config.INSTANCE = config;
-
-        // Re-apply filters
-        ItemGroupUtility.applyFilters();
-
-        // Reorder, hide/show, etc... here
+        reload();
     }
 
     /**
