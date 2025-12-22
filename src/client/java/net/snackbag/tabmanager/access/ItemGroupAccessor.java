@@ -60,4 +60,16 @@ public interface ItemGroupAccessor {
      * Resets the displayed items to the default state (all items).
      */
     void tabmanager$resetDisplayItems();
+
+    /**
+     * Gets the page number of the tab.
+     * @return The page number.
+     */
+    int tabmanager$getPage();
+
+    /**
+     * Sets the page number of the tab.
+     * @param page The page number.
+     */
+    void tabmanager$setPage(int page);
 }

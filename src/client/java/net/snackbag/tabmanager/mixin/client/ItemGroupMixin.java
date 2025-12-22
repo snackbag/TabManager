@@ -1,5 +1,6 @@
 package net.snackbag.tabmanager.mixin.client;
 
+import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -136,5 +137,17 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Override
     public void tabmanager$resetDisplayItems() {
         tabmanager$displayStacks = new CopyOnWriteArrayList<>(this.displayStacks);
+    }
+
+    @Override
+    @SuppressWarnings("UnstableApiUsage")
+    public int tabmanager$getPage() {
+        return ((FabricItemGroupImpl) this).fabric_getPage();
+    }
+
+    @Override
+    @SuppressWarnings("UnstableApiUsage")
+    public void tabmanager$setPage(int page) {
+        ((FabricItemGroupImpl) this).fabric_setPage(page);
     }
 }
