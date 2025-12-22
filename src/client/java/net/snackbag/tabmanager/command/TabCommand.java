@@ -8,7 +8,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
@@ -20,6 +19,7 @@ import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.config.Config;
+import net.snackbag.tabmanager.util.CreativeMenuUtility;
 import net.snackbag.tabmanager.util.ItemFilter;
 import org.jetbrains.annotations.Nullable;
 
@@ -128,7 +128,7 @@ public class TabCommand {
         ItemGroup.Row currentRow = targetGroup.getRow();
         ItemGroup.Row targetRow = row == 0 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP;
 
-        player.sendMessage(Text.literal("Setting row for ItemGroup '" + tabId + "': " + currentRow + " -> " + targetRow)); // --> "Setting row for ItemGroup 'minecraft:something': TOP -> BOTTOM
+        player.sendMessage(Text.literal("Setting row for ItemGroup '" + tabId + "': " + currentRow + " -> " + targetRow)); // --> Setting row for ItemGroup 'minecraft:something': TOP -> BOTTOM
 
         ((ItemGroupAccessor) targetGroup).tabmanager$setRow(targetRow);
 
@@ -159,7 +159,7 @@ public class TabCommand {
             return Command.SINGLE_SUCCESS;
         }
 
-        player.sendMessage(Text.literal("Changing Icon for ItemGroup '" + tabId + "': " + currentIcon.getItem().toString() + " -> " + targetIcon.getItem().toString()), false); // --> "Changing Icon for ItemGroup 'minecraft:something': minecraft:iron_ingot -> minecraft:gold_ingot
+        player.sendMessage(Text.literal("Changing Icon for ItemGroup '" + tabId + "': " + currentIcon.getItem().toString() + " -> " + targetIcon.getItem().toString()), false); // --> Changing Icon for ItemGroup 'minecraft:something': minecraft:iron_ingot -> minecraft:gold_ingot
 
         ((ItemGroupAccessor) targetGroup).tabmanager$setIcon(targetIcon);
 
@@ -175,7 +175,7 @@ public class TabCommand {
         PlayerEntity player = cmdSource.getSource().getPlayer();
         String tabId = StringArgumentType.getString(cmdSource, "id");
         int targetPage = IntegerArgumentType.getInteger(cmdSource, "page");
-        int maxPage = FabricCreativeGuiComponents.getPageCount() - 1;
+        int maxPage = CreativeMenuUtility.getPageCount() - 1;
 
         if (targetPage < 0 || targetPage > maxPage) {
             player.sendMessage(Text.literal("Target page must be between 0 and " + maxPage), false);
@@ -256,7 +256,7 @@ public class TabCommand {
 
         Config.INSTANCE.fakePages++;
 
-        player.sendMessage(Text.literal("Creative Menu now has " + FabricCreativeGuiComponents.getPageCount() + " pages!"));
+        player.sendMessage(Text.literal("Creative Menu now has " + CreativeMenuUtility.getPageCount() + " pages!"));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -268,22 +268,23 @@ public class TabCommand {
      */
     private static int removePage(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
-        int highestPage = FabricCreativeGuiComponents.getPageCount() - 1;
+        int totalPages = CreativeMenuUtility.getPageCount();
+        int highestPageIndex = totalPages - 1;
 
         if (Config.INSTANCE.fakePages <= 0) {
-            player.sendMessage(Text.literal("Cannot remove pages; cannot go lower than " + FabricCreativeGuiComponents.getPageCount() + " pages!"), false);
+            player.sendMessage(Text.literal("Cannot remove pages; cannot go lower than " + totalPages + " pages!"), false);
             return Command.SINGLE_SUCCESS;
         }
 
         // Move objects on page to free spots on pages below
         List<ItemGroup> groupsToMove = ItemGroups.getGroups()
                 .stream()
-                .filter(o -> ((ItemGroupAccessor) o).tabmanager$getPage() == highestPage)
+                .filter(o -> ((ItemGroupAccessor) o).tabmanager$getPage() == highestPageIndex)
                 .toList();
 
         for (ItemGroup itemGroup : groupsToMove) {
             boolean spotFound = false;
-            for (int page = highestPage - 1; page >= 0; page--) { // Scan all pages from highest to lowest for free spots
+            for (int page = highestPageIndex - 1; page >= 0; page--) { // Scan all pages from highest to lowest for free spots
                 for (int row = 0; row <= 1; row++) { // Scan both rows for free spots
                     for (int col = 0; col <= 4; col++) { // Scan all columns on that row for free spots; one row has 5 columns (0-4)
                         final int finalPage = page;
@@ -299,7 +300,7 @@ public class TabCommand {
                         if (!spotTaken) {
                             // Spot is free, move the item group here
                             player.sendMessage(Text.literal("Moving ItemGroup '" + ((ItemGroupAccessor) itemGroup).tabmanager$getTabKey().toString() +
-                                    "' from Page " + highestPage + " to Page " + finalPage + ", Row " + finalRow + ", Column " + finalCol), false);
+                                    "' from Page " + highestPageIndex + " to Page " + finalPage + ", Row " + finalRow + ", Column " + finalCol), false);
                             ((ItemGroupAccessor) itemGroup).tabmanager$setPage(finalPage);
                             ((ItemGroupAccessor) itemGroup).tabmanager$setRow(row == 1 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP); // Set row
                             ((ItemGroupAccessor) itemGroup).tabmanager$setColumn(finalCol); // Set column
