@@ -3,6 +3,7 @@
   "package": "net.snackbag.tabmanager.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "CreativeInventoryScreenMixin",
     "FabricCreativeGuiComponentsMixin"
   ],
   "injectors": {
