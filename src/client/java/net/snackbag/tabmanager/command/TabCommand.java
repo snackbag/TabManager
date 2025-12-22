@@ -8,6 +8,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
+import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
@@ -52,6 +54,9 @@ public class TabCommand {
                         .then(ClientCommandManager.literal("printGroupPairs").executes(TabCommand::printGroupPairs))
                         .then(ClientCommandManager.literal("printDisplayStacks")
                                 .then(ClientCommandManager.argument("id",  StringArgumentType.string()).executes(TabCommand::printDisplayStack)))
+                        .then(ClientCommandManager.literal("changePage")
+                                .then(ClientCommandManager.argument("id", StringArgumentType.string())
+                                        .then(ClientCommandManager.argument("page", IntegerArgumentType.integer()).executes(TabCommand::changePage))))
                         .then(ClientCommandManager.literal("applyFilter")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string())
                                         .then(ClientCommandManager.literal("regex")
@@ -157,6 +162,34 @@ public class TabCommand {
         player.sendMessage(Text.literal("Changing Icon for ItemGroup '" + tabId + "': " + currentIcon.getItem().toString() + " -> " + targetIcon.getItem().toString()), false); // --> "Changing Icon for ItemGroup 'minecraft:something': minecraft:iron_ingot -> minecraft:gold_ingot
 
         ((ItemGroupAccessor) targetGroup).tabmanager$setIcon(targetIcon);
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    /**
+     * Changes the page of a tab in the creative menu
+     * @param cmdSource The cmdSource containing the target page and item group
+     * @return Always 1
+     */
+    private static int changePage(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        String tabId = StringArgumentType.getString(cmdSource, "id");
+        int targetPage = IntegerArgumentType.getInteger(cmdSource, "page");
+        int maxPage = FabricCreativeGuiComponents.getPageCount() - 1;
+
+        if (targetPage < 0 || targetPage > maxPage) {
+            player.sendMessage(Text.literal("Target page must be between 0 and " + maxPage), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        ItemGroup targetGroup = getItemGroupOrError(tabId, player);
+        if (targetGroup == null) return Command.SINGLE_SUCCESS;
+
+        int currentPage = ((FabricItemGroupImpl) targetGroup).fabric_getPage();
+
+        player.sendMessage(Text.literal("Changing Page for ItemGroup '" + tabId + "': " + currentPage + " -> " + targetPage), false);
+
+        ((FabricItemGroupImpl) targetGroup).fabric_setPage(targetPage);
 
         return Command.SINGLE_SUCCESS;
     }
