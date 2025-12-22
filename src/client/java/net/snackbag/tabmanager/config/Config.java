@@ -9,7 +9,6 @@ import net.snackbag.tabmanager.util.ItemGroupUtility;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Config {
@@ -20,6 +19,7 @@ public class Config {
     // Make new instance only for storing Configs!
     public static Config INSTANCE = new Config();
     public List<ItemFilter> filters = new ArrayList<>();
+    public byte fakePages; // Pages to fake in the creative menu to allow for empty and more pages.
 
     /**
      * Serializes the config into a JsonObject

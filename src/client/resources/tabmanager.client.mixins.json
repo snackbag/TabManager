@@ -2,7 +2,9 @@
   "required": true,
   "package": "net.snackbag.tabmanager.mixin.client",
   "compatibilityLevel": "JAVA_21",
-  "client": [],
+  "client": [
+    "FabricCreativeGuiComponentsMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

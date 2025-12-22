@@ -2,6 +2,7 @@ package net.snackbag.tabmanager.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,6 +27,7 @@ import net.snackbag.tabmanager.util.ItemFilter;
 import net.snackbag.tabmanager.util.RegexCompiler;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class TabCommand {
@@ -57,6 +59,8 @@ public class TabCommand {
                         .then(ClientCommandManager.literal("changePage")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string())
                                         .then(ClientCommandManager.argument("page", IntegerArgumentType.integer()).executes(TabCommand::changePage))))
+                        .then(ClientCommandManager.literal("addPage").executes(TabCommand::addPage))
+                        .then(ClientCommandManager.literal("removePage").executes(TabCommand::removePage))
                         .then(ClientCommandManager.literal("applyFilter")
                                 .then(ClientCommandManager.argument("id", StringArgumentType.string())
                                         .then(ClientCommandManager.literal("regex")
@@ -244,6 +248,80 @@ public class TabCommand {
         itemFilter.addApplicableGroup(targetGroup);
         Config.INSTANCE.filters.add(itemFilter);
         Config.reload();
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    /**
+     * Adds a page to the creative menu.
+     * @param cmdSource The Command Source containing mainly the player
+     * @return Always 1
+     */
+    private static int addPage(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+
+        Config.INSTANCE.fakePages++;
+
+        player.sendMessage(Text.literal("Creative Menu now has " + FabricCreativeGuiComponents.getPageCount() + " pages!"));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    /**
+     * Removes the highest page from the creative menu
+     * @param cmdSource The Command Source containing mainly the player
+     * @return Always 1
+     */
+    private static int removePage(CommandContext<FabricClientCommandSource> cmdSource) {
+        PlayerEntity player = cmdSource.getSource().getPlayer();
+        int highestPage = FabricCreativeGuiComponents.getPageCount() - 1;
+
+        if (Config.INSTANCE.fakePages <= 0) {
+            player.sendMessage(Text.literal("Cannot remove pages; cannot go lower than " + FabricCreativeGuiComponents.getPageCount() + " pages!"), false);
+            return Command.SINGLE_SUCCESS;
+        }
+
+        // Move objects on page to free spots on pages below
+        List<ItemGroup> groupsToMove = ItemGroups.getGroups()
+                .stream()
+                .filter(o -> ((ItemGroupAccessor) o).tabmanager$getPage() == highestPage)
+                .toList();
+
+        for (ItemGroup itemGroup : groupsToMove) {
+            boolean spotFound = false;
+            for (int page = highestPage - 1; page >= 0; page--) { // Scan all pages from highest to lowest for free spots
+                for (int row = 0; row <= 1; row++) { // Scan both rows for free spots
+                    for (int col = 0; col <= 4; col++) { // Scan all columns on that row for free spots; one row has 5 columns (0-4)
+                        final int finalPage = page;
+                        final int finalRow = row;
+                        final int finalCol = col;
+
+                        boolean spotTaken = ItemGroups.getGroups().stream().anyMatch(igroup ->
+                                ((ItemGroupAccessor) igroup).tabmanager$getPage() == finalPage &&
+                                        igroup.getRow().ordinal() == finalRow &&
+                                        igroup.getColumn() == finalCol
+                        );
+
+                        if (!spotTaken) {
+                            // Spot is free, move the item group here
+                            player.sendMessage(Text.literal("Moving ItemGroup '" + ((ItemGroupAccessor) itemGroup).tabmanager$getTabKey().toString() +
+                                    "' from Page " + highestPage + " to Page " + finalPage + ", Row " + finalRow + ", Column " + finalCol), false);
+                            ((ItemGroupAccessor) itemGroup).tabmanager$setPage(finalPage);
+                            ((ItemGroupAccessor) itemGroup).tabmanager$setRow(row == 1 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP); // Set row
+                            ((ItemGroupAccessor) itemGroup).tabmanager$setColumn(finalCol); // Set column
+                            spotFound = true;
+                            break; // Break out of column loop
+                        }
+                    }
+
+                    if (spotFound) break; // Break out of row loop
+                }
+
+                if (spotFound) break; // Break out of page loop
+            }
+        }
+
+        Config.INSTANCE.fakePages--; // Finally, remove the page
 
         return Command.SINGLE_SUCCESS;
     }
