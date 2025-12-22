@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.snackbag.tabmanager.TabManagerClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +24,7 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
     @Unique private static final int EDIT_BUTTON_WIDTH_HEIGHT = 20;
     @Unique private static final int PADDING_TO_CREATIVE_INV = 5;
 
-    @Unique private static final ButtonTextures EDIT_BUTTON_TEXTURES = new ButtonTextures(Identifier.of("tabmanager", "widget/edit_button"), Identifier.of("tabmanager", "widget/edit_button_highlighted"));
+    @Unique private static final ButtonTextures EDIT_BUTTON_TEXTURES = new ButtonTextures(Identifier.of(TabManagerClient.MOD_ID, "widget/edit_button"), Identifier.of(TabManagerClient.MOD_ID, "widget/edit_button_highlighted"));
 
     private CreativeInventoryScreenMixin(CreativeInventoryScreen.CreativeScreenHandler screenHandler, PlayerInventory playerInventory, Text text) {
         super(screenHandler, playerInventory, text);

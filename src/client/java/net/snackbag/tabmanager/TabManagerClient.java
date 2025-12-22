@@ -15,6 +15,7 @@ import static net.snackbag.tabmanager.util.ItemGroupUtility.populateItemGroups;
 public class TabManagerClient implements ClientModInitializer {
 
     public static Logger LOGGER = LogManager.getLogger();
+    public static final String MOD_ID = "tabmanager";
 
 	@Override
 	public void onInitializeClient() {
