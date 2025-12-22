@@ -9,7 +9,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
-import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
@@ -186,11 +185,11 @@ public class TabCommand {
         ItemGroup targetGroup = getItemGroupOrError(tabId, player);
         if (targetGroup == null) return Command.SINGLE_SUCCESS;
 
-        int currentPage = ((FabricItemGroupImpl) targetGroup).fabric_getPage();
+        int currentPage = ((ItemGroupAccessor) targetGroup).tabmanager$getPage();
 
         player.sendMessage(Text.literal("Changing Page for ItemGroup '" + tabId + "': " + currentPage + " -> " + targetPage), false);
 
-        ((FabricItemGroupImpl) targetGroup).fabric_setPage(targetPage);
+        ((ItemGroupAccessor) targetGroup).tabmanager$setPage(targetPage);
 
         return Command.SINGLE_SUCCESS;
     }
@@ -207,7 +206,7 @@ public class TabCommand {
         ItemGroups.getGroups().forEach(igroup ->
                 player.sendMessage(Text.literal("ItemGroup: " + igroup.getDisplayName().getString() + " | ID: " +
                         ((ItemGroupAccessor)igroup).tabmanager$getTabKey() + " | Row: " + igroup.getRow() + " | Column: "
-                        + igroup.getColumn() + " | Page: " + ((FabricItemGroupImpl)igroup).fabric_getPage()), false)
+                        + igroup.getColumn() + " | Page: " + ((ItemGroupAccessor) igroup).tabmanager$getPage()), false)
         );
 
         return Command.SINGLE_SUCCESS;
@@ -225,9 +224,7 @@ public class TabCommand {
         ItemGroup targetGroup = getItemGroupOrError(tabId, player);
         if (targetGroup == null) return Command.SINGLE_SUCCESS;
 
-        targetGroup.getDisplayStacks().forEach(istack -> {
-            player.sendMessage(Text.literal("ItemStack: " + istack.toString() + " | Item: " + istack.getItem().toString()), false);
-        });
+        targetGroup.getDisplayStacks().forEach(istack -> player.sendMessage(Text.literal("ItemStack: " + istack.toString() + " | Item: " + istack.getItem().toString()), false));
 
         return Command.SINGLE_SUCCESS;
     }
