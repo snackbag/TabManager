@@ -2,7 +2,6 @@ package net.snackbag.tabmanager.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -18,17 +17,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.config.Config;
 import net.snackbag.tabmanager.util.ItemFilter;
-import net.snackbag.tabmanager.util.RegexCompiler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class TabCommand {
 
