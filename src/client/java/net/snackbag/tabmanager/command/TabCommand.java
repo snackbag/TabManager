@@ -166,6 +166,7 @@ public class TabCommand {
      * @param cmdSource The command source containing the player.
      * @return Always 1
      */
+    // Warnings here are fine as far as I (Tobias) know. I wasn't able to find an according value for "@SuppressWarning()" to suppress it unfortunately.
     private static int printGroupPairs(CommandContext<FabricClientCommandSource> cmdSource) {
         PlayerEntity player = cmdSource.getSource().getPlayer();
 
