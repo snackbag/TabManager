@@ -1,3 +1,11 @@
 {
-  "tabmanager.gui.edit_button.tooltip": "Editar Inventario"
+  "tabmanager.gui.edit_button.tooltip": "Editar Inventario",
+
+  "tabmanager.gui.edit_screen.import_config_button": "Importar Configuración...",
+  "tabmanager.gui.edit_screen.export_config_button": "Exportar Configuración...",
+  "tabmanager.gui.edit_screen.new_config_button": "Crear Nueva Configuración",
+  "tabmanager.gui.edit_screen.save_button": "Guardar",
+  "tabmanager.gui.edit_screen.close_button": "Cerrar",
+
+  "tabmanager.gui.edit_screen.edit_item_masks": "Editar Filtro de Item..."
 }

@@ -1,5 +1,6 @@
 package net.snackbag.tabmanager.mixin.client;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
+import net.snackbag.tabmanager.ui.screen.EditScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -54,7 +56,7 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
     @Unique
     private void tabmanager$openEditScreen() {
         // Placeholder for future implementation
-        System.out.println("Edit button clicked - open edit screen");
+        MinecraftClient.getInstance().setScreen(new EditScreen());
     }
 
 }
