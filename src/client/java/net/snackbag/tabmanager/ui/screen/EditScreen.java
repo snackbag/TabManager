@@ -4,12 +4,10 @@ import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.TextBoxComponent;
-import io.wispforest.owo.ui.component.TextureComponent;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.snackbag.tabmanager.TabManagerClient;
+import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
 import org.jetbrains.annotations.NotNull;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
@@ -33,6 +31,8 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.fill());
         FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill());
 
+        InventoryEditComponent<FlowLayout> inventoryEditComponent = new InventoryEditComponent<>(195, 127, (btn) -> {});
+
         controlPanel.surface(Surface.DARK_PANEL);
         controlPanel.margins(Insets.of(5));
 
@@ -42,7 +42,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         drawConfigControls(controlPanel, controlPanelWidth);
         drawSaveCancelControls(controlPanel, controlPanelWidth);
 
-        drawCreativeContainer(canvasPanel, 195, 127);
+        inventoryEditComponent.build(canvasPanel::child);
 
         stageLayout
                 .child(controlPanel)
@@ -103,38 +103,5 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 .child(saveButton);
 
         rootComponent.child(scCtrlContainer);
-    }
-
-    /**
-     * Draws the creative inventory with the edit button on in the editor screen
-     * @param rootComponent The component to attach the creative screen on
-     * @param textureWidth How wide the inventory should be (influences button width)
-     * @param textureHeight How high the inventory should be (influences button height)
-     */
-    private void drawCreativeContainer(FlowLayout rootComponent, final int textureWidth, final int textureHeight) {
-        final float buttonMultiplierW = 162/195f; // Calculates the width of the button. Change these two if you change the creative inventory texture.
-        final float buttonMultiplierH = 90/127f;
-
-        final int buttonWidth = (int) (textureWidth * buttonMultiplierW);
-        final int buttonHeight = (int) (textureHeight * buttonMultiplierH);
-
-        StackLayout componentLayout = Containers.stack(Sizing.content(), Sizing.content());
-
-        TextureComponent creativeInventoryTexture = Components.texture(
-                Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/creative_inventory.png"),
-                0, 0,
-                textureWidth, textureHeight,
-                textureWidth, textureHeight);
-
-        ButtonComponent itemMasksButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), (btn) -> {});
-
-        itemMasksButton.zIndex(10);
-        itemMasksButton.positioning(Positioning.absolute(8, 8));
-        itemMasksButton.sizing(Sizing.fixed(buttonWidth), Sizing.fixed(buttonHeight));
-
-        componentLayout.child(creativeInventoryTexture);
-        componentLayout.child(itemMasksButton);
-
-        rootComponent.child(componentLayout);
     }
 }
