@@ -51,6 +51,11 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(stageLayout);
     }
 
+    /**
+     * Draws the configuration controls for the editor
+     * @param rootComponent The component to attach these controls to
+     * @param width The width of these controls
+     */
     private void drawConfigControls(FlowLayout rootComponent, final int width) {
         FlowLayout confCtrlContainer = Containers.verticalFlow(Sizing.fixed(width), Sizing.content())
                 .gap(5);
@@ -75,6 +80,11 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(confCtrlContainer);
     }
 
+    /**
+     * Draws the "Save" and "Close" controls for the editor
+     * @param rootComponent The component to attach the buttons on
+     * @param width The width of these controls
+     */
     private void drawSaveCancelControls(FlowLayout rootComponent, final int width) {
         FlowLayout scCtrlContainer = Containers.verticalFlow(Sizing.fixed(width), Sizing.expand())
                 .gap(5);
@@ -95,6 +105,12 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(scCtrlContainer);
     }
 
+    /**
+     * Draws the creative inventory with the edit button on in the editor screen
+     * @param rootComponent The component to attach the creative screen on
+     * @param textureWidth How wide the inventory should be (influences button width)
+     * @param textureHeight How high the inventory should be (influences button height)
+     */
     private void drawCreativeContainer(FlowLayout rootComponent, final int textureWidth, final int textureHeight) {
         final float buttonMultiplierW = 162/195f; // Calculates the width of the button. Change these two if you change the creative inventory texture.
         final float buttonMultiplierH = 90/127f;
@@ -110,7 +126,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 textureWidth, textureHeight,
                 textureWidth, textureHeight);
 
-        ButtonComponent itemMasksButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), (btn) -> { });
+        ButtonComponent itemMasksButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), (btn) -> {});
 
         itemMasksButton.zIndex(10);
         itemMasksButton.positioning(Positioning.absolute(8, 8));
