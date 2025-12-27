@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents.COMMON_GROUPS;
 import static net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl.TABS_PER_PAGE;
 
+@SuppressWarnings("UnstableApiUsage")
 @Mixin(FabricCreativeGuiComponents.class)
 abstract public class FabricCreativeGuiComponentsMixin {
 
