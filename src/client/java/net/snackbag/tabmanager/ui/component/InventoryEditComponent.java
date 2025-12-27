@@ -8,12 +8,16 @@ import io.wispforest.owo.ui.container.GridLayout;
 import io.wispforest.owo.ui.container.StackLayout;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.util.CreativeMenuUtility;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -46,7 +50,7 @@ public class InventoryEditComponent {
     public static final int pageSwitchButtonPosMagicNumberH = 102;
 
     protected int currentPage = 1;
-    protected int maxPages = CreativeMenuUtility.getPageCount();
+    protected int maxPages = CreativeMenuUtility.getPageCount() - 1;
     
     public static final Identifier inventoryTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/creative_inventory.png");
     public static final Identifier tabTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab.png");
@@ -116,7 +120,7 @@ public class InventoryEditComponent {
                 .child(inventoryLayout)
                 .child(bottomItemGroupRow);
 
-        topItemGroupRow.child(getTab(Blocks.WHITE_TERRACOTTA.asItem().getDefaultStack()), 0, 0);
+        updateItemGroups();
 
         addToParent.apply(componentLayout);
     }
@@ -155,6 +159,23 @@ public class InventoryEditComponent {
     }
 
     private void updateItemGroups() {
+        List<ItemGroup> groups = CreativeMenuUtility.getItemGroupsOnPage(currentPage - 1);
+        clearComponent(topItemGroupRow);
+        clearComponent(bottomItemGroupRow);
 
+        if (groups.isEmpty()) return; // Nothing to display
+
+        for (ItemGroup displayTopItem : groups.subList(0, Math.min(TABS_PER_ROW, groups.size())))
+            topItemGroupRow.child(getTab(displayTopItem.getIcon()), 0, groups.indexOf(displayTopItem));
+
+        if (groups.size() <= TABS_PER_ROW) return; // Nothing to display for second row
+
+        for (ItemGroup displayBottomItem : groups.subList(TABS_PER_ROW, Math.min(TABS_PER_ROW * 2, groups.size())))
+            bottomItemGroupRow.child(getTab(displayBottomItem.getIcon()), 0, groups.indexOf(displayBottomItem) - 5); // -5 because second row
+    }
+
+    private void clearComponent(ParentComponent component) {
+        List<Component> components = new ArrayList<>(component.children());
+        components.forEach(component::removeChild);
     }
 }
