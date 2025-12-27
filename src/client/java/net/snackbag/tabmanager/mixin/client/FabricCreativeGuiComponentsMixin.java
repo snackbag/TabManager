@@ -18,7 +18,6 @@ abstract public class FabricCreativeGuiComponentsMixin {
 
     /**
      * Mixin into getPageCount to allow for fake pages in the inventory
-     * @param cir
      */
     @Inject(method = "getPageCount", at = @At("HEAD"), cancellable = true)
     private static void tabmanager$getPageCount(CallbackInfoReturnable<Integer> cir) {
