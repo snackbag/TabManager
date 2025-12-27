@@ -12,11 +12,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
+import net.snackbag.tabmanager.util.CreativeMenuUtility;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class InventoryEditComponent {
+
+    public static final int TABS_PER_PAGE = 10;
+    public static final int TABS_PER_ROW = 5;
 
     protected final GridLayout topItemGroupRow, bottomItemGroupRow;
     protected final StackLayout inventoryLayout;
@@ -40,6 +44,9 @@ public class InventoryEditComponent {
     public static final int filterButtonPosMagicNumber = 8;
     public static final int pageSwitchButtonPosMagicNumberW = 8;
     public static final int pageSwitchButtonPosMagicNumberH = 102;
+
+    protected int currentPage = 1;
+    protected int maxPages = CreativeMenuUtility.getPageCount();
     
     public static final Identifier inventoryTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/creative_inventory.png");
     public static final Identifier tabTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab.png");
@@ -76,19 +83,19 @@ public class InventoryEditComponent {
                 .positioning(Positioning.absolute(filterButtonPosMagicNumber, filterButtonPosMagicNumber))
                 .sizing(Sizing.fixed(fixedButtonWidth), Sizing.fixed(fixedButtonHeight));
 
-        nextPageButton = Components.button(Text.literal("<-"), (btn) -> nextPage());
+        nextPageButton = Components.button(Text.literal("->"), (btn) -> nextPage());
         nextPageButton.zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW, pageSwitchButtonPosMagicNumberH))
+                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberH))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
                 .tooltip(Text.translatable("tabmanager.gui.edit_screen.next_page_tooltip"));
 
-        previousPageButton = Components.button(Text.literal("->"), (btn) -> previousPage());
+        previousPageButton = Components.button(Text.literal("<-"), (btn) -> previousPage());
         previousPageButton.zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberH))
+                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW, pageSwitchButtonPosMagicNumberH))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
                 .tooltip(Text.translatable("tabmanager.gui.edit_screen.previous_page_tooltip"));
 
-        pageLabel = Components.button(Text.translatable("tabmanager.gui.edit_screen.page", 5, 5), (btn) -> {});
+        pageLabel = Components.button(Text.translatable("tabmanager.gui.edit_screen.page", currentPage, maxPages), (btn) -> {});
         pageLabel.active(false)
                 .zIndex(10)
                 .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth, pageSwitchButtonPosMagicNumberH))
@@ -128,10 +135,26 @@ public class InventoryEditComponent {
     }
 
     private void nextPage() {
+        if (currentPage >= maxPages) return; // Cannot go more than maxPages
 
+        currentPage++;
+        updatePageLabel();
+        updateItemGroups();
     }
 
     private void previousPage() {
+        if (currentPage <= 1) return; // Cannot go less than page 1
+
+        currentPage--;
+        updatePageLabel();
+        updateItemGroups();
+    }
+
+    private void updatePageLabel() {
+        pageLabel.setMessage(Text.translatable("tabmanager.gui.edit_screen.page", currentPage, maxPages));
+    }
+
+    private void updateItemGroups() {
 
     }
 }
