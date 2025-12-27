@@ -7,10 +7,7 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.GridLayout;
 import io.wispforest.owo.ui.container.StackLayout;
 import io.wispforest.owo.ui.core.*;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
@@ -23,12 +20,11 @@ import java.util.function.Function;
 
 public class InventoryEditComponent {
 
-    public static final int TABS_PER_PAGE = 10;
-    public static final int TABS_PER_ROW = 5;
-
     protected final GridLayout topItemGroupRow, bottomItemGroupRow;
     protected final StackLayout inventoryLayout;
     protected final FlowLayout componentLayout;
+
+    protected List<TabWidget> tabs = new ArrayList<>();
     
     protected final TextureComponent creativeInventoryTexture;
     protected final ButtonComponent editFilterButton, nextPageButton, previousPageButton;
@@ -53,7 +49,6 @@ public class InventoryEditComponent {
     protected int maxPages = CreativeMenuUtility.getPageCount() - 1;
     
     public static final Identifier inventoryTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/creative_inventory.png");
-    public static final Identifier tabTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab.png");
 
     /**
      * Draws the creative inventory with the edit button on in the editor screen
@@ -125,17 +120,10 @@ public class InventoryEditComponent {
         addToParent.apply(componentLayout);
     }
 
-    private StackLayout getTab(ItemStack displayItem) {
-        StackLayout tabLayout = Containers.stack(Sizing.content(), Sizing.content());
-        TextureComponent tab = Components.texture(tabTextureIdentifier, 0, 0, 26, 26, 26, 26);
-
-        ItemComponent item = Components.item(displayItem);
-        item.zIndex(10);
-        item.positioning(Positioning.relative(50, 50));
-
-        tabLayout.child(tab).child(item);
-
-        return tabLayout;
+    private TabWidget getTab(ItemGroup reference) {
+        return new TabWidget(reference, false, (widget) -> {
+            tabs.stream().filter(tab -> tab != widget).forEach(tab -> tab.setActive(false));
+        });
     }
 
     private void nextPage() {
@@ -162,16 +150,23 @@ public class InventoryEditComponent {
         List<ItemGroup> groups = CreativeMenuUtility.getItemGroupsOnPage(currentPage - 1);
         clearComponent(topItemGroupRow);
         clearComponent(bottomItemGroupRow);
+        tabs.clear();
 
         if (groups.isEmpty()) return; // Nothing to display
 
-        for (ItemGroup displayTopItem : groups.subList(0, Math.min(TABS_PER_ROW, groups.size())))
-            topItemGroupRow.child(getTab(displayTopItem.getIcon()), 0, groups.indexOf(displayTopItem));
-
-        if (groups.size() <= TABS_PER_ROW) return; // Nothing to display for second row
-
-        for (ItemGroup displayBottomItem : groups.subList(TABS_PER_ROW, Math.min(TABS_PER_ROW * 2, groups.size())))
-            bottomItemGroupRow.child(getTab(displayBottomItem.getIcon()), 0, groups.indexOf(displayBottomItem) - 5); // -5 because second row
+        for (ItemGroup displayItem : groups) {
+            if (displayItem.getRow() == ItemGroup.Row.TOP) {
+                TabWidget tab = getTab(displayItem);
+                topItemGroupRow.child(tab.build(), 0, displayItem.getColumn());
+                tabs.add(tab);
+            } else if (displayItem.getRow() == ItemGroup.Row.BOTTOM) {
+                TabWidget tab = getTab(displayItem);
+                bottomItemGroupRow.child(tab.build(), 0, displayItem.getColumn());
+                tabs.add(tab);
+            } else {
+                TabManagerClient.LOGGER.error("An error occurred: Couldn't determine row for ItemGroup {}", displayItem.toString());
+            }
+        }
     }
 
     private void clearComponent(ParentComponent component) {

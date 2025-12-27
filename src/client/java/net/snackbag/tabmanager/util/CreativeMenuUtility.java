@@ -20,6 +20,7 @@ public class CreativeMenuUtility {
         return ItemGroups.getGroupsToDisplay()
                 .stream()
                 .filter(itemGroup -> ((ItemGroupAccessor) itemGroup).tabmanager$getPage() == page)
+                .filter(itemGroup -> !itemGroup.isSpecial())
                 // Thanks to isXander for the sorting
                 .sorted(Comparator.comparing(ItemGroup::getRow).thenComparingInt(ItemGroup::getColumn))
                 .sorted((a, b) -> {
