@@ -8,5 +8,7 @@
   "tabmanager.gui.edit_screen.close_button": "Cerrar",
 
   "tabmanager.gui.edit_screen.edit_item_masks": "Editar Filtro de Item...",
-  "tabmanager.gui.edit_screen.page": "Pág. %s/%s"
+  "tabmanager.gui.edit_screen.page": "Pág. %s/%s",
+  "tabmanager.gui.edit_screen.next_page_tooltip": "Página Siguiente",
+  "tabmanager.gui.edit_screen.previous_page_tooltip": "Página Anterior"
 }

@@ -79,12 +79,14 @@ public class InventoryEditComponent {
         nextPageButton = Components.button(Text.literal("<-"), (btn) -> nextPage());
         nextPageButton.zIndex(10)
                 .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW, pageSwitchButtonPosMagicNumberH))
-                .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight));
+                .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
+                .tooltip(Text.translatable("tabmanager.gui.edit_screen.next_page_tooltip"));
 
         previousPageButton = Components.button(Text.literal("->"), (btn) -> previousPage());
         previousPageButton.zIndex(10)
                 .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberH))
-                .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight));
+                .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
+                .tooltip(Text.translatable("tabmanager.gui.edit_screen.previous_page_tooltip"));
 
         pageLabel = Components.button(Text.translatable("tabmanager.gui.edit_screen.page", 5, 5), (btn) -> {});
         pageLabel.active(false)
