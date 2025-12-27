@@ -31,7 +31,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.fill());
         FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill());
 
-        InventoryEditComponent<FlowLayout> inventoryEditComponent = new InventoryEditComponent<>(195, 127, (btn) -> {});
+        InventoryEditComponent inventoryEditComponent = new InventoryEditComponent(195, 127, (btn) -> {});
 
         controlPanel.surface(Surface.DARK_PANEL);
         controlPanel.margins(Insets.of(5));

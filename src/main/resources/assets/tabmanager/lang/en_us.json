@@ -7,5 +7,6 @@
   "tabmanager.gui.edit_screen.save_button": "Save",
   "tabmanager.gui.edit_screen.close_button": "Close",
 
-  "tabmanager.gui.edit_screen.edit_item_masks": "Edit Item Filter..."
+  "tabmanager.gui.edit_screen.edit_item_masks": "Edit Item Filter...",
+  "tabmanager.gui.edit_screen.page": "Page %s/%s"
 }
