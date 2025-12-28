@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 public class TabWidget {
 
     private boolean active;
+    private boolean isInTray = false;
     private ItemStack icon;
 
     protected TextureComponent tabTexture;
@@ -78,6 +79,15 @@ public class TabWidget {
     public TabWidget toggleActive() {
         setActive(!active);
         return this;
+    }
+
+    public TabWidget setInTray(boolean inTray) {
+        isInTray = inTray;
+        return this;
+    }
+
+    public boolean isInTray() {
+        return isInTray;
     }
 
     public ItemStack getIcon() {
