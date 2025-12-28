@@ -8,9 +8,11 @@ import io.wispforest.owo.ui.container.GridLayout;
 import io.wispforest.owo.ui.container.StackLayout;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
+import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.config.Config;
 import net.snackbag.tabmanager.util.CreativeMenuUtility;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +57,7 @@ public class InventoryEditComponent {
     public static final int pageSwitchButtonPosMagicNumberH = 102;
 
     protected int currentPage = 1;
-    protected int maxPages = CreativeMenuUtility.getPageCount() - 1;
+    protected int maxPages = CreativeMenuUtility.getPageCount();
     
     public static final Identifier inventoryTextureIdentifier = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/creative_inventory.png");
 
@@ -155,6 +157,7 @@ public class InventoryEditComponent {
         componentLayout.child(inventoryContainerLayout)
                 .child(tabControlGridContainer);
 
+        updatePageCount();
         updateItemGroups();
         updateButtons();
 
@@ -168,9 +171,9 @@ public class InventoryEditComponent {
         moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> {});
         toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> {});
         fromTrayButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/from_tray.png"), 13, 13, (btn) -> {});
-        newPageButton =     new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/new_page.png"), 13, 13, (btn) -> {});
         changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> {});
-        removePageButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/remove_page.png"), 13, 13, (btn) -> {});
+        newPageButton =     new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/new_page.png"), 13, 13, (btn) -> addPage());
+        removePageButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/remove_page.png"), 13, 13, (btn) -> removePage());
 
         moveLeftButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.move_left_tooltip"));
         moveRightButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.move_right_tooltip"));
@@ -274,6 +277,12 @@ public class InventoryEditComponent {
         removePageButton.setActive(Config.INSTANCE.fakePages > 0);
     }
 
+    private void updatePageCount() {
+        maxPages = CreativeMenuUtility.getPageCount();
+        updatePageLabel();
+        updatePageButtons();
+    }
+
     /**
      * Returns the currently selected tab
      */
@@ -288,5 +297,76 @@ public class InventoryEditComponent {
     private void clearComponent(ParentComponent component) {
         List<Component> components = new ArrayList<>(component.children());
         components.forEach(component::removeChild);
+    }
+
+
+
+    // LOGIC FOR BUTTON ACTIONS --------------------------------------
+    // ---------------------------------------------------------------
+
+    /**
+     * Appends a new fake page
+     */
+    private void addPage() {
+        Config.INSTANCE.fakePages++;
+        updatePageCount();
+    }
+
+    /**
+     * Removes last page if possible and moves tabs from that page to free spots on other pages
+     */
+    private void removePage() {
+        if (Config.INSTANCE.fakePages <= 0) return; // Cannot go below 0 fake pages
+
+        // Move tabs from page to free page if current page is the last page
+        List<ItemGroup> allGroups = ItemGroups.getGroups();
+
+        List<ItemGroup> groupsToMove = ItemGroups.getGroupsToDisplay()
+                .stream()
+                .filter(o -> {
+                    int page = ((ItemGroupAccessor) o).tabmanager$getPage();
+                    return page == maxPages - 1; // -1 because pages are 0-indexed
+                })
+                .toList();
+
+        for (ItemGroup itemGroup : groupsToMove) {
+            boolean spotFound = false;
+            for (int page = maxPages - 2; page >= 0; page--) { // Scan all pages from highest to lowest for free spots  |  -2 because if e.g. maxPages is 3, we want to scan pages 1 and 2 but we also have to account for 0-indexing so we actually need to scan 0 and 1
+                for (int row = 0; row <= 1; row++) { // Scan both rows for free spots
+                    for (int col = 0; col <= 4; col++) { // Scan all columns on that row for free spots; one row has 5 columns (0-4)
+                        final int finalPage = page;
+                        final int finalRow = row;
+                        final int finalCol = col;
+
+                        boolean spotTaken = ItemGroups.getGroups().stream().anyMatch(igroup ->
+                                ((ItemGroupAccessor) igroup).tabmanager$getPage() == finalPage &&
+                                        igroup.getRow().ordinal() == finalRow &&
+                                        igroup.getColumn() == finalCol
+                        );
+
+                        if (!spotTaken) {
+                            // Spot is free, move the item group here
+                            ((ItemGroupAccessor) itemGroup).tabmanager$setPage(finalPage);
+                            ((ItemGroupAccessor) itemGroup).tabmanager$setRow(row == 1 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP); // Set row
+                            ((ItemGroupAccessor) itemGroup).tabmanager$setColumn(finalCol); // Set column
+                            spotFound = true;
+                            break; // Break out of column loop
+                        }
+                    }
+
+                    if (spotFound) break; // Break out of row loop
+                }
+
+                if (spotFound) break; // Break out of page loop
+            }
+        }
+
+        Config.INSTANCE.fakePages--;
+        if (currentPage > maxPages) {
+            currentPage = maxPages;
+        }
+
+        updatePageCount();
+        updateItemGroups();
     }
 }
