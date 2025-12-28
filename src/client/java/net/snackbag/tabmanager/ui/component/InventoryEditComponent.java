@@ -168,8 +168,8 @@ public class InventoryEditComponent {
     }
 
     private void initTabControls() {
-        moveLeftButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_left.png"), 13, 13, (btn) -> updateButtons());
-        moveRightButton =   new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_right.png"), 13, 13, (btn) -> {});
+        moveLeftButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_left.png"), 13, 13, (btn) -> changeColumn(false));
+        moveRightButton =   new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_right.png"), 13, 13, (btn) -> changeColumn(true));
         moveUpButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_up.png"), 13, 13, (btn) -> {});
         moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> {});
         toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> {});
@@ -369,5 +369,32 @@ public class InventoryEditComponent {
 
         updatePageCount();
         updateItemGroups();
+    }
+
+    /**
+     * Changes the column of the selected tab
+     * @param toRight True to move right, false to move left
+     */
+    private void changeColumn(boolean toRight) {
+        TabWidget selectedTab = getSelectedTab();
+        if (selectedTab == null) return; // No tab selected, do nothing
+
+        if (toRight && selectedTab.reference.getColumn() >= ITEM_GROUPS_PER_ROW - 1) return; // Cannot move right anymore
+        if (!toRight && selectedTab.reference.getColumn() <= 0) return; // Cannot move left anymore
+
+        int currentColumn = selectedTab.reference.getColumn();
+        int targetColumn = toRight ? currentColumn + 1 : currentColumn - 1;
+
+        // Move other tab if necessary
+        ItemGroups.getGroupsToDisplay()
+                .stream()
+                .filter(o -> ((ItemGroupAccessor) o).tabmanager$getPage() == ((ItemGroupAccessor) selectedTab.reference).tabmanager$getPage() &&
+                        o.getRow() == selectedTab.reference.getRow() &&
+                        o.getColumn() == targetColumn)
+                .forEach(o -> ((ItemGroupAccessor) o).tabmanager$setColumn(currentColumn)); // SHOULD only be one tab here
+
+        ((ItemGroupAccessor) selectedTab.reference).tabmanager$setColumn(targetColumn);
+        updateItemGroups();
+        updateButtons();
     }
 }
