@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.util.CreativeMenuUtility;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class InventoryEditComponent {
+
+    private static final int ITEM_GROUPS_PER_ROW = 5;
 
     protected final GridLayout topItemGroupRow, bottomItemGroupRow;
     protected final GridLayout tabControlGridContainer, tabControlGrid;
@@ -142,9 +145,9 @@ public class InventoryEditComponent {
                 .child(moveDownButton.build(), 0, 3)
                 .child(toTrayButton.build(), 0, 4)
                 .child(fromTrayButton.build(), 0, 5)
-                .child(newPageButton.build(), 0, 6)
-                .child(removePageButton.build(), 0, 7)
-                .child(changeIconButton.build(), 0, 8);
+                .child(changeIconButton.build(), 0, 6)
+                .child(newPageButton.build(), 0, 7)
+                .child(removePageButton.build(), 0, 8);
 
         inventoryContainerLayout.child(topItemGroupRow)
                 .child(inventoryLayout)
@@ -159,7 +162,7 @@ public class InventoryEditComponent {
     }
 
     private void initTabControls() {
-        moveLeftButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_left.png"), 13, 13, (btn) -> {});
+        moveLeftButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_left.png"), 13, 13, (btn) -> updateButtons());
         moveRightButton =   new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_right.png"), 13, 13, (btn) -> {});
         moveUpButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_up.png"), 13, 13, (btn) -> {});
         moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> {});
@@ -173,6 +176,7 @@ public class InventoryEditComponent {
     private TabWidget getTab(ItemGroup reference) {
         return new TabWidget(reference, false, (widget) -> {
             tabs.stream().filter(tab -> tab != widget).forEach(tab -> tab.setActive(false));
+            updateButtons(); // Update buttons based on selected tab
         });
     }
 
@@ -219,6 +223,42 @@ public class InventoryEditComponent {
         }
     }
 
+    /**
+     * Updates the state of the tab control buttons based on the selected tab
+     */
+    private void updateButtons() {
+        TabWidget selectedTab = getSelectedTab();
+        if (selectedTab == null) {
+            moveLeftButton.setActive(false);
+            moveRightButton.setActive(false);
+            moveUpButton.setActive(false);
+            moveDownButton.setActive(false);
+            toTrayButton.setActive(false);
+            fromTrayButton.setActive(false);
+            changeIconButton.setActive(false);
+            return;
+        }; // No tab selected, do nothing
+
+        moveLeftButton.setActive(selectedTab.reference.getColumn() != 0);
+        moveRightButton.setActive(selectedTab.reference.getColumn() != ITEM_GROUPS_PER_ROW - 1);
+        moveUpButton.setActive(selectedTab.reference.getRow() != ItemGroup.Row.TOP);
+        moveDownButton.setActive(selectedTab.reference.getRow() != ItemGroup.Row.BOTTOM);
+        toTrayButton.setActive(!selectedTab.isInTray());
+        fromTrayButton.setActive(selectedTab.isInTray());
+        changeIconButton.setActive(true);
+    }
+
+    /**
+     * Returns the currently selected tab
+     */
+    private @Nullable TabWidget getSelectedTab() {
+        return tabs.stream().filter(TabWidget::isActive).findFirst().orElse(null);
+    }
+
+    /**
+     * Clears all children from a ParentComponent
+     * @param component the ParentComponent to clear
+     */
     private void clearComponent(ParentComponent component) {
         List<Component> components = new ArrayList<>(component.children());
         components.forEach(component::removeChild);
