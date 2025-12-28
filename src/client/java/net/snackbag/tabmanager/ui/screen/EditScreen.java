@@ -92,7 +92,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         scCtrlContainer.verticalAlignment(VerticalAlignment.BOTTOM);
         scCtrlContainer.padding(Insets.of(5));
 
-        ButtonComponent saveButton =  Components.button(Text.translatable("tabmanager.gui.edit_screen.save_button"),   (btn) -> {});
+        ButtonComponent saveButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.save_button"), (btn) -> {});
         ButtonComponent closeButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.close_button"), (btn) -> {});
 
         saveButton.sizing(Sizing.fill(), Sizing.content());
