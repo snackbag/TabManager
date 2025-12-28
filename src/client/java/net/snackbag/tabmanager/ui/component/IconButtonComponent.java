@@ -27,6 +27,8 @@ public class IconButtonComponent {
     protected ButtonComponent button;
     protected TextureComponent textureComponent;
 
+    @Nullable protected Text tooltip = null;
+
     protected Identifier texture;
     protected final int textureWidth, textureHeight;
 
@@ -55,6 +57,9 @@ public class IconButtonComponent {
 
         if (positioning != null)
             componentLayout.positioning(positioning);
+
+        if (tooltip != null)
+            button.tooltip(tooltip);
 
         componentLayout.child(button).child(textureComponent);
 
@@ -96,6 +101,15 @@ public class IconButtonComponent {
     public IconButtonComponent positioning(Positioning positioning) {
         this.positioning = positioning;
         return this;
+    }
+
+    public IconButtonComponent tooltip(Text tooltip) {
+        this.tooltip = tooltip;
+        return this;
+    }
+
+    public Text getTooltip() {
+        return tooltip;
     }
 
     public IconButtonComponent setActive(boolean active) {
