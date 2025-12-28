@@ -97,4 +97,14 @@ public class IconButtonComponent {
         this.positioning = positioning;
         return this;
     }
+
+    public IconButtonComponent setActive(boolean active) {
+        this.button.active = active;
+        return this;
+    }
+
+    public boolean isActive() {
+        return this.button.active;
+    }
+
 }
