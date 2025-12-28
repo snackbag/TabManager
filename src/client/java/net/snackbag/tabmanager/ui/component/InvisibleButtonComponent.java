@@ -1,7 +1,6 @@
 package net.snackbag.tabmanager.ui.component;
 
 import io.wispforest.owo.ui.component.ButtonComponent;
-import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.util.NinePatchTexture;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
