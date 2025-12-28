@@ -31,13 +31,16 @@ public class TabWidget {
     public static final Identifier TAB_TEXTURE_IDENTIFIER = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab.png");
     public static final Identifier TAB_TEXTURE_IDENTIFIER_ACTIVE = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab_active.png");
 
+    public static final int TAB_TEXTURE_WIDTH = 26;
+    public static final int TAB_TEXTURE_HEIGHT = 26;
+
     public TabWidget(ItemGroup reference, boolean isActive, Consumer<TabWidget> onPress) {
         this.reference = reference;
         this.active = isActive;
         this.onPress = onPress;
         this.icon = reference.getIcon();
 
-        tabTexture = Components.texture(isActive ? TAB_TEXTURE_IDENTIFIER_ACTIVE : TAB_TEXTURE_IDENTIFIER, 0, 0, 26, 26, 26, 26);
+        tabTexture = Components.texture(isActive ? TAB_TEXTURE_IDENTIFIER_ACTIVE : TAB_TEXTURE_IDENTIFIER, 0, 0, 26, 26, TAB_TEXTURE_WIDTH, TAB_TEXTURE_HEIGHT);
     }
 
     public StackLayout build() {
