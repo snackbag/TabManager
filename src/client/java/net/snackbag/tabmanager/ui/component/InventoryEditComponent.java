@@ -11,6 +11,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.TabManagerClient;
+import net.snackbag.tabmanager.config.Config;
 import net.snackbag.tabmanager.util.CreativeMenuUtility;
 import org.jetbrains.annotations.Nullable;
 
@@ -157,6 +158,7 @@ public class InventoryEditComponent {
                 .child(tabControlGridContainer);
 
         updateItemGroups();
+        updateButtons();
 
         addToParent.apply(componentLayout);
     }
@@ -171,6 +173,16 @@ public class InventoryEditComponent {
         newPageButton =     new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/new_page.png"), 13, 13, (btn) -> {});
         changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> {});
         removePageButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/remove_page.png"), 13, 13, (btn) -> {});
+
+        moveLeftButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.move_left_tooltip"));
+        moveRightButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.move_right_tooltip"));
+        moveUpButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.move_up_tooltip"));
+        moveDownButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.move_down_tooltip"));
+        toTrayButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.to_tray_tooltip"));
+        fromTrayButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.from_tray_tooltip"));
+        newPageButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.new_page_tooltip"));
+        changeIconButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.change_icon_tooltip"));
+        removePageButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.remove_page_tooltip"));
     }
 
     private TabWidget getTab(ItemGroup reference) {
@@ -227,7 +239,16 @@ public class InventoryEditComponent {
      * Updates the state of the tab control buttons based on the selected tab
      */
     private void updateButtons() {
+        updatePageButtons();
+        updateTabButtons();
+    }
+
+    /**
+     * Updates the state of the tab control buttons based on the selected tab
+     */
+    private void updateTabButtons() {
         TabWidget selectedTab = getSelectedTab();
+
         if (selectedTab == null) {
             moveLeftButton.setActive(false);
             moveRightButton.setActive(false);
@@ -246,6 +267,13 @@ public class InventoryEditComponent {
         toTrayButton.setActive(!selectedTab.isInTray());
         fromTrayButton.setActive(selectedTab.isInTray());
         changeIconButton.setActive(true);
+    }
+
+    /**
+     * Updates the state of the page control buttons based on fake pages
+     */
+    private void updatePageButtons() {
+        removePageButton.setActive(Config.INSTANCE.fakePages > 0);
     }
 
     /**

@@ -10,5 +10,15 @@
   "tabmanager.gui.edit_screen.edit_item_masks": "Editar Filtro de Item...",
   "tabmanager.gui.edit_screen.page": "Pág. %s/%s",
   "tabmanager.gui.edit_screen.next_page_tooltip": "Página Siguiente",
-  "tabmanager.gui.edit_screen.previous_page_tooltip": "Página Anterior"
+  "tabmanager.gui.edit_screen.previous_page_tooltip": "Página Anterior",
+
+  "tabmanager.gui.edit_screen.control.move_left_tooltip": "Mover pestaña a la izquierda",
+  "tabmanager.gui.edit_screen.control.move_right_tooltip": "Mover pestaña a la derecha",
+  "tabmanager.gui.edit_screen.control.move_up_tooltip": "Mover a la fila superior",
+  "tabmanager.gui.edit_screen.control.move_down_tooltip": "Mover a la fila inferior",
+  "tabmanager.gui.edit_screen.control.to_tray_tooltip": "Mover a la bandeja",
+  "tabmanager.gui.edit_screen.control.from_tray_tooltip": "Quitar de la bandeja",
+  "tabmanager.gui.edit_screen.control.change_icon_tooltip": "Cambiar icono",
+  "tabmanager.gui.edit_screen.control.new_page_tooltip": "Nueva página",
+  "tabmanager.gui.edit_screen.control.remove_page_tooltip": "Quitar última página"
 }
