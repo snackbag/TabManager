@@ -170,8 +170,8 @@ public class InventoryEditComponent {
     private void initTabControls() {
         moveLeftButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_left.png"), 13, 13, (btn) -> changeColumn(false));
         moveRightButton =   new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_right.png"), 13, 13, (btn) -> changeColumn(true));
-        moveUpButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_up.png"), 13, 13, (btn) -> {});
-        moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> {});
+        moveUpButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_up.png"), 13, 13, (btn) -> changeRow(false));
+        moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> changeRow(true));
         toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> {});
         fromTrayButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/from_tray.png"), 13, 13, (btn) -> {});
         changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> {});
@@ -394,6 +394,28 @@ public class InventoryEditComponent {
                 .forEach(o -> ((ItemGroupAccessor) o).tabmanager$setColumn(currentColumn)); // SHOULD only be one tab here
 
         ((ItemGroupAccessor) selectedTab.reference).tabmanager$setColumn(targetColumn);
+        updateItemGroups();
+        updateButtons();
+    }
+
+    private void changeRow(boolean toBottom) {
+        TabWidget selectedTab = getSelectedTab();
+        if (selectedTab == null) return; // No tab selected, do nothing
+
+        if (toBottom && selectedTab.reference.getRow() == ItemGroup.Row.BOTTOM) return; // Cannot move down anymore
+        if (!toBottom && selectedTab.reference.getRow() == ItemGroup.Row.TOP) return; // Cannot move up anymore
+
+        ItemGroup.Row targetRow = toBottom ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP;
+
+        // Move other tab if necessary
+        ItemGroups.getGroupsToDisplay()
+                .stream()
+                .filter(o -> ((ItemGroupAccessor) o).tabmanager$getPage() == ((ItemGroupAccessor) selectedTab.reference).tabmanager$getPage() &&
+                        o.getRow() == targetRow &&
+                        o.getColumn() == selectedTab.reference.getColumn())
+                .forEach(o -> ((ItemGroupAccessor) o).tabmanager$setRow(selectedTab.reference.getRow())); // SHOULD only be one tab here
+
+        ((ItemGroupAccessor) selectedTab.reference).tabmanager$setRow(targetRow);
         updateItemGroups();
         updateButtons();
     }
