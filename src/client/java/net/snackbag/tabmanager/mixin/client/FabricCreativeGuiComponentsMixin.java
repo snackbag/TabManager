@@ -21,7 +21,7 @@ abstract public class FabricCreativeGuiComponentsMixin {
      */
     @Inject(method = "getPageCount", at = @At("HEAD"), cancellable = true)
     private static void tabmanager$getPageCount(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue((int) Math.ceil((double) (ItemGroups.getGroupsToDisplay().size() - COMMON_GROUPS.stream().filter(ItemGroup::shouldDisplay).count()) / TABS_PER_PAGE) + Config.INSTANCE.fakePages + 1);
+        cir.setReturnValue((int) Math.ceil((double) (ItemGroups.getGroupsToDisplay().size() - COMMON_GROUPS.stream().filter(ItemGroup::shouldDisplay).count()) / TABS_PER_PAGE) + Config.INSTANCE.fakePages);
     }
 
 }
