@@ -89,6 +89,7 @@ public class InventoryEditComponent {
         componentLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
 
         componentLayout.horizontalAlignment(HorizontalAlignment.CENTER);
+        componentLayout.gap(10);
 
         // Initialize components
         this.creativeInventoryTexture = Components.texture(
