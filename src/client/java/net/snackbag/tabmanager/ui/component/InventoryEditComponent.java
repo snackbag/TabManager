@@ -84,8 +84,6 @@ public class InventoryEditComponent {
         tabControlGridContainer = Containers.grid(Sizing.content(), Sizing.content(), 2, 1);
         tabControlGrid = Containers.grid(Sizing.content(), Sizing.content(), 1, 9);
 
-        // Positiong in the middle horizontally but attach normal vertically
-        //tabControlGridContainer.horizontalSizing(Sizing.fill());
         tabControlGridContainer.surface(Surface.DARK_PANEL).padding(Insets.of(5));
 
         inventoryLayout = Containers.stack(Sizing.content(), Sizing.content());
