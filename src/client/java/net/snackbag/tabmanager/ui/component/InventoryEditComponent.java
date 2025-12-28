@@ -83,6 +83,9 @@ public class InventoryEditComponent {
         topItemGroupRow = Containers.grid(Sizing.content(), Sizing.content(), 1, 5); // 1 Row, 5 Item Groups per row
         bottomItemGroupRow = Containers.grid(Sizing.content(), Sizing.content(), 1, 5); // The same thing here
 
+        topItemGroupRow.sizing(Sizing.fixed(TabWidget.TAB_WIDTH * 5), Sizing.content());
+        bottomItemGroupRow.sizing(Sizing.fixed(TabWidget.TAB_WIDTH * 5), Sizing.content());
+
         tabControlGridContainer = Containers.grid(Sizing.content(), Sizing.content(), 2, 1);
         tabControlGrid = Containers.grid(Sizing.content(), Sizing.content(), 1, 9);
 
