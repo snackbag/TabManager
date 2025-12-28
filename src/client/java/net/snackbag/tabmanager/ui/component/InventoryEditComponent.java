@@ -322,8 +322,6 @@ public class InventoryEditComponent {
         if (Config.INSTANCE.fakePages <= 0) return; // Cannot go below 0 fake pages
 
         // Move tabs from page to free page if current page is the last page
-        List<ItemGroup> allGroups = ItemGroups.getGroups();
-
         List<ItemGroup> groupsToMove = ItemGroups.getGroupsToDisplay()
                 .stream()
                 .filter(o -> {
