@@ -21,6 +21,8 @@ import java.util.function.Function;
 public class InventoryEditComponent {
 
     protected final GridLayout topItemGroupRow, bottomItemGroupRow;
+    protected final GridLayout tabControlGridContainer, tabControlGrid;
+    //protected final ScrollContainer here or smth else scrollable
     protected final StackLayout inventoryLayout;
     protected final FlowLayout componentLayout;
 
@@ -29,6 +31,8 @@ public class InventoryEditComponent {
     protected final TextureComponent creativeInventoryTexture;
     protected final ButtonComponent editFilterButton, nextPageButton, previousPageButton;
     protected final ButtonComponent pageLabel; // Button Component as Label because it's easier to work with and look the same
+
+    protected IconButtonComponent moveLeftButton, moveRightButton, moveUpButton, moveDownButton, toTrayButton, fromTrayButton, newPageButton, removePageButton, changeIconButton;
 
     protected final int textureWidth, textureHeight;
     protected final int fixedButtonWidth, fixedButtonHeight;
@@ -57,20 +61,28 @@ public class InventoryEditComponent {
      * @param onFilterClick what happens if the filterButton is clicked
      */
     public InventoryEditComponent(int textureWidth, int textureHeight, Consumer<ButtonComponent> onFilterClick) {
-        topItemGroupRow = Containers.grid(Sizing.content(), Sizing.content(), 1, 5); // 1 Row, 5 Item Groups per row
-        bottomItemGroupRow = Containers.grid(Sizing.content(), Sizing.content(), 1, 5); // The same thing here
-        inventoryLayout = Containers.stack(Sizing.content(), Sizing.content());
-        componentLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
-        
+        // Set sizes
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
-        
+
+        // Calculate button sizes based on texture size
         fixedButtonWidth = (int) (textureWidth * filterButtonMultiplierW);
         fixedButtonHeight = (int) (textureHeight * filterButtonMultiplierH);
 
         pageSwitchWidth = (int) (textureWidth * pageSwitchButtonMultiplierW);
         pageSwitchHeight = (int) (textureHeight * pageSwitchButtonMultiplierH);
-        
+
+        // Initialize layouts
+        topItemGroupRow = Containers.grid(Sizing.content(), Sizing.content(), 1, 5); // 1 Row, 5 Item Groups per row
+        bottomItemGroupRow = Containers.grid(Sizing.content(), Sizing.content(), 1, 5); // The same thing here
+
+        tabControlGridContainer = Containers.grid(Sizing.content(), Sizing.content(), 2, 1);
+        tabControlGrid = Containers.grid(Sizing.content(), Sizing.content(), 1, 9);
+
+        inventoryLayout = Containers.stack(Sizing.content(), Sizing.content());
+        componentLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
+
+        // Initialize components
         this.creativeInventoryTexture = Components.texture(
                 inventoryTextureIdentifier,
                 0, 0,
@@ -99,6 +111,8 @@ public class InventoryEditComponent {
                 .zIndex(10)
                 .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth, pageSwitchButtonPosMagicNumberH))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight));
+
+        initTabControls();
     }
 
     /**
@@ -111,13 +125,38 @@ public class InventoryEditComponent {
                 .child(previousPageButton)
                 .child(pageLabel);
 
+        tabControlGridContainer.child(tabControlGrid, 0, 0);
+
+        tabControlGrid.child(moveLeftButton.build(), 0, 0)
+                .child(moveRightButton.build(), 0, 1)
+                .child(moveUpButton.build(), 0, 2)
+                .child(moveDownButton.build(), 0, 3)
+                .child(toTrayButton.build(), 0, 4)
+                .child(fromTrayButton.build(), 0, 5)
+                .child(newPageButton.build(), 0, 6)
+                .child(removePageButton.build(), 0, 7)
+                .child(changeIconButton.build(), 0, 8);
+
         componentLayout.child(topItemGroupRow)
                 .child(inventoryLayout)
-                .child(bottomItemGroupRow);
+                .child(bottomItemGroupRow)
+                .child(tabControlGridContainer);
 
         updateItemGroups();
 
         addToParent.apply(componentLayout);
+    }
+
+    private void initTabControls() {
+        moveLeftButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_left.png"), 13, 13, (btn) -> {});
+        moveRightButton =   new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_right.png"), 13, 13, (btn) -> {});
+        moveUpButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_up.png"), 13, 13, (btn) -> {});
+        moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> {});
+        toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> {});
+        fromTrayButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/from_tray.png"), 13, 13, (btn) -> {});
+        newPageButton =     new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/new_page.png"), 13, 13, (btn) -> {});
+        changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> {});
+        removePageButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/remove_page.png"), 13, 13, (btn) -> {});
     }
 
     private TabWidget getTab(ItemGroup reference) {
