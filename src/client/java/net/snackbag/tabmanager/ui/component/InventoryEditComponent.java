@@ -24,6 +24,7 @@ public class InventoryEditComponent {
     protected final GridLayout tabControlGridContainer, tabControlGrid;
     //protected final ScrollContainer here or smth else scrollable
     protected final StackLayout inventoryLayout;
+    protected final FlowLayout inventoryContainerLayout;
     protected final FlowLayout componentLayout;
 
     protected List<TabWidget> tabs = new ArrayList<>();
@@ -79,8 +80,15 @@ public class InventoryEditComponent {
         tabControlGridContainer = Containers.grid(Sizing.content(), Sizing.content(), 2, 1);
         tabControlGrid = Containers.grid(Sizing.content(), Sizing.content(), 1, 9);
 
+        // Positiong in the middle horizontally but attach normal vertically
+        //tabControlGridContainer.horizontalSizing(Sizing.fill());
+        tabControlGridContainer.surface(Surface.DARK_PANEL).padding(Insets.of(5));
+
         inventoryLayout = Containers.stack(Sizing.content(), Sizing.content());
+        inventoryContainerLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
         componentLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
+
+        componentLayout.horizontalAlignment(HorizontalAlignment.CENTER);
 
         // Initialize components
         this.creativeInventoryTexture = Components.texture(
@@ -137,9 +145,11 @@ public class InventoryEditComponent {
                 .child(removePageButton.build(), 0, 7)
                 .child(changeIconButton.build(), 0, 8);
 
-        componentLayout.child(topItemGroupRow)
+        inventoryContainerLayout.child(topItemGroupRow)
                 .child(inventoryLayout)
-                .child(bottomItemGroupRow)
+                .child(bottomItemGroupRow);
+
+        componentLayout.child(inventoryContainerLayout)
                 .child(tabControlGridContainer);
 
         updateItemGroups();
