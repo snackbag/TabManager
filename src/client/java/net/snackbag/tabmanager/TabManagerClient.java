@@ -39,9 +39,4 @@ public class TabManagerClient implements ClientModInitializer {
             TabManagerClient.LOGGER.error("Failed to load config file!", e);
         }
     }
-
-    /*
-    TODO:
-       - GUI feature for reordering (maybe)
-     */
 }
