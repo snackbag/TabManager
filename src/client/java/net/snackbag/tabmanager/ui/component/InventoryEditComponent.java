@@ -46,15 +46,16 @@ public class InventoryEditComponent {
     protected final int pageSwitchWidth, pageSwitchHeight;
     
     public static final float filterButtonMultiplierW = 162/195f; // The original width multiplier of the image to calculate button width
-    public static final float filterButtonMultiplierH = 90/127f;  // The original height multiplier of the image to calculate button height
+    public static final float filterButtonMultiplierH = 18/127f;  // The original height multiplier of the image to calculate button height
 
     public static final float pageSwitchButtonMultiplierW = 54/195f;
     public static final float pageSwitchButtonMultiplierH = 18/127f;
 
     // Magic numbers because positioning is fucking hard and I don't feel like investing brain power when this also does it
-    public static final int filterButtonPosMagicNumber = 8;
-    public static final int pageSwitchButtonPosMagicNumberW = 8;
-    public static final int pageSwitchButtonPosMagicNumberH = 102;
+    public static final int filterButtonPosMagicNumberX = 8;
+    public static final int filterButtonPosMagicNumberY = 80;
+    public static final int pageSwitchButtonPosMagicNumberX = 8;
+    public static final int pageSwitchButtonPosMagicNumberY = 102;
 
     protected int currentPage = 1;
     protected int maxPages = CreativeMenuUtility.getPageCount();
@@ -107,25 +108,25 @@ public class InventoryEditComponent {
         
         editFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), onFilterClick);
         editFilterButton.zIndex(10)
-                .positioning(Positioning.absolute(filterButtonPosMagicNumber, filterButtonPosMagicNumber))
+                .positioning(Positioning.absolute(filterButtonPosMagicNumberX, filterButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(fixedButtonWidth), Sizing.fixed(fixedButtonHeight));
 
         nextPageButton = Components.button(Text.literal("->"), (btn) -> nextPage());
         nextPageButton.zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberH))
+                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberX + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
                 .tooltip(Text.translatable("tabmanager.gui.edit_screen.next_page_tooltip"));
 
         previousPageButton = Components.button(Text.literal("<-"), (btn) -> previousPage());
         previousPageButton.zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW, pageSwitchButtonPosMagicNumberH))
+                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberX, pageSwitchButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
                 .tooltip(Text.translatable("tabmanager.gui.edit_screen.previous_page_tooltip"));
 
         pageLabel = Components.button(Text.translatable("tabmanager.gui.edit_screen.page", currentPage, maxPages), (btn) -> {});
         pageLabel.active(false)
                 .zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberW + pageSwitchWidth, pageSwitchButtonPosMagicNumberH))
+                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberX + pageSwitchWidth, pageSwitchButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight));
 
         initTabControls();
@@ -161,6 +162,7 @@ public class InventoryEditComponent {
                 .child(tabControlGridContainer);
 
         updatePageCount();
+        initializeTabs();
         updateItemGroups();
         updateButtons();
 
@@ -212,30 +214,34 @@ public class InventoryEditComponent {
         updateItemGroups();
     }
 
+    private void initializeTabs() {
+        tabs.clear();
+        for (ItemGroup itemGroup : ItemGroups.getGroupsToDisplay()) {
+            TabWidget tab = getTab(itemGroup);
+            tab.build(); // Build it once
+            tabs.add(tab);
+        }
+    }
+
     private void updatePageLabel() {
         pageLabel.setMessage(Text.translatable("tabmanager.gui.edit_screen.page", currentPage, maxPages));
     }
 
     private void updateItemGroups() {
         List<ItemGroup> groups = CreativeMenuUtility.getItemGroupsOnPage(currentPage - 1);
-        clearComponent(topItemGroupRow);
+        clearComponent(topItemGroupRow); // Clear the rows
         clearComponent(bottomItemGroupRow);
-        tabs.clear();
 
         if (groups.isEmpty()) return; // Nothing to display
 
-        for (ItemGroup displayItem : groups) {
-            if (displayItem.getRow() == ItemGroup.Row.TOP) {
-                TabWidget tab = getTab(displayItem);
-                topItemGroupRow.child(tab.build(), 0, displayItem.getColumn());
-                tabs.add(tab);
-            } else if (displayItem.getRow() == ItemGroup.Row.BOTTOM) {
-                TabWidget tab = getTab(displayItem);
-                bottomItemGroupRow.child(tab.build(), 0, displayItem.getColumn());
-                tabs.add(tab);
-            } else {
-                TabManagerClient.LOGGER.error("An error occurred: Couldn't determine row for ItemGroup {}", displayItem.toString());
-            }
+        // Now add them back
+        for (TabWidget tab : tabs) {
+            if (tab.reference == null) continue; // Just in case
+            if (!groups.contains(tab.reference)) continue; // Not on this page
+            if (tab.reference.getRow() == ItemGroup.Row.TOP)
+                topItemGroupRow.child(tab.build(), 0, tab.reference.getColumn());
+            else
+                bottomItemGroupRow.child(tab.build(), 0, tab.reference.getColumn());
         }
     }
 
