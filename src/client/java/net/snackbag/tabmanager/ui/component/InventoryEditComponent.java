@@ -268,7 +268,7 @@ public class InventoryEditComponent {
             fromTrayButton.setActive(false);
             changeIconButton.setActive(false);
             return;
-        }; // No tab selected, do nothing
+        } // No tab selected, do nothing
 
         moveLeftButton.setActive(selectedTab.reference.getColumn() != 0);
         moveRightButton.setActive(selectedTab.reference.getColumn() != ITEM_GROUPS_PER_ROW - 1);
