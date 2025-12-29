@@ -36,6 +36,9 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Shadow
     private Collection<ItemStack> displayStacks;
 
+    @Shadow @Final
+    private ItemGroup.Type type;
+
 
 
     // UNIQUE FIELDS -----------------------------
@@ -149,5 +152,15 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @SuppressWarnings("UnstableApiUsage")
     public void tabmanager$setPage(int page) {
         ((FabricItemGroupImpl) this).fabric_setPage(page);
+    }
+
+    @Override
+    public boolean shouldDisplayVanilla() {
+        return this.tabmanager$getType() != ItemGroup.Type.CATEGORY || !this.displayStacks.isEmpty();
+    }
+
+    @Override
+    public ItemGroup.Type tabmanager$getType() {
+        return this.type;
     }
 }

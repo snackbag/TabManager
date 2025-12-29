@@ -72,4 +72,15 @@ public interface ItemGroupAccessor {
      * @param page The page number.
      */
     void tabmanager$setPage(int page);
+
+    /**
+     * Determines if tab should be displayed the vanilla-way.
+     */
+    boolean shouldDisplayVanilla();
+
+    /**
+     * Gets the type of the ItemGroup.
+     */
+    ItemGroup.Type tabmanager$getType();
+
 }
