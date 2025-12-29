@@ -51,10 +51,10 @@ public class InventoryEditComponent {
     public static final float pageSwitchButtonMultiplierW = 54/195f;
     public static final float pageSwitchButtonMultiplierH = 18/127f;
 
+    public static final int INVENTORY_BORDER_WIDTH = 8;
+
     // Magic numbers because positioning is fucking hard and I don't feel like investing brain power when this also does it
-    public static final int filterButtonPosMagicNumberX = 8;
     public static final int filterButtonPosMagicNumberY = 80;
-    public static final int pageSwitchButtonPosMagicNumberX = 8;
     public static final int pageSwitchButtonPosMagicNumberY = 102;
 
     protected int currentPage = 1;
@@ -108,25 +108,25 @@ public class InventoryEditComponent {
         
         editFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), onFilterClick);
         editFilterButton.zIndex(10)
-                .positioning(Positioning.absolute(filterButtonPosMagicNumberX, filterButtonPosMagicNumberY))
+                .positioning(Positioning.absolute(INVENTORY_BORDER_WIDTH, filterButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(fixedButtonWidth), Sizing.fixed(fixedButtonHeight));
 
         nextPageButton = Components.button(Text.literal("->"), (btn) -> nextPage());
         nextPageButton.zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberX + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberY))
+                .positioning(Positioning.absolute(INVENTORY_BORDER_WIDTH + pageSwitchWidth * 2, pageSwitchButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
                 .tooltip(Text.translatable("tabmanager.gui.edit_screen.next_page_tooltip"));
 
         previousPageButton = Components.button(Text.literal("<-"), (btn) -> previousPage());
         previousPageButton.zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberX, pageSwitchButtonPosMagicNumberY))
+                .positioning(Positioning.absolute(INVENTORY_BORDER_WIDTH, pageSwitchButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight))
                 .tooltip(Text.translatable("tabmanager.gui.edit_screen.previous_page_tooltip"));
 
         pageLabel = Components.button(Text.translatable("tabmanager.gui.edit_screen.page", currentPage, maxPages), (btn) -> {});
         pageLabel.active(false)
                 .zIndex(10)
-                .positioning(Positioning.absolute(pageSwitchButtonPosMagicNumberX + pageSwitchWidth, pageSwitchButtonPosMagicNumberY))
+                .positioning(Positioning.absolute(INVENTORY_BORDER_WIDTH + pageSwitchWidth, pageSwitchButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(pageSwitchWidth), Sizing.fixed(pageSwitchHeight));
 
         initTabControls();
