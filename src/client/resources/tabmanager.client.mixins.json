@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CreativeInventoryScreenMixin",
+    "FabricCreativeGuiComponentsMixin",
+    "ItemGroupButtonWidgetMixin",
     "FabricCreativeGuiComponentsMixin"
   ],
   "injectors": {
