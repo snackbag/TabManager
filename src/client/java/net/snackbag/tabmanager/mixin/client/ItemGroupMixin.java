@@ -155,7 +155,7 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     }
 
     @Override
-    public boolean shouldDisplayVanilla() {
+    public boolean tabmanager$shouldDisplayVanilla() {
         return this.tabmanager$getType() != ItemGroup.Type.CATEGORY || !this.displayStacks.isEmpty();
     }
 

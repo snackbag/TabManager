@@ -76,7 +76,7 @@ public interface ItemGroupAccessor {
     /**
      * Determines if tab should be displayed the vanilla-way.
      */
-    boolean shouldDisplayVanilla();
+    boolean tabmanager$shouldDisplayVanilla();
 
     /**
      * Gets the type of the ItemGroup.
