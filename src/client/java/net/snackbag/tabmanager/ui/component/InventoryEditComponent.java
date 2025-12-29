@@ -216,7 +216,7 @@ public class InventoryEditComponent {
 
     private void initializeTabs() {
         tabs.clear();
-        for (ItemGroup itemGroup : ItemGroups.getGroupsToDisplay()) {
+        for (ItemGroup itemGroup : ItemGroups.getGroups()) {
             TabWidget tab = getTab(itemGroup);
             tab.build(); // Build it once
             tabs.add(tab);
