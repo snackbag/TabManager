@@ -16,8 +16,16 @@ public class CreativeMenuUtility {
     }
 
     // Copied from CreativeInventoryScreenMixin on Fabric's side and slightly modified
-    public static List<ItemGroup> getItemGroupsOnPage(int page) {
-        return ItemGroups.getGroupsToDisplay()
+
+    /**
+     * Gets the item groups on a specific page. Filters out special groups.
+     * @param page The page to get the item groups for
+     * @param allGroups Whether to include all groups or only non-special groups
+     * @return The item groups on the specified page
+     */
+    public static List<ItemGroup> getItemGroupsOnPage(int page, boolean allGroups) {
+        List<ItemGroup> groupsOnPage = allGroups ? ItemGroups.getGroups() : ItemGroups.getGroupsToDisplay();
+        return groupsOnPage
                 .stream()
                 .filter(itemGroup -> ((ItemGroupAccessor) itemGroup).tabmanager$getPage() == page)
                 .filter(itemGroup -> !itemGroup.isSpecial())
