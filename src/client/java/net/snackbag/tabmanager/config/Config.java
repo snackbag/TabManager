@@ -23,6 +23,7 @@ public class Config {
     public List<ItemFilter> filters = new ArrayList<>();
     public byte fakePages; // Pages to fake in the creative menu to allow for empty and more pages.
 
+    public JsonArray itemGroups = new JsonArray(); // Reserved for future use
     private String name = "default";
 
     /**
@@ -74,15 +75,12 @@ public class Config {
             filters.add(ItemFilter.parse(item.getAsJsonObject()))
         );
 
-        JsonArray itemGroupsArray = config.getAsJsonArray("itemGroups");
-        itemGroupsArray.forEach(item ->
-            ItemGroupUtility.applySerialized(item.getAsJsonObject())
-        );
 
         Config cfg = new Config();
         cfg.filters = filters;
         cfg.setName(config.has("name") ? config.get("name").getAsString() : "default");
         cfg.fakePages = config.has("fakePages") ? config.get("fakePages").getAsByte() : 0;
+        cfg.itemGroups = config.getAsJsonArray("itemGroups");
 
         return cfg;
     }

@@ -48,15 +48,19 @@ public class ItemGroupUtility {
         });
     }
 
+    public static void reloadItemGroups() {
+        Config.INSTANCE.itemGroups.forEach(igroup -> ItemGroupUtility.applySerialized(igroup.getAsJsonObject()));
+    }
+
     public static JsonObject serialize(ItemGroup group) {
         JsonObject serialized = new JsonObject();
 
         serialized.addProperty("serializeVersion", SERIALIZE_VERSION);
         serialized.addProperty("id", ((ItemGroupAccessor)group).tabmanager$getTabKey().toString());
+        serialized.addProperty("page", ((ItemGroupAccessor)group).tabmanager$getPage());
         serialized.addProperty("icon", group.getIcon().getItem().toString());
         serialized.addProperty("column", group.getColumn());
         serialized.addProperty("row", group.getRow().ordinal());
-        serialized.addProperty("page", ((ItemGroupAccessor)group).tabmanager$getPage());
         serialized.addProperty("hidden", ((ItemGroupAccessor)group).tabmanager$isHidden());
 
         return serialized;
@@ -86,14 +90,17 @@ public class ItemGroupUtility {
             }
         }
 
-        if (obj.has("column"))
-            accessor.tabmanager$setColumn(obj.get("column").getAsInt());
-
-        if (obj.has("row"))
-            accessor.tabmanager$setRow(ItemGroup.Row.values()[obj.get("row").getAsInt()]);
-
         if (obj.has("page"))
             accessor.tabmanager$setPage(obj.get("page").getAsInt());
+
+        if (obj.has("column")) {
+            accessor.tabmanager$setColumn(obj.get("column").getAsInt());
+        }
+
+        if (obj.has("row")) {
+            accessor.tabmanager$setRow(ItemGroup.Row.values()[obj.get("row").getAsInt()]);
+        }
+
 
         if (obj.has("hidden"))
             accessor.tabmanager$setHidden(obj.get("hidden").getAsBoolean());
