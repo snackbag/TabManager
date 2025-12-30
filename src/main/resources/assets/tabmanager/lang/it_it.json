@@ -20,5 +20,7 @@
   "tabmanager.gui.edit_screen.control.from_tray_tooltip": "Rimuovi dal vassoio",
   "tabmanager.gui.edit_screen.control.change_icon_tooltip": "Cambia icona",
   "tabmanager.gui.edit_screen.control.new_page_tooltip": "Nuova pagina",
-  "tabmanager.gui.edit_screen.control.remove_page_tooltip": "Rimuovi l'ultima pagina"
+  "tabmanager.gui.edit_screen.control.remove_page_tooltip": "Rimuovi l'ultima pagina",
+
+  "tabmanager.gui.edit_screen.icon.search_item": "Cerca oggetto"
 }

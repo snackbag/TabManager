@@ -20,5 +20,7 @@
   "tabmanager.gui.edit_screen.control.from_tray_tooltip": "Remove from Tray",
   "tabmanager.gui.edit_screen.control.change_icon_tooltip": "Change Icon",
   "tabmanager.gui.edit_screen.control.new_page_tooltip": "New Page",
-  "tabmanager.gui.edit_screen.control.remove_page_tooltip": "Remove Last Page"
+  "tabmanager.gui.edit_screen.control.remove_page_tooltip": "Remove Last Page",
+
+  "tabmanager.gui.edit_screen.icon.search_item": "Search for item"
 }
