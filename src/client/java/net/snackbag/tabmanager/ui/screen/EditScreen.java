@@ -187,7 +187,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
             AtomicBoolean aborted = new AtomicBoolean(false);
             String loadPath = NativeFileDialogs.open(Text.translatable("tabmanager.gui.edit_screen.import_config_button").toString(), new NativeFileDialogs.FilterItem(
                     "Tab Manager Config Files",
-                    new String[] {".json", ".tmconfig"}),
+                    new String[] {"*.json", "*.tmconfig"}),
                     ConfigDirectory.getConfigDirectory().toAbsolutePath().toString(),
                     (msg) -> aborted.set(true));
 
