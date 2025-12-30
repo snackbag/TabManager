@@ -2,10 +2,7 @@ package net.snackbag.tabmanager.ui.component;
 
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.component.TextureComponent;
-import io.wispforest.owo.ui.container.Containers;
-import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.container.GridLayout;
-import io.wispforest.owo.ui.container.StackLayout;
+import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
@@ -29,7 +26,8 @@ public class InventoryEditComponent {
 
     protected final GridLayout topItemGroupRow, bottomItemGroupRow;
     protected final GridLayout tabControlGridContainer, tabControlGrid;
-    //protected final ScrollContainer here or smth else scrollable
+    protected final ScrollContainer<FlowLayout> trayScrollContainer;
+    protected final FlowLayout trayLayout;
     protected final StackLayout inventoryLayout;
     protected final FlowLayout inventoryContainerLayout;
     protected final FlowLayout componentLayout;
@@ -57,6 +55,9 @@ public class InventoryEditComponent {
     // Magic numbers because positioning is fucking hard and I don't feel like investing brain power when this also does it
     public static final int filterButtonPosMagicNumberY = 80;
     public static final int pageSwitchButtonPosMagicNumberY = 102;
+
+    private static final int TRAY_WIDTH = 162;
+    private static final int TRAY_HEIGHT = 72;
 
     protected int currentPage = 1;
     protected int maxPages = CreativeMenuUtility.getPageCount();
@@ -95,8 +96,14 @@ public class InventoryEditComponent {
 
         inventoryLayout = Containers.stack(Sizing.content(), Sizing.content());
         inventoryContainerLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
-        componentLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
 
+        trayLayout = Containers.ltrTextFlow(Sizing.fixed(TRAY_WIDTH), Sizing.content());
+
+        trayScrollContainer = Containers.verticalScroll(Sizing.fixed(TRAY_WIDTH), Sizing.fixed(TRAY_HEIGHT), trayLayout);
+        trayScrollContainer.positioning(Positioning.absolute(INVENTORY_BORDER_WIDTH, INVENTORY_BORDER_WIDTH)) // It IS passed correctly, IntelliJ!
+                .padding(Insets.of(2)); // A lil' bit of padding won't hurt
+
+        componentLayout = Containers.verticalFlow(Sizing.content(), Sizing.content());
         componentLayout.horizontalAlignment(HorizontalAlignment.CENTER);
         componentLayout.gap(10);
 
@@ -138,6 +145,7 @@ public class InventoryEditComponent {
      */
     public void build(Function<FlowLayout, FlowLayout> addToParent) {
         inventoryLayout.child(creativeInventoryTexture)
+                .child(trayScrollContainer)
                 .child(editFilterButton)
                 .child(nextPageButton)
                 .child(previousPageButton)
@@ -175,8 +183,8 @@ public class InventoryEditComponent {
         moveRightButton =   new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_right.png"), 13, 13, (btn) -> changeColumn(true));
         moveUpButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_up.png"), 13, 13, (btn) -> changeRow(false));
         moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> changeRow(true));
-        toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> {});
-        fromTrayButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/from_tray.png"), 13, 13, (btn) -> {});
+        toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> moveToTray());
+        fromTrayButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/from_tray.png"), 13, 13, (btn) -> moveFromTray());
         changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> {});
         newPageButton =     new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/new_page.png"), 13, 13, (btn) -> addPage());
         removePageButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/remove_page.png"), 13, 13, (btn) -> removePage());
@@ -205,6 +213,7 @@ public class InventoryEditComponent {
         currentPage++;
         updatePageLabel();
         updateItemGroups();
+        updateButtons();
     }
 
     private void previousPage() {
@@ -213,12 +222,14 @@ public class InventoryEditComponent {
         currentPage--;
         updatePageLabel();
         updateItemGroups();
+        updateButtons();
     }
 
     private void initializeTabs() {
         tabs.clear();
         for (ItemGroup itemGroup : ItemGroups.getGroups()) {
             TabWidget tab = getTab(itemGroup);
+            tab.setInTray(((ItemGroupAccessor) itemGroup).tabmanager$isHidden());
             tab.build(); // Build it once
             tabs.add(tab);
         }
@@ -229,16 +240,21 @@ public class InventoryEditComponent {
     }
 
     private void updateItemGroups() {
-        List<ItemGroup> groups = CreativeMenuUtility.getItemGroupsOnPage(currentPage - 1);
+        List<ItemGroup> groups = CreativeMenuUtility.getItemGroupsOnPage(currentPage - 1, true); // Pages are 0-indexed internally
         clearComponent(topItemGroupRow); // Clear the rows
         clearComponent(bottomItemGroupRow);
-
-        if (groups.isEmpty()) return; // Nothing to display
+        clearComponent(trayLayout);
 
         // Now add them back
         for (TabWidget tab : tabs) {
             if (tab.reference == null) continue; // Just in case
-            if (!groups.contains(tab.reference)) continue; // Not on this page
+            if (!tab.isInTray() && !groups.contains(tab.reference)) continue; // Not on this page
+
+            if (tab.isInTray()) {
+                trayLayout.child(tab.build());
+                continue;
+            }
+
             if (tab.reference.getRow() == ItemGroup.Row.TOP)
                 topItemGroupRow.child(tab.build(), 0, tab.reference.getColumn());
             else
@@ -276,7 +292,7 @@ public class InventoryEditComponent {
         moveUpButton.setActive(selectedTab.reference.getRow() != ItemGroup.Row.TOP);
         moveDownButton.setActive(selectedTab.reference.getRow() != ItemGroup.Row.BOTTOM);
         toTrayButton.setActive(!selectedTab.isInTray());
-        fromTrayButton.setActive(selectedTab.isInTray());
+        fromTrayButton.setActive(selectedTab.isInTray() && getFreeSpotInPage(currentPage - 1) != null); // Only active if there is a free spot
         changeIconButton.setActive(true);
     }
 
