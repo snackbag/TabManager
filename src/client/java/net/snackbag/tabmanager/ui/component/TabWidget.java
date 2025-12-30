@@ -29,6 +29,8 @@ public class TabWidget {
 
     protected final ItemGroup reference;
 
+    protected ItemComponent item;
+
     public static final Identifier TAB_TEXTURE_IDENTIFIER = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab.png");
     public static final Identifier TAB_TEXTURE_IDENTIFIER_ACTIVE = Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/tab_active.png");
 
@@ -58,7 +60,7 @@ public class TabWidget {
 
         button.active(pressable);
 
-        ItemComponent item = Components.item(icon);
+        item = Components.item(icon);
         item.zIndex(10)
                 .positioning(Positioning.relative(50, 50));
 
@@ -126,6 +128,13 @@ public class TabWidget {
 
     public boolean isPressable() {
         return this.pressable;
+    }
+
+    /**
+     * Updates the current icon
+     */
+    public void updateIcon() {
+        this.item.stack(reference.getIcon());
     }
 
 }
