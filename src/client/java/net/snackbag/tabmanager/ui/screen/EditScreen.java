@@ -7,8 +7,8 @@ import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.text.Text;
+import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
 import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
-import net.snackbag.tabmanager.ui.component.ItemSelectorComponent;
 import org.jetbrains.annotations.NotNull;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
@@ -32,19 +32,19 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.fill());
         FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill());
 
-        ItemSelectorComponent itemSelectorComponent = new ItemSelectorComponent(
+        IconSelectorComponent iconSelectorComponent = new IconSelectorComponent(
                 Component::remove, // on hide
                 rootComponent::child, // on show
-                ItemSelectorComponent::clearTabWidget); // on close
-        itemSelectorComponent.zIndex(1000);
+                IconSelectorComponent::clearTabWidget); // on close
+        iconSelectorComponent.zIndex(1000);
 
         InventoryEditComponent inventoryEditComponent = new InventoryEditComponent(
                 195, 127,
                 (btn, tab) -> {}, // Item Filter Click
                 (btn, tab) -> { // Icon Change Click
                     if (tab == null) return;
-                    itemSelectorComponent.setTabWidget(tab, tab::updateIcon);
-                    itemSelectorComponent.show();
+                    iconSelectorComponent.setTabWidget(tab, tab::updateIcon);
+                    iconSelectorComponent.show();
                 });
 
         controlPanel.surface(Surface.DARK_PANEL);

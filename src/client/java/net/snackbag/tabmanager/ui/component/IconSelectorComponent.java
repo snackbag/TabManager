@@ -1,6 +1,5 @@
 package net.snackbag.tabmanager.ui.component;
 
-import com.mojang.serialization.codecs.KeyDispatchCodec;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -8,8 +7,6 @@ import io.wispforest.owo.ui.container.OverlayContainer;
 import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.search.SearchProvider;
@@ -25,7 +22,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-public class ItemSelectorComponent extends OverlayContainer<FlowLayout> {
+public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
 
     protected static final List<Item> items = Registries.ITEM.getEntrySet().stream().map(Map.Entry::getValue).toList();
     protected List<Item> display = new CopyOnWriteArrayList<>(items);
@@ -45,21 +42,21 @@ public class ItemSelectorComponent extends OverlayContainer<FlowLayout> {
 
     protected LabelComponent itemGroupNameLabel;
 
-    protected Consumer<ItemSelectorComponent> hide;
-    protected Consumer<ItemSelectorComponent> show;
-    protected Consumer<ItemSelectorComponent> close;
+    protected Consumer<IconSelectorComponent> hide;
+    protected Consumer<IconSelectorComponent> show;
+    protected Consumer<IconSelectorComponent> close;
 
     protected @Nullable TabWidget tabWidget = null;
     protected @Nullable Runnable onChange = null;
 
-    public ItemSelectorComponent(Consumer<ItemSelectorComponent> hide, Consumer<ItemSelectorComponent> show, Consumer<ItemSelectorComponent> close) {
+    public IconSelectorComponent(Consumer<IconSelectorComponent> hide, Consumer<IconSelectorComponent> show, Consumer<IconSelectorComponent> close) {
         this(Containers.verticalFlow(Sizing.fixed(400), Sizing.content()));
         this.hide = hide;
         this.show = show;
         this.close = close;
     }
 
-    private ItemSelectorComponent(FlowLayout layout) {
+    private IconSelectorComponent(FlowLayout layout) {
         super(layout);
 
         this.componentLayout = layout;
