@@ -19,6 +19,7 @@ public class TabWidget {
 
     private boolean active;
     private boolean isInTray = false;
+    private boolean pressable = true;
     private ItemStack icon;
 
     protected TextureComponent tabTexture;
@@ -54,6 +55,8 @@ public class TabWidget {
         button.sizing(Sizing.fixed(TAB_WIDTH), Sizing.fixed(TAB_HEIGHT))
                 .positioning(Positioning.relative(0, 0))
                 .zIndex(20);
+
+        button.active(pressable);
 
         ItemComponent item = Components.item(icon);
         item.zIndex(10)
@@ -107,6 +110,18 @@ public class TabWidget {
      */
     public TabWidget clone() {
         return new TabWidget(reference, active, onPress);
+    }
+
+    public void setOnPress(Consumer<TabWidget> onPress) {
+        this.onPress = onPress;
+    }
+
+    public void setPressable(boolean pressable) {
+        this.pressable = pressable;
+    }
+
+    public boolean isPressable() {
+        return this.pressable;
     }
 
 }
