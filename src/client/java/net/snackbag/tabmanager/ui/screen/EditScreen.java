@@ -95,7 +95,6 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         canvasPanel.horizontalAlignment(HorizontalAlignment.CENTER);
 
         drawConfigControls(controlPanel, controlPanelWidth);
-        drawSaveCancelControls(controlPanel, controlPanelWidth);
 
         inventoryEditComponent.build(canvasPanel::child);
 
@@ -133,30 +132,5 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(), Sizing.content()));
 
         rootComponent.child(confCtrlContainer);
-    }
-
-    /**
-     * Draws the "Save" and "Close" controls for the editor
-     * @param rootComponent The component to attach the buttons on
-     * @param width The width of these controls
-     */
-    private void drawSaveCancelControls(FlowLayout rootComponent, final int width) {
-        FlowLayout scCtrlContainer = Containers.verticalFlow(Sizing.fixed(width), Sizing.expand())
-                .gap(5);
-
-        scCtrlContainer.verticalAlignment(VerticalAlignment.BOTTOM);
-        scCtrlContainer.padding(Insets.of(5));
-
-        ButtonComponent saveButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.save_button"), (btn) -> {});
-        ButtonComponent closeButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.close_button"), (btn) -> {});
-
-        saveButton.sizing(Sizing.fill(), Sizing.content());
-        closeButton.sizing(Sizing.fill(), Sizing.content());
-
-        scCtrlContainer
-                .child(closeButton)
-                .child(saveButton);
-
-        rootComponent.child(scCtrlContainer);
     }
 }
