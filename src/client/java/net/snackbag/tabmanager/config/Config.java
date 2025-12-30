@@ -3,6 +3,8 @@ package net.snackbag.tabmanager.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.snackbag.tabmanager.exception.ConfigParseException;
 import net.snackbag.tabmanager.util.ItemFilter;
 import net.snackbag.tabmanager.util.ItemGroupUtility;
@@ -21,6 +23,8 @@ public class Config {
     public List<ItemFilter> filters = new ArrayList<>();
     public byte fakePages; // Pages to fake in the creative menu to allow for empty and more pages.
 
+    private String name = "default";
+
     /**
      * Serializes the config into a JsonObject
      * @return the serialized JsonObject
@@ -29,12 +33,20 @@ public class Config {
         JsonObject obj = new JsonObject();
 
         JsonArray filtersArray = new JsonArray();
+        JsonArray itemGroups = new JsonArray();
 
         for (ItemFilter filter : filters)
             filtersArray.add(filter.serialize());
 
         obj.addProperty("serializeVersion", SERIALIZE_VERSION);
+        obj.addProperty("name", this.name);
+        obj.addProperty("fakePages", this.fakePages);
         obj.add("filters", filtersArray);
+
+        for (ItemGroup itemGroup : ItemGroups.getGroups().stream().filter(ig -> !ig.isSpecial()).toList())
+            itemGroups.add(ItemGroupUtility.serialize(itemGroup));
+
+        obj.add("itemGroups", itemGroups);
 
         return obj;
     }
@@ -62,8 +74,15 @@ public class Config {
             filters.add(ItemFilter.parse(item.getAsJsonObject()))
         );
 
+        JsonArray itemGroupsArray = config.getAsJsonArray("itemGroups");
+        itemGroupsArray.forEach(item ->
+            ItemGroupUtility.applySerialized(item.getAsJsonObject())
+        );
+
         Config cfg = new Config();
         cfg.filters = filters;
+        cfg.setName(config.has("name") ? config.get("name").getAsString() : "default");
+        cfg.fakePages = config.has("fakePages") ? config.get("fakePages").getAsByte() : 0;
 
         return cfg;
     }
@@ -71,8 +90,6 @@ public class Config {
     public static void reload() {
         // Re-apply filters
         ItemGroupUtility.applyFilters();
-
-        // Reorder, hide/show, etc... here
     }
 
     /**
@@ -113,5 +130,13 @@ public class Config {
             byte[] parsedConfigBytes = parsedConfig.getBytes();
             fos.write(parsedConfigBytes);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
