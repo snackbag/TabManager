@@ -104,6 +104,11 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
                 .child(closeButton);
     }
 
+    /**
+     * Creates an ItemSelectableComponent for the given item
+     * @param item The item to create the selectable for
+     * @return The created ItemSelectableComponent
+     */
     private ItemSelectableComponent getItemSelectable(Item item) {
         ItemSelectableComponent itemSelectable = new ItemSelectableComponent(
                 Sizing.fixed(20), Sizing.fixed(20),
@@ -123,16 +128,27 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
         return itemSelectable;
     }
 
+    /**
+     * Updates the item list display based on the current display list
+     */
     private void updateItemList() {
         this.itemResultLayout.clearChildren();
         this.selectables.clear();
         display.forEach(item -> itemResultLayout.child(getItemSelectable(item).assemble()));
     }
 
+    /**
+     * Updates the tab widget icon to reflect the current icon selection if tabWidget is not null
+     */
     private void updateWidget() {
         if (tabWidget != null) tabWidget.updateIcon();
     }
 
+    /**
+     * Sets the tab widget to be edited by this component
+     * @param widget The tab widget
+     * @param onChange A runnable to be called when the icon is changed (can be null)
+     */
     public void setTabWidget(@NotNull TabWidget widget, @Nullable Runnable onChange) {
         this.onChange = onChange;
         this.tabWidget = widget.clone();
@@ -171,6 +187,9 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
         this.close.accept(this);
     }
 
+    /**
+     * Searches for items based on the current search bar text and updates the display list accordingly
+     */
     private void search() {
         String term = searchBar.getText();
         if (term.isEmpty()) {
