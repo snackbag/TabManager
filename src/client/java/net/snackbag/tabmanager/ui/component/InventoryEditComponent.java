@@ -254,6 +254,8 @@ public class InventoryEditComponent {
             if (tab.reference == null) continue; // Just in case
             if (!tab.isInTray() && !groups.contains(tab.reference)) continue; // Not on this page
 
+            tab.updateIcon();
+
             if (tab.isInTray()) {
                 trayLayout.child(tab.build());
                 continue;
