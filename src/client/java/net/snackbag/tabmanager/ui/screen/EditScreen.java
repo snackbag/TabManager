@@ -3,7 +3,6 @@ package net.snackbag.tabmanager.ui.screen;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.text.Text;
