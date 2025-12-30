@@ -102,4 +102,11 @@ public class TabWidget {
         return this;
     }
 
+    /**
+     * Returns a cloned version of the current widget with no reference to the current widget
+     */
+    public TabWidget clone() {
+        return new TabWidget(reference, active, onPress);
+    }
+
 }
