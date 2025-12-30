@@ -159,7 +159,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                     "Tab Manager Config Files",
                     new String[] {"*.json", "*.tmconfig"}),
                     ConfigDirectory.getConfigDirectory().toAbsolutePath().toString(),
-                    Config.INSTANCE.getName() + ".tmconfig",
+                     "config.tmconfig",
                     (msg) -> aborted.set(true));
 
             if (aborted.get()) return;

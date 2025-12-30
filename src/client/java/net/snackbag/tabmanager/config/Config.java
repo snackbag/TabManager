@@ -24,7 +24,6 @@ public class Config {
     public byte fakePages; // Pages to fake in the creative menu to allow for empty and more pages.
 
     public JsonArray itemGroups = new JsonArray(); // Reserved for future use
-    private String name = "default";
 
     /**
      * Serializes the config into a JsonObject
@@ -40,7 +39,6 @@ public class Config {
             filtersArray.add(filter.serialize());
 
         obj.addProperty("serializeVersion", SERIALIZE_VERSION);
-        obj.addProperty("name", this.name);
         obj.addProperty("fakePages", this.fakePages);
         obj.add("filters", filtersArray);
 
@@ -78,7 +76,6 @@ public class Config {
 
         Config cfg = new Config();
         cfg.filters = filters;
-        cfg.setName(config.has("name") ? config.get("name").getAsString() : "default");
         cfg.fakePages = config.has("fakePages") ? config.get("fakePages").getAsByte() : 0;
         cfg.itemGroups = config.getAsJsonArray("itemGroups");
 
@@ -128,13 +125,5 @@ public class Config {
             byte[] parsedConfigBytes = parsedConfig.getBytes();
             fos.write(parsedConfigBytes);
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
