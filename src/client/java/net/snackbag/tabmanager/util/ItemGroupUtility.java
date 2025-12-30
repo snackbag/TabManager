@@ -8,11 +8,20 @@ import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.config.Config;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemGroupUtility {
 
     public static final int SERIALIZE_VERSION = 1;
+
+    public static List<VanillaSnapshot> VANILLA_GROUPS = null;
+
+    /**
+     * @param iconId null wenn Default
+     */
+    public record VanillaSnapshot(String id, int page, int column, int rowOrdinal, boolean hidden, Identifier iconId) { }
 
     /**
      * Tries to parse an ItemGroup from an id.
@@ -49,7 +58,57 @@ public class ItemGroupUtility {
     }
 
     public static void reloadItemGroups() {
+        if (VANILLA_GROUPS == null) { // First time initialization; snapshot current vanilla state
+            VANILLA_GROUPS = ItemGroups.getGroups()
+                    .stream()
+                    .filter(igroup -> !igroup.isSpecial())
+                    .map(igroup -> {
+                        ItemGroupAccessor acc = (ItemGroupAccessor) igroup;
+                        Identifier iconId = null;
+                        if (igroup.getIcon() != null) {
+                            Item iconItem = igroup.getIcon().getItem();
+                            //noinspection OptionalGetWithoutIsPresent
+                            if (iconItem != Registries.ITEM.getDefaultEntry().get().value()) {
+                                iconId = Registries.ITEM.getId(iconItem);
+                            }
+                        }
+                        return new VanillaSnapshot(
+                                acc.tabmanager$getTabKey().toString(),
+                                acc.tabmanager$getPage(),
+                                igroup.getColumn(),
+                                igroup.getRow().ordinal(),
+                                acc.tabmanager$isHidden(),
+                                iconId
+                        );
+                    })
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
         Config.INSTANCE.itemGroups.forEach(igroup -> ItemGroupUtility.applySerialized(igroup.getAsJsonObject()));
+    }
+
+    public static void resetItemGroups() {
+        if (VANILLA_GROUPS == null) return;
+
+        VANILLA_GROUPS.forEach(snapshot -> {
+            ItemGroup group = ItemGroupUtility.parse(snapshot.id);
+            if (group == null) return;
+
+            ItemGroupAccessor match = (ItemGroupAccessor) group;
+
+            match.tabmanager$setPage(snapshot.page);
+            match.tabmanager$setColumn(snapshot.column);
+            match.tabmanager$setRow(ItemGroup.Row.values()[snapshot.rowOrdinal]);
+            match.tabmanager$setHidden(snapshot.hidden);
+
+            if (snapshot.iconId != null) {
+                Item icon = Registries.ITEM.get(snapshot.iconId);
+                match.tabmanager$setIcon(icon.getDefaultStack());
+            } else {
+                // Set to default icon if null
+                //noinspection OptionalGetWithoutIsPresent
+                match.tabmanager$setIcon(Registries.ITEM.getDefaultEntry().get().value().getDefaultStack());
+            }
+        });
     }
 
     public static JsonObject serialize(ItemGroup group) {
