@@ -1,6 +1,5 @@
 package net.snackbag.tabmanager.util;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
