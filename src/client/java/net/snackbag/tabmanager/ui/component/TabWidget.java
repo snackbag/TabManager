@@ -112,12 +112,14 @@ public class TabWidget {
         return new TabWidget(reference, active, onPress);
     }
 
-    public void setOnPress(Consumer<TabWidget> onPress) {
+    public TabWidget setOnPress(Consumer<TabWidget> onPress) {
         this.onPress = onPress;
+        return this;
     }
 
-    public void setPressable(boolean pressable) {
+    public TabWidget setPressable(boolean pressable) {
         this.pressable = pressable;
+        return this;
     }
 
     public boolean isPressable() {
