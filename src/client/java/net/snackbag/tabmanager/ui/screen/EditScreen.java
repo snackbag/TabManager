@@ -14,6 +14,7 @@ import net.snackbag.tabmanager.ui.component.FilterEditComponent;
 import net.snackbag.tabmanager.ui.component.FilterListComponent;
 import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
 import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
+import net.snackbag.tabmanager.util.ItemGroupUtility;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -24,6 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
+
+    protected InventoryEditComponent inventoryEditComponent;
 
     ExecutorService fileIOExecutor = Executors.newCachedThreadPool();
 
@@ -43,7 +46,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
         FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(), Sizing.fill());
 
-        FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.fill());
+        FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.content());
         FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill());
 
         IconSelectorComponent iconSelectorComponent = new IconSelectorComponent(
@@ -86,7 +89,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         filterListRef.set(filterListComponent);
 
         filterListComponent.zIndex(1000);
-        InventoryEditComponent inventoryEditComponent = new InventoryEditComponent(
+        inventoryEditComponent = new InventoryEditComponent(
                 195, 127,
                 (btn, tab) -> { // Item Filter Click
                     filterListComponent.show();
@@ -127,16 +130,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
         ButtonComponent loadConfigButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.import_config_button"), (btn) -> importConfig());
         ButtonComponent saveConfigButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.export_config_button"), (btn) -> exportConfig());
-        ButtonComponent newConfigButton  = Components.button(Text.translatable("tabmanager.gui.edit_screen.new_config_button"), (btn) -> {
-            try {
-                ConfigDirectory.backupConfigFile();
-                Config.INSTANCE = new Config();
-                Config.reload();
-            } catch (IOException e) {
-                TabManagerClient.LOGGER.error("Failed to create new config", e);
-                throw new RuntimeException(e);
-            }
-        });
+        ButtonComponent newConfigButton  = Components.button(Text.translatable("tabmanager.gui.edit_screen.new_config_button"), (btn) -> newConfig());
 
         confCtrlContainer
                 .child(loadConfigButton)
@@ -146,6 +140,19 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(), Sizing.content()));
 
         rootComponent.child(confCtrlContainer);
+    }
+
+    private void newConfig() {
+        try {
+            ConfigDirectory.backupConfigFile();
+            Config.loadConfig(new Config());
+            Config.reload();
+            ItemGroupUtility.resetItemGroups();
+            inventoryEditComponent.refresh();
+        } catch (IOException e) {
+            TabManagerClient.LOGGER.error("Failed to create new config", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -202,6 +209,9 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         try {
             ConfigDirectory.backupConfigFile();
             Config.writeConfigFile(ConfigDirectory.getConfigFile());
+            inventoryEditComponent.refresh();
+            Config.reload();
+            ItemGroupUtility.reloadItemGroups();
         } catch (IOException e) {
             TabManagerClient.LOGGER.error("Failed to save config on exit", e);
             throw new RuntimeException(e);
