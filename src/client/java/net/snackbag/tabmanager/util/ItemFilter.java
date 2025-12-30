@@ -135,4 +135,8 @@ public class ItemFilter {
 
         return obj;
     }
+
+    public String getPredicateSource() {
+        return predicateSource;
+    }
 }
