@@ -71,7 +71,10 @@ public class TabWidget {
         return active;
     }
 
-    public TabWidget setActive(boolean isActive) {
+    /**
+     * Must be used after {@link TabWidget#build()} has been called because required {@link TabWidget#layout} to be initialized and not-null.
+     */
+    public void setActive(boolean isActive) {
         this.active = isActive;
 
         // Remove texture, update texture, add texture
@@ -79,7 +82,6 @@ public class TabWidget {
         tabTexture = Components.texture(isActive ? TAB_TEXTURE_IDENTIFIER_ACTIVE : TAB_TEXTURE_IDENTIFIER, 0, 0, 26, 26, 26, 26);
         tabTexture.zIndex(0);
         this.layout.child(this.tabTexture);
-        return this;
     }
 
     public TabWidget toggleActive() {
