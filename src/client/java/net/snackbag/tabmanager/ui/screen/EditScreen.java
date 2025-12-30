@@ -139,14 +139,10 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
             }
         });
 
-        TextBoxComponent configNameBox = Components.textBox(Sizing.fill());
-        configNameBox.setEditable(false);
-
         confCtrlContainer
                 .child(loadConfigButton)
                 .child(saveConfigButton)
-                .child(newConfigButton)
-                .child(configNameBox);
+                .child(newConfigButton);
 
         confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(), Sizing.content()));
 
