@@ -337,34 +337,16 @@ public class InventoryEditComponent {
                 .toList();
 
         for (ItemGroup itemGroup : groupsToMove) {
-            boolean spotFound = false;
             for (int page = maxPages - 2; page >= 0; page--) { // Scan all pages from highest to lowest for free spots  |  -2 because if e.g. maxPages is 3, we want to scan pages 1 and 2 but we also have to account for 0-indexing so we actually need to scan 0 and 1
-                for (int row = 0; row <= 1; row++) { // Scan both rows for free spots
-                    for (int col = 0; col <= 4; col++) { // Scan all columns on that row for free spots; one row has 5 columns (0-4)
-                        final int finalPage = page;
-                        final int finalRow = row;
-                        final int finalCol = col;
+                Pair<ItemGroup.Row, Integer> freeSpot = getFreeSpotInPage(page);
 
-                        boolean spotTaken = ItemGroups.getGroups().stream().anyMatch(igroup ->
-                                ((ItemGroupAccessor) igroup).tabmanager$getPage() == finalPage &&
-                                        igroup.getRow().ordinal() == finalRow &&
-                                        igroup.getColumn() == finalCol
-                        );
+                if (freeSpot == null) continue; // No free spot on this page, try next one
 
-                        if (!spotTaken) {
-                            // Spot is free, move the item group here
-                            ((ItemGroupAccessor) itemGroup).tabmanager$setPage(finalPage);
-                            ((ItemGroupAccessor) itemGroup).tabmanager$setRow(row == 1 ? ItemGroup.Row.BOTTOM : ItemGroup.Row.TOP); // Set row
-                            ((ItemGroupAccessor) itemGroup).tabmanager$setColumn(finalCol); // Set column
-                            spotFound = true;
-                            break; // Break out of column loop
-                        }
-                    }
-
-                    if (spotFound) break; // Break out of row loop
-                }
-
-                if (spotFound) break; // Break out of page loop
+                // Spot is free, move the item group here
+                ((ItemGroupAccessor) itemGroup).tabmanager$setPage(page);
+                ((ItemGroupAccessor) itemGroup).tabmanager$setRow(freeSpot.getLeft()); // Set row
+                ((ItemGroupAccessor) itemGroup).tabmanager$setColumn(freeSpot.getRight()); // Set column
+                break; // Move to next item group
             }
         }
 
@@ -424,5 +406,46 @@ public class InventoryEditComponent {
         ((ItemGroupAccessor) selectedTab.reference).tabmanager$setRow(targetRow);
         updateItemGroups();
         updateButtons();
+    }
+
+    // HELPER FUNCTIONS ------------------------------------------------
+    // -----------------------------------------------------------------
+
+    /**
+     * Checks if there is any free spot in the specified page
+     * @param page The page 0-indexed to check
+     * @return Pair non-null if a free spot was found, null otherwise
+     */
+    private @Nullable Pair<ItemGroup.Row, Integer> getFreeSpotInPage(int page) {
+        for (int row = 0; row <= 1; row++) {
+            Integer freeCol = getFreeColumnInRow(row == 0 ? ItemGroup.Row.TOP : ItemGroup.Row.BOTTOM, page);
+            if (freeCol != null) return new Pair<>(row == 0 ? ItemGroup.Row.TOP : ItemGroup.Row.BOTTOM, freeCol);
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a free column in the specified row and page, or null if none found
+     * @param row The row to check
+     * @param page The page 0-indexed to check
+     * @return The free column index, or null if none found
+     */
+    private @Nullable Integer getFreeColumnInRow(ItemGroup.Row row, int page) {
+        for (int col = 0; col < ITEM_GROUPS_PER_ROW; col++) {
+            final int finalCol = col;
+            boolean spotTaken = ItemGroups.getGroups().stream().anyMatch(igroup ->
+                    ((ItemGroupAccessor) igroup).tabmanager$getPage() == page &&
+                            igroup.getRow() == row &&
+                            igroup.getColumn() == finalCol &&
+                            !((ItemGroupAccessor) igroup).tabmanager$isHidden()
+            );
+
+            if (!spotTaken) {
+                return col;
+            }
+        }
+
+        return null;
     }
 }
