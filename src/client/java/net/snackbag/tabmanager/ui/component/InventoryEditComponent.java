@@ -174,10 +174,7 @@ public class InventoryEditComponent {
         componentLayout.child(inventoryContainerLayout)
                 .child(tabControlGridContainer);
 
-        updatePageCount();
-        initializeTabs();
-        updateItemGroups();
-        updateButtons();
+        refresh();
 
         addToParent.apply(componentLayout);
     }
@@ -202,6 +199,16 @@ public class InventoryEditComponent {
         newPageButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.new_page_tooltip"));
         changeIconButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.change_icon_tooltip"));
         removePageButton.tooltip(Text.translatable("tabmanager.gui.edit_screen.control.remove_page_tooltip"));
+    }
+
+    /**
+     * Refreshes the entire component
+     */
+    public void refresh() {
+        updatePageCount();
+        initializeTabs();
+        updateItemGroups();
+        updateButtons();
     }
 
     private TabWidget getTab(ItemGroup reference) {
