@@ -287,6 +287,16 @@ public class InventoryEditComponent {
             return;
         } // No tab selected, do nothing
 
+        if (selectedTab.isInTray()) {
+            moveLeftButton.setActive(false);
+            moveRightButton.setActive(false);
+            moveUpButton.setActive(false);
+            moveDownButton.setActive(false);
+            toTrayButton.setActive(false);
+            fromTrayButton.setActive(getFreeSpotInPage(currentPage - 1) != null); // Only active if there is a free spot
+            return;
+        }
+
         moveLeftButton.setActive(selectedTab.reference.getColumn() != 0);
         moveRightButton.setActive(selectedTab.reference.getColumn() != ITEM_GROUPS_PER_ROW - 1);
         moveUpButton.setActive(selectedTab.reference.getRow() != ItemGroup.Row.TOP);
@@ -383,6 +393,7 @@ public class InventoryEditComponent {
     private void changeColumn(boolean toRight) {
         TabWidget selectedTab = getSelectedTab();
         if (selectedTab == null) return; // No tab selected, do nothing
+        if (selectedTab.isInTray()) return; // Tab is in tray, cannot move
 
         if (toRight && selectedTab.reference.getColumn() >= ITEM_GROUPS_PER_ROW - 1) return; // Cannot move right anymore
         if (!toRight && selectedTab.reference.getColumn() <= 0) return; // Cannot move left anymore
@@ -406,6 +417,7 @@ public class InventoryEditComponent {
     private void changeRow(boolean toBottom) {
         TabWidget selectedTab = getSelectedTab();
         if (selectedTab == null) return; // No tab selected, do nothing
+        if (selectedTab.isInTray()) return; // Tab is in tray, cannot move
 
         if (toBottom && selectedTab.reference.getRow() == ItemGroup.Row.BOTTOM) return; // Cannot move down anymore
         if (!toBottom && selectedTab.reference.getRow() == ItemGroup.Row.TOP) return; // Cannot move up anymore
