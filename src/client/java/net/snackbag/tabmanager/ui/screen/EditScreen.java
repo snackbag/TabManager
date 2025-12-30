@@ -7,9 +7,14 @@ import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.text.Text;
+import net.snackbag.tabmanager.config.Config;
+import net.snackbag.tabmanager.ui.component.FilterEditComponent;
+import net.snackbag.tabmanager.ui.component.FilterListComponent;
 import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
 import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
@@ -38,9 +43,45 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 IconSelectorComponent::clearTabWidget); // on close
         iconSelectorComponent.zIndex(1000);
 
+        // References to allow mutual access between components
+        AtomicReference<FilterEditComponent> filterEditRef = new AtomicReference<>();
+        AtomicReference<FilterListComponent> filterListRef = new AtomicReference<>();
+
+        FilterEditComponent filterEditComponent = new FilterEditComponent(
+                Component::remove, // on hide
+                rootComponent::child, // on show
+                (comp) -> { // on save
+                    if (comp.isNew()) { // IF is new, add to config and update
+                        Config.INSTANCE.filters.add(comp.getFilter());
+                        Config.reload();
+                    } else { // ... otherwise just update
+                        Config.reload();
+                    }
+
+                    comp.close();
+
+                    filterListRef.get().refresh(); // Refresh the filter list to show changes
+                }
+        );
+        filterEditRef.set(filterEditComponent);
+        filterEditComponent.zIndex(2000);
+
+        FilterListComponent filterListComponent = new FilterListComponent(
+                Component::remove, // on hide
+                rootComponent::child,  // on show
+                (filter, isNew) -> { // on edit and add
+                    filterEditComponent.initialize(filter, isNew);
+                    filterEditComponent.show();
+                }
+        );
+        filterListRef.set(filterListComponent);
+
+        filterListComponent.zIndex(1000);
         InventoryEditComponent inventoryEditComponent = new InventoryEditComponent(
                 195, 127,
-                (btn, tab) -> {}, // Item Filter Click
+                (btn, tab) -> { // Item Filter Click
+                    filterListComponent.show();
+                },
                 (btn, tab) -> { // Icon Change Click
                     if (tab == null) return;
                     iconSelectorComponent.setTabWidget(tab, tab::updateIcon);

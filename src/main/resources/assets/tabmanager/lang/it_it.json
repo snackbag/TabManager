@@ -5,6 +5,7 @@
   "tabmanager.gui.edit_screen.export_config_button": "Esporta Configurazione...",
   "tabmanager.gui.edit_screen.new_config_button": "Crea Nuova Configurazione",
   "tabmanager.gui.edit_screen.save_button": "Salva",
+  "tabmanager.gui.edit_screen.discard_button": "Respinga",
   "tabmanager.gui.edit_screen.close_button": "Chiudi",
 
   "tabmanager.gui.edit_screen.edit_item_masks": "Edita Filtro di Item...",
@@ -22,5 +23,11 @@
   "tabmanager.gui.edit_screen.control.new_page_tooltip": "Nuova pagina",
   "tabmanager.gui.edit_screen.control.remove_page_tooltip": "Rimuovi l'ultima pagina",
 
-  "tabmanager.gui.edit_screen.icon.search_item": "Cerca oggetto"
+  "tabmanager.gui.edit_screen.icon.search_item": "Cerca oggetto",
+  "tabmanager.gui.edit_screen.filter.available_groups": "Gruppi disponibili",
+  "tabmanager.gui.edit_screen.filter.applied_groups": "Gruppi applicati",
+  "tabmanager.gui.edit_screen.filter.use_regex": "Usa Regular Expressions",
+  "tabmanager.gui.edit_screen.filter.add_filter": "Aggiungere Filtro...",
+  "tabmanager.gui.edit_screen.filter.remove_filter": "Rimuovi Filtro",
+  "tabmanager.gui.edit_screen.filter.edit_filter": "Edita Filtro..."
 }
