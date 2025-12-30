@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class InventoryEditComponent {
@@ -39,6 +39,7 @@ public class InventoryEditComponent {
     protected final ButtonComponent pageLabel; // Button Component as Label because it's easier to work with and look the same
 
     protected IconButtonComponent moveLeftButton, moveRightButton, moveUpButton, moveDownButton, toTrayButton, fromTrayButton, newPageButton, removePageButton, changeIconButton;
+    protected BiConsumer<ButtonComponent, TabWidget> onIconChangeClick;
 
     protected final int textureWidth, textureHeight;
     protected final int fixedButtonWidth, fixedButtonHeight;
@@ -69,11 +70,14 @@ public class InventoryEditComponent {
      * @param textureWidth How wide the inventory should be (influences button width)
      * @param textureHeight How high the inventory should be (influences button height)
      * @param onFilterClick what happens if the filterButton is clicked
+     * @param onIconChangeClick what happens if the change icon button is clicked
      */
-    public InventoryEditComponent(int textureWidth, int textureHeight, Consumer<ButtonComponent> onFilterClick) {
+    public InventoryEditComponent(int textureWidth, int textureHeight, BiConsumer<ButtonComponent, @Nullable TabWidget> onFilterClick, BiConsumer<ButtonComponent, @Nullable TabWidget> onIconChangeClick) {
         // Set sizes
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
+
+        this.onIconChangeClick = onIconChangeClick;
 
         // Calculate button sizes based on texture size
         fixedButtonWidth = (int) (textureWidth * filterButtonMultiplierW);
@@ -114,7 +118,7 @@ public class InventoryEditComponent {
                 textureWidth, textureHeight,
                 textureWidth, textureHeight);
         
-        editFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), onFilterClick);
+        editFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.edit_item_masks"), btn -> onFilterClick.accept(btn, getSelectedTab()));
         editFilterButton.zIndex(10)
                 .positioning(Positioning.absolute(INVENTORY_BORDER_WIDTH, filterButtonPosMagicNumberY))
                 .sizing(Sizing.fixed(fixedButtonWidth), Sizing.fixed(fixedButtonHeight));
@@ -185,7 +189,7 @@ public class InventoryEditComponent {
         moveDownButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/arrow_down.png"), 13, 13, (btn) -> changeRow(true));
         toTrayButton =      new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/to_tray.png"), 13, 13, (btn) -> moveToTray());
         fromTrayButton =    new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/from_tray.png"), 13, 13, (btn) -> moveFromTray());
-        changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> {});
+        changeIconButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/change_icon.png"), 13, 13, (btn) -> onIconChangeClick.accept(btn, getSelectedTab()));
         newPageButton =     new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/new_page.png"), 13, 13, (btn) -> addPage());
         removePageButton =  new IconButtonComponent(Identifier.of(TabManagerClient.MOD_ID, "textures/gui/sprites/image/remove_page.png"), 13, 13, (btn) -> removePage());
 
