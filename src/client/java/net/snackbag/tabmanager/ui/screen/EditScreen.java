@@ -7,16 +7,26 @@ import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.text.Text;
+import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.config.Config;
+import net.snackbag.tabmanager.file_dialog.NativeFileDialogs;
+import net.snackbag.tabmanager.filesystem.ConfigDirectory;
 import net.snackbag.tabmanager.ui.component.FilterEditComponent;
 import net.snackbag.tabmanager.ui.component.FilterListComponent;
 import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
 import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
+
+    ExecutorService fileIOExecutor = Executors.newCachedThreadPool();
 
     @Override
     protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
@@ -116,9 +126,18 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
         confCtrlContainer.padding(Insets.of(5));
 
-        ButtonComponent loadConfigButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.import_config_button"), (btn) -> {});
-        ButtonComponent saveConfigButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.export_config_button"), (btn) -> {});
-        ButtonComponent newConfigButton  = Components.button(Text.translatable("tabmanager.gui.edit_screen.new_config_button"),    (btn) -> {});
+        ButtonComponent loadConfigButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.import_config_button"), (btn) -> importConfig());
+        ButtonComponent saveConfigButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.export_config_button"), (btn) -> exportConfig());
+        ButtonComponent newConfigButton  = Components.button(Text.translatable("tabmanager.gui.edit_screen.new_config_button"), (btn) -> {
+            try {
+                ConfigDirectory.backupConfigFile();
+                Config.INSTANCE = new Config();
+                Config.reload();
+            } catch (IOException e) {
+                TabManagerClient.LOGGER.error("Failed to create new config", e);
+                throw new RuntimeException(e);
+            }
+        });
 
         TextBoxComponent configNameBox = Components.textBox(Sizing.fill());
         configNameBox.setEditable(false);
@@ -132,5 +151,65 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(), Sizing.content()));
 
         rootComponent.child(confCtrlContainer);
+    }
+
+    /**
+     * Uses TinyFD to export the current config to a chosen location in a separate thread
+     */
+    private void exportConfig() {
+        fileIOExecutor.submit(() -> {
+            AtomicBoolean aborted = new AtomicBoolean(false);
+            String savePath = NativeFileDialogs.save(Text.translatable("tabmanager.gui.edit_screen.export_config_button").toString(), new NativeFileDialogs.FilterItem(
+                    "Tab Manager Config Files",
+                    new String[] {"*.json", "*.tmconfig"}),
+                    ConfigDirectory.getConfigDirectory().toAbsolutePath().toString(),
+                    Config.INSTANCE.getName() + ".tmconfig",
+                    (msg) -> aborted.set(true));
+
+            if (aborted.get()) return;
+
+            try {
+                Config.writeConfigFile(new File(savePath)); // Cannot be null here because of the aborted check
+            } catch (IOException e) {
+                TabManagerClient.LOGGER.error("Failed to export config to {}", savePath, e);
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    /**
+     * Uses TinyFD to import a config from a chosen location in a separate thread
+     */
+    private void importConfig() {
+        fileIOExecutor.submit(() -> {
+            AtomicBoolean aborted = new AtomicBoolean(false);
+            String loadPath = NativeFileDialogs.open(Text.translatable("tabmanager.gui.edit_screen.import_config_button").toString(), new NativeFileDialogs.FilterItem(
+                    "Tab Manager Config Files",
+                    new String[] {".json", ".tmconfig"}),
+                    ConfigDirectory.getConfigDirectory().toAbsolutePath().toString(),
+                    (msg) -> aborted.set(true));
+
+            if (aborted.get()) return;
+
+            try {
+                Config.loadConfigFile(new File(loadPath)); // Cannot be null here because of the aborted check
+            } catch (IOException e) {
+                TabManagerClient.LOGGER.error("Failed to import config from {}", loadPath, e);
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        try {
+            ConfigDirectory.backupConfigFile();
+            Config.writeConfigFile(ConfigDirectory.getConfigFile());
+        } catch (IOException e) {
+            TabManagerClient.LOGGER.error("Failed to save config on exit", e);
+            throw new RuntimeException(e);
+        }
     }
 }
