@@ -60,6 +60,7 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
 
     @Inject(method = "populateDisplay", at = @At("TAIL"))
     private void tabmanager$applyConfig(SearchManager searchManager, FeatureSet enabledFeatures, boolean showOperatorTab, RegistryWrapper.WrapperLookup registryLookup, CallbackInfoReturnable<Boolean> cir) {
+        // Apply config on inventory open
         ItemGroupUtility.reloadItemGroups();
     }
 

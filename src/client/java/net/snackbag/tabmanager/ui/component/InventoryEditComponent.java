@@ -250,6 +250,9 @@ public class InventoryEditComponent {
         pageLabel.setMessage(Text.translatable("tabmanager.gui.edit_screen.page", currentPage, maxPages));
     }
 
+    /**
+     * Updates the displayed item groups based on the selected page
+     */
     private void updateItemGroups() {
         List<ItemGroup> groups = CreativeMenuUtility.getItemGroupsOnPage(currentPage - 1, true); // Pages are 0-indexed internally
         clearComponent(topItemGroupRow); // Clear the rows
@@ -427,6 +430,10 @@ public class InventoryEditComponent {
         updateButtons();
     }
 
+    /**
+     * Changes the row of the selected tab
+     * @param toBottom True to move down, false to move up
+     */
     private void changeRow(boolean toBottom) {
         TabWidget selectedTab = getSelectedTab();
         if (selectedTab == null) return; // No tab selected, do nothing
@@ -450,6 +457,9 @@ public class InventoryEditComponent {
         updateButtons();
     }
 
+    /**
+     * Moves the selected tab to the tray and hides it from the inventory
+     */
     private void moveToTray() {
         TabWidget selectedTab = getSelectedTab();
         if (selectedTab == null) return; // No tab selected, do nothing
@@ -461,6 +471,9 @@ public class InventoryEditComponent {
         updateButtons();
     }
 
+    /**
+     * Moves the selected tab from the tray back to the current page if possible
+     */
     private void moveFromTray() {
         TabWidget selectedTab = getSelectedTab();
         if (selectedTab == null) return; // No tab selected, do nothing

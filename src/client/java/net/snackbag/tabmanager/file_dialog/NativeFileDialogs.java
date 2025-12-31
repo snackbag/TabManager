@@ -1,5 +1,6 @@
 package net.snackbag.tabmanager.file_dialog;
 
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
@@ -11,7 +12,15 @@ import java.util.function.Consumer;
 // I do not care about the duplicates btw because it's simple enough and would be kind of dangerous with the memory management
 public class NativeFileDialogs {
 
-    public static String open(String title, FilterItem filterItem, String defaultPath, Consumer<String> onAbort) {
+    /**
+     * Opens a native file dialog via TinyFD.
+     * @param title The title of the dialog. Can use translations from Minecraft.
+     * @param filterItem The filter item containing name and extensions. See {@link FilterItem}
+     * @param defaultPath The default path to open the dialog in as a String. Should be absolute.
+     * @param onAbort Callback when the user aborts or an error occurs.
+     * @return The selected file path as a String, or null if aborted.
+     */
+    public static @Nullable String open(String title, FilterItem filterItem, String defaultPath, Consumer<String> onAbort) {
 
         ByteBuffer titleBuffer = MemoryUtil.memUTF8(title);
         ByteBuffer pathBuffer = MemoryUtil.memUTF8(defaultPath);
@@ -55,7 +64,16 @@ public class NativeFileDialogs {
         return result;
     }
 
-    public static String save(String title, FilterItem filterItem, String defaultPath, String defaultFileName, Consumer<String> onAbort) {
+    /**
+     * Opens a native save file dialog via TinyFD.
+     * @param title The title of the dialog. Can use translations from Minecraft.
+     * @param filterItem The filter item containing name and extensions. See {@link FilterItem}
+     * @param defaultPath The default path to open the dialog in as a String. Should be absolute.
+     * @param defaultFileName The default file name to suggest in the dialog.
+     * @param onAbort Callback when the user aborts or an error occurs.
+     * @return The selected file path as a String, or null if aborted.
+     */
+    public static @Nullable String save(String title, FilterItem filterItem, String defaultPath, String defaultFileName, Consumer<String> onAbort) {
 
         String defaultPathAndFile = defaultPath.endsWith("/") || defaultPath.endsWith("\\")
                 ? defaultPath + defaultFileName
@@ -101,6 +119,11 @@ public class NativeFileDialogs {
         return result;
     }
 
+    /**
+     * Filter item for file dialogs.
+     * @param name The name/description of the filter.
+     * @param ext The array of extensions (e.g., {"*.json", "*.txt"}).
+     */
     public record FilterItem(String name, String[] ext) {
         /**
          * Convert extensions to ByteBuffers for TinyFD. Must be freed after use.

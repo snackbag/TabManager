@@ -199,11 +199,13 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
 
     public ItemFilter getFilter() {
         if (isNew()) {
+            // If new, return a new filter with all the traits set
             String predicateSource = (isRegexCheckbox.isChecked() ? "regex:" : "glob:") + predicateInput.getText();
             ItemFilter newFilter = ItemFilter.parse(predicateSource);
             appliedGroups.forEach(newFilter::addApplicableGroup);
             return newFilter;
         } else {
+            // Else, just update the existing filter and return it
             return filter;
         }
     }

@@ -206,6 +206,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
     public void close() {
         super.close();
 
+        // Save config on screen exit
         try {
             ConfigDirectory.backupConfigFile();
             Config.writeConfigFile(ConfigDirectory.getConfigFile());
