@@ -31,3 +31,6 @@ Currently available for 1.21.1
 The mod requires [OwoLib](https://github.com/wisp-forest/owo-lib) to function, which wraps vanilla GUI widgets from
 Minecraft and provides additional functionality for mod developers. The dependency is licensed under the MIT License
 and therefore freely available.
+
+## Documentation
+If you do not know how to use this mod, there's a basic documentation over [here](./docs/documentation.md) that should cover you.
