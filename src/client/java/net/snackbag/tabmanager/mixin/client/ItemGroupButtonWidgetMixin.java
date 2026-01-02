@@ -12,6 +12,9 @@ import static net.snackbag.tabmanager.util.CreativeMenuUtility.getPageCount;
 @Mixin(FabricCreativeGuiComponents.ItemGroupButtonWidget.class)
 abstract public class ItemGroupButtonWidgetMixin {
 
+    /**
+     * Allows the buttons to be displayed on fake pages.
+     */
     @Redirect(
             method = "renderWidget",
             at = @At(
