@@ -19,8 +19,14 @@ public class ItemGroupUtility {
     public static List<VanillaSnapshot> VANILLA_GROUPS = null;
 
     /**
-     * @param iconId null wenn Default
-     */
+     * A snapshot of a vanilla ItemGroup's properties
+     * @param id The id of the ItemGroup
+     * @param page The page of the ItemGroup
+     * @param column The column of the ItemGroup
+     * @param rowOrdinal The row ordinal of the ItemGroup
+     * @param hidden Whether the ItemGroup is hidden
+     * @param iconId The icon id of the ItemGroup
+     **/
     public record VanillaSnapshot(String id, int page, int column, int rowOrdinal, boolean hidden, Identifier iconId) { }
 
     /**
