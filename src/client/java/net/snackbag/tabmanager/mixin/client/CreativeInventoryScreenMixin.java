@@ -37,6 +37,9 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
         super(screenHandler, playerInventory, text);
     }
 
+    /**
+     * Adds the edit button to the creative inventory screen.
+     */
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;setMaxLength(I)V")) // Execute inside the if-statement in init
     private void tabmanager$onInit(CallbackInfo ci) {
         // Render on top right above the inventory
