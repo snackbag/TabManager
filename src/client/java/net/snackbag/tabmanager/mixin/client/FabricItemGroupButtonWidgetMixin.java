@@ -20,6 +20,10 @@ public class FabricItemGroupButtonWidgetMixin {
     private void tabmanager$onInit(int x, int y, FabricCreativeGuiComponents.Type type, CreativeInventoryScreen screen, CallbackInfo ci) {
         ((ButtonWidgetAccessor) this).tabmanager$setOnPress((bw) -> {
             int toPage = type == FabricCreativeGuiComponents.Type.NEXT ? screen.getCurrentPage() + 1 : screen.getCurrentPage() - 1;
+            
+            if (toPage < 0 || toPage >= screen.getPageCount()) // >= because getPageCount is 1-based and toPage is 0-based
+                return;
+
             ((CreativeInventoryScreenAccessor) screen).tabmanager$setCurrentPage(toPage);
         });
     }
