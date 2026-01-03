@@ -5,6 +5,10 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
+import io.wispforest.owo.ui.util.UIErrorToast;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.config.Config;
@@ -14,7 +18,10 @@ import net.snackbag.tabmanager.ui.component.FilterEditComponent;
 import net.snackbag.tabmanager.ui.component.FilterListComponent;
 import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
 import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
+import net.snackbag.tabmanager.ui.toast.ZToast;
+import net.snackbag.tabmanager.util.ItemFilter;
 import net.snackbag.tabmanager.util.ItemGroupUtility;
+import net.snackbag.tabmanager.util.ToastUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -27,6 +34,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
     protected InventoryEditComponent inventoryEditComponent;
+    protected FilterEditComponent filterEditComponent;
+    protected FilterListComponent filterListComponent;
 
     ExecutorService fileIOExecutor = Executors.newCachedThreadPool();
 
@@ -56,29 +65,14 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         iconSelectorComponent.zIndex(1000);
 
         // References to allow mutual access between components
-        AtomicReference<FilterEditComponent> filterEditRef = new AtomicReference<>();
-        AtomicReference<FilterListComponent> filterListRef = new AtomicReference<>();
-
-        FilterEditComponent filterEditComponent = new FilterEditComponent(
+        filterEditComponent = new FilterEditComponent(
                 Component::remove, // on hide
                 rootComponent::child, // on show
-                (comp) -> { // on save
-                    if (comp.isNew()) { // IF is new, add to config and update
-                        Config.INSTANCE.filters.add(comp.getFilter());
-                        Config.reload();
-                    } else { // ... otherwise just update
-                        Config.reload();
-                    }
-
-                    comp.close();
-
-                    filterListRef.get().refresh(); // Refresh the filter list to show changes
-                }
+                this::onFilterSave // on save
         );
-        filterEditRef.set(filterEditComponent);
         filterEditComponent.zIndex(2000);
 
-        FilterListComponent filterListComponent = new FilterListComponent(
+        filterListComponent = new FilterListComponent(
                 Component::remove, // on hide
                 rootComponent::child,  // on show
                 (filter, isNew) -> { // on edit and add
@@ -86,9 +80,8 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                     filterEditComponent.show();
                 }
         );
-        filterListRef.set(filterListComponent);
-
         filterListComponent.zIndex(1000);
+
         inventoryEditComponent = new InventoryEditComponent(
                 195, 127,
                 (btn, tab) -> { // Item Filter Click
@@ -200,6 +193,38 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    /**
+     * Called when a filter is saved from the FilterEditComponent
+     */
+    private void onFilterSave(FilterEditComponent comp) {
+        if (comp.isNew()) { // IF is new, add to config and update
+            ItemFilter filter = comp.getFilter();
+
+            if (filter != null) {
+                Config.INSTANCE.filters.add(comp.getFilter());
+                Config.reload();
+            } else {
+
+                // Show system toast on error
+                ToastUtil.displayToast(
+                        MinecraftClient.getInstance(),
+                        ZToast.ZToastType.WARNING,
+                        Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_title"),
+                        Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_description"),
+                        500f // Very high Z to ensure visibility
+                );
+
+                TabManagerClient.LOGGER.error("Failed to compile ItemFilter");
+            }
+        } else { // ... otherwise just update
+            Config.reload();
+        }
+
+        comp.close();
+
+        filterListComponent.refresh(); // Refresh the filter list to show changes
     }
 
     @Override

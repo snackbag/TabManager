@@ -198,11 +198,14 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
         resetComponents();
     }
 
-    public ItemFilter getFilter() {
+    public @Nullable ItemFilter getFilter() {
         if (isNew()) {
             // If new, return a new filter with all the traits set
             String predicateSource = (isRegexCheckbox.isChecked() ? "regex:" : "glob:") + predicateInput.getText();
             ItemFilter newFilter = ItemFilter.parse(predicateSource);
+
+            if (newFilter == null) return null; // Parsing failed
+
             appliedGroups.forEach(newFilter::addApplicableGroup);
             return newFilter;
         } else {

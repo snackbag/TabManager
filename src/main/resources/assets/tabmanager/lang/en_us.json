@@ -30,5 +30,8 @@
   "tabmanager.gui.edit_screen.filter.use_regex": "Use Regular Expressions",
   "tabmanager.gui.edit_screen.filter.add_filter": "Add Filter...",
   "tabmanager.gui.edit_screen.filter.remove_filter": "Remove Filter",
-  "tabmanager.gui.edit_screen.filter.edit_filter": "Edit Filter..."
+  "tabmanager.gui.edit_screen.filter.edit_filter": "Edit Filter...",
+
+  "tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_title": "Could not add filter",
+  "tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_description": "Invalid predicate"
 }

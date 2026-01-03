@@ -239,6 +239,9 @@ public class TabCommand {
 
         // Compile the pattern from the raw filter (without the prefix)
         ItemFilter itemFilter = ItemFilter.parse(predicateSource);
+
+        if (itemFilter == null) return Command.SINGLE_SUCCESS; // Error message already printed in ItemFilter.parse() - regex compilation failed
+
         itemFilter.addApplicableGroup(targetGroup);
         Config.INSTANCE.filters.add(itemFilter);
         Config.reload();

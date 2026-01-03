@@ -1,8 +1,10 @@
 package net.snackbag.tabmanager.util;
 
+import blue.endless.jankson.annotation.Nullable;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemGroup;
+import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.exception.ItemFilterParseException;
 
@@ -10,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Class for filtering OUT items
@@ -60,15 +63,20 @@ public class ItemFilter {
     /**
      * Parses either a glob or a regex into an ItemFilter
      * @param line the glob or regex mask
-     * @return the ItemFilter without any applicable {@link ItemGroup}s. Must manually apply later.
+     * @return the ItemFilter without any applicable {@link ItemGroup}s. Must manually apply later. Can be null if parsing failed.
      */
-    public static ItemFilter parse(String line) {
+    public static @Nullable ItemFilter parse(String line) {
         line = line.trim();
 
         if (line.startsWith("regex:")) {
             String regex = line.substring("regex:".length());
-            Pattern pattern = RegexCompiler.compileRegex(regex);
-            return new ItemFilter(id -> pattern.matcher(id).matches(), line);
+            try {
+                Pattern pattern = RegexCompiler.compileRegex(regex);
+                return new ItemFilter(id -> pattern.matcher(id).matches(), line);
+            } catch (PatternSyntaxException e) {
+                TabManagerClient.LOGGER.warn("Invalid regular expression in ItemFilter: {}! Will not compile...", regex, e);
+                return null;
+            }
         }
 
         if (line.startsWith("glob:")) {
@@ -85,10 +93,10 @@ public class ItemFilter {
     /**
      * Produces an ItemFilter from an {@link JsonObject}
      * @param filterObj The {@link JsonObject} to parse the ItemFilter from
-     * @return The parsed ItemFilter
+     * @return The parsed ItemFilter or null if parsing failed
      * @see ItemFilter#serialize()
      */
-    public static ItemFilter parse(JsonObject filterObj) throws ItemFilterParseException {
+    public static @Nullable ItemFilter parse(JsonObject filterObj) throws ItemFilterParseException {
 
         // Checks
         if (!filterObj.has("serializeVersion"))
@@ -113,7 +121,9 @@ public class ItemFilter {
         groupsArray.forEach(itemGroup -> applicableGroups.add(ItemGroupUtility.parse(itemGroup.getAsString())));
 
         ItemFilter filter = ItemFilter.parse(predicateSource);
-        filter.setApplicableGroups(applicableGroups);
+
+        if (filter != null)
+            filter.setApplicableGroups(applicableGroups);
 
         return filter;
     }
