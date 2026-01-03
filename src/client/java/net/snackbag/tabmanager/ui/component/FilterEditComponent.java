@@ -116,9 +116,9 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
         this.filter = filter;
         this.isNew = isNew;
 
-        if (isNew || filter == null) {
-            predicateInput.setText("");
-        } else {
+        resetComponents();
+
+        if (!isNew && filter != null) {
             String source = filter.getPredicateSource();
             predicateInput.setEditable(false);
             predicateInput.write(source.substring(source.indexOf(":") + 1));
@@ -195,6 +195,7 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
 
     public void close() {
         hide();
+        resetComponents();
     }
 
     public ItemFilter getFilter() {
@@ -212,6 +213,15 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
 
     public boolean isNew() {
         return isNew;
+    }
+
+    public void resetComponents() {
+        predicateInput.setText("");
+        predicateInput.setEditable(true);
+        isRegexCheckbox.checked(false);
+        appliedGroups.clear();
+        availableGroups = new ArrayList<>(itemGroups);
+        updateGroups();
     }
 
 }
