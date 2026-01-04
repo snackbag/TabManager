@@ -90,7 +90,7 @@ public class ConfigDirectory {
 
         try (
                 FileInputStream fileInputStream = new FileInputStream(getConfigFile());
-                FileOutputStream fileOutputStream = new FileOutputStream(MOD_CONFIG_FILE);
+                FileOutputStream fileOutputStream = new FileOutputStream(getBakConfigFile());
         ) {
             byte[] fileContent = fileInputStream.readAllBytes();
             if (fileContent.length == 0) return; // Do nothing if config is empty
