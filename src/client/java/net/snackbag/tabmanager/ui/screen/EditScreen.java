@@ -235,8 +235,12 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
         // Save config on screen exit
         try {
+            ItemGroupUtility.saveItemGroupsToConfig();
+
             ConfigDirectory.backupConfigFile();
             Config.writeConfigFile(ConfigDirectory.getConfigFile());
+
+            // Refresh inventory to apply any changes made
             inventoryEditComponent.refresh();
             Config.reload();
             ItemGroupUtility.reloadItemGroups();

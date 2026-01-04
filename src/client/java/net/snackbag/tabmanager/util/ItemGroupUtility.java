@@ -1,5 +1,6 @@
 package net.snackbag.tabmanager.util;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -100,6 +101,21 @@ public class ItemGroupUtility {
                     .collect(Collectors.toCollection(ArrayList::new));
         }
         Config.INSTANCE.itemGroups.forEach(igroup -> ItemGroupUtility.applySerialized(igroup.getAsJsonObject()));
+    }
+
+    /**
+     * Saves all ItemGroups to the config
+     */
+    public static void saveItemGroupsToConfig() {
+        if (Config.INSTANCE == null) return;
+
+        JsonArray arr = new JsonArray();
+        ItemGroups.getGroups()
+                .stream()
+                .filter(igroup -> !igroup.isSpecial())
+                .forEach(igroup -> arr.add(serialize(igroup)));
+
+        Config.INSTANCE.itemGroups = arr;
     }
 
     /**
