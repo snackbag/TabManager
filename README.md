@@ -34,3 +34,22 @@ and therefore freely available.
 
 ## Documentation
 If you do not know how to use this mod, there's a basic documentation over [here](./docs/documentation.md) that should cover you.
+
+## License & Attribution
+
+This project is licensed under the **LGPL-3.0 License** - see the [LICENSE](./LICENSE) file for details.
+
+### For Developers (Code Usage)
+If you use parts of this project (code, logic, or assets) in your own mod, please include the following in your README or "About" section:
+
+> **TabManager** by **SnackBag Studios** (https://studios.snackbag.net/)
+> - **Original Source:** https://github.com/snackbag/TabManager/
+> - **Original Author:** Tobiazsh (https://github.com/tobiazsh)
+> - **Licensed under:** LGPL-3.0
+>
+> *Portions of this mod use code from TabManager.*
+
+### For Modpack Creators
+You are free to include this mod in any modpack! While not strictly required by the license to list every mod on your main page, we appreciate a link back to our project:
+
+> **TabManager** by **SnackBag Studios** ([Modrinth/GitHub Link])
