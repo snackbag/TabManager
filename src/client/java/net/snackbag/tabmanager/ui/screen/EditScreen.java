@@ -37,8 +37,6 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
     protected FilterEditComponent filterEditComponent;
     protected FilterListComponent filterListComponent;
 
-    ExecutorService fileIOExecutor = Executors.newCachedThreadPool();
-
     @Override
     protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
         return OwoUIAdapter.create(this, Containers::verticalFlow);
@@ -152,10 +150,10 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
      * Uses TinyFD to export the current config to a chosen location in a separate thread
      */
     private void exportConfig() {
-        fileIOExecutor.submit(() -> {
+        MinecraftClient.getInstance().execute(() -> {
             AtomicBoolean aborted = new AtomicBoolean(false);
             String savePath = NativeFileDialogs.save(
-                    Text.translatable("tabmanager.gui.edit_screen.export_config_button").toString(),
+                    Text.translatable("tabmanager.gui.edit_screen.export_config_button").getString(),
                     new NativeFileDialogs.FilterItem(
                         "Tab Manager Config Files",
                         new String[] {"*.json", "*.tmconfig"}),
@@ -178,10 +176,10 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
      * Uses TinyFD to import a config from a chosen location in a separate thread
      */
     private void importConfig() {
-        fileIOExecutor.submit(() -> {
+        MinecraftClient.getInstance().execute(() -> {
             AtomicBoolean aborted = new AtomicBoolean(false);
             String loadPath = NativeFileDialogs.open(
-                    Text.translatable("tabmanager.gui.edit_screen.import_config_button").toString(),
+                    Text.translatable("tabmanager.gui.edit_screen.import_config_button").getString(),
                     new NativeFileDialogs.FilterItem(
                         "Tab Manager Config Files",
                         new String[] {"*.json", "*.tmconfig"}),
