@@ -8,8 +8,21 @@ import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import java.util.function.Consumer;
 
-// Straight up stole from my mod MyWorld Traffic Addition lmao
-// I do not care about the duplicates btw because it's simple enough and would be kind of dangerous with the memory management
+/*
+ * ╔═════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║ File Dialog Logic for TabManager                                                                    ║
+ * ║ Code taken from Tobiazsh's Mod "MyWorld Traffic Addition" version 1.7.0, licensed under LGPL-3.0    ║
+ * ║ https://github.com/snackbag/TabManager                                                              ║
+ * ║ https://github.com/tobiazsh/MyWorld-Traffic-Addition                                                ║
+ * ║                                                                                                     ║
+ * ║ Licensed under LGPL-3.0. Build something cool, but keep it open!                                    ║
+ * ╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝
+ */
+
+
+/**
+ * Utility class for native file dialogs using TinyFD.
+ */
 public class NativeFileDialogs {
 
     /**

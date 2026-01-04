@@ -1,5 +1,6 @@
 package net.snackbag.tabmanager.util;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
@@ -16,11 +17,18 @@ public class ItemGroupUtility {
 
     public static final int SERIALIZE_VERSION = 1;
 
+    // Snapshot of all vanilla ItemGroups for resetting purposes
     public static List<VanillaSnapshot> VANILLA_GROUPS = null;
 
     /**
-     * @param iconId null wenn Default
-     */
+     * A snapshot of a vanilla ItemGroup's properties
+     * @param id The id of the ItemGroup
+     * @param page The page of the ItemGroup
+     * @param column The column of the ItemGroup
+     * @param rowOrdinal The row ordinal of the ItemGroup
+     * @param hidden Whether the ItemGroup is hidden
+     * @param iconId The icon id of the ItemGroup
+     **/
     public record VanillaSnapshot(String id, int page, int column, int rowOrdinal, boolean hidden, Identifier iconId) { }
 
     /**
@@ -37,12 +45,18 @@ public class ItemGroupUtility {
                 .orElse(null);
     }
 
+    /**
+     * Populates all ItemGroups with their respective tab keys
+     */
     public static void populateItemGroups() {
         List<ItemGroup> allGroups = ItemGroups.getGroups();
 
         allGroups.forEach(igroup -> ((ItemGroupAccessor)igroup).tabmanager$setTabKey(Registries.ITEM_GROUP.getId(igroup)));
     }
 
+    /**
+     * Applies all filters from the config to all ItemGroups
+     */
     public static void applyFilters() {
         List<ItemGroup> allGroups = ItemGroups.getGroups();
 
@@ -57,6 +71,9 @@ public class ItemGroupUtility {
         });
     }
 
+    /**
+     * Reloads all ItemGroups from the config
+     */
     public static void reloadItemGroups() {
         if (VANILLA_GROUPS == null) { // First time initialization; snapshot current vanilla state
             VANILLA_GROUPS = ItemGroups.getGroups()
@@ -86,6 +103,24 @@ public class ItemGroupUtility {
         Config.INSTANCE.itemGroups.forEach(igroup -> ItemGroupUtility.applySerialized(igroup.getAsJsonObject()));
     }
 
+    /**
+     * Saves all ItemGroups to the config
+     */
+    public static void saveItemGroupsToConfig() {
+        if (Config.INSTANCE == null) return;
+
+        JsonArray arr = new JsonArray();
+        ItemGroups.getGroups()
+                .stream()
+                .filter(igroup -> !igroup.isSpecial())
+                .forEach(igroup -> arr.add(serialize(igroup)));
+
+        Config.INSTANCE.itemGroups = arr;
+    }
+
+    /**
+     * Resets all ItemGroups to their vanilla state
+     */
     public static void resetItemGroups() {
         if (VANILLA_GROUPS == null) return;
 
@@ -111,6 +146,11 @@ public class ItemGroupUtility {
         });
     }
 
+    /**
+     * Serializes an ItemGroup into a JsonObject
+     * @param group the ItemGroup to serialize
+     * @return the serialized JsonObject
+     */
     public static JsonObject serialize(ItemGroup group) {
         JsonObject serialized = new JsonObject();
 

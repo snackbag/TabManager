@@ -219,18 +219,21 @@ public class InventoryEditComponent {
     }
 
     private void nextPage() {
-        if (currentPage >= maxPages) return; // Cannot go more than maxPages
-
-        currentPage++;
-        updatePageLabel();
-        updateItemGroups();
-        updateButtons();
+        toPage(currentPage + 1);
     }
 
     private void previousPage() {
-        if (currentPage <= 1) return; // Cannot go less than page 1
+        toPage(currentPage - 1);
+    }
 
-        currentPage--;
+    /**
+     * Moves to the specified page
+     * @param page The page to move to (1-indexed)
+     */
+    private void toPage(int page) {
+        if (page < 1 || page > maxPages) return; // Out of bounds
+
+        currentPage = page; // Pages are 1-indexed for the user
         updatePageLabel();
         updateItemGroups();
         updateButtons();
@@ -351,6 +354,19 @@ public class InventoryEditComponent {
         components.forEach(component::removeChild);
     }
 
+    /**
+     * Checks if user's current page is within bounds after changes and corrects it to the nearest valid page if not
+     */
+    private void checkPageBounds() {
+        if (this.currentPage > this.maxPages) {
+            toPage(maxPages);
+        }
+
+        if (this.currentPage < 1) {
+            toPage(1);
+        }
+    }
+
 
 
     // LOGIC FOR BUTTON ACTIONS --------------------------------------
@@ -400,6 +416,7 @@ public class InventoryEditComponent {
 
         updatePageCount();
         updateItemGroups();
+        checkPageBounds();
     }
 
     /**

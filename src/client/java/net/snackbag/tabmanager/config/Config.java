@@ -1,8 +1,6 @@
 package net.snackbag.tabmanager.config;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.snackbag.tabmanager.exception.ConfigParseException;
@@ -121,7 +119,8 @@ public class Config {
      */
     public static void writeConfigFile(File configFile) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(configFile)) {
-            String parsedConfig = Config.INSTANCE.serialize().toString();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String parsedConfig = gson.toJson(Config.INSTANCE.serialize());
             byte[] parsedConfigBytes = parsedConfig.getBytes();
             fos.write(parsedConfigBytes);
         }

@@ -36,7 +36,8 @@ public class TabManagerClient implements ClientModInitializer {
         try {
             Config.loadConfigFile(ConfigDirectory.getConfigFile());
         } catch (IOException e) {
-            TabManagerClient.LOGGER.error("Failed to load config file!", e);
+            TabManagerClient.LOGGER.error("Failed to load config file! Maybe it doesn't exist it. Using empty config!", e);
+            Config.INSTANCE = new Config();
         }
     }
 }

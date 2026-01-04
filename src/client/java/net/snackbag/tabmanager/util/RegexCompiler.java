@@ -1,6 +1,7 @@
 package net.snackbag.tabmanager.util;
 
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class RegexCompiler {
 
@@ -27,7 +28,7 @@ public class RegexCompiler {
      * @param pattern The regex pattern in form of a string
      * @return The regular expression {@link Pattern}
      */
-    public static Pattern compileRegex(String pattern) {
+    public static Pattern compileRegex(String pattern) throws PatternSyntaxException {
         return Pattern.compile(pattern);
     }
 
