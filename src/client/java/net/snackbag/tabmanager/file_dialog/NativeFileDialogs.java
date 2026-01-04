@@ -9,14 +9,14 @@ import java.nio.LongBuffer;
 import java.util.function.Consumer;
 
 /*
- * ╔═══════════════════════════════════════════════════════════════════════════════════════╗
- * ║ File Dialog Logic for TabManager                                                      ║
- * ║ Code taken from Tobiazsh's Mod "MyWorld Traffic Addition", licensed under LGPL-3.0    ║
- * ║ https://github.com/snackbag/TabManager                                                ║
- * ║ https://github.com/tobiazsh/MyWorld-Traffic-Addition                                  ║
- * ║                                                                                       ║
- * ║ Licensed under LGPL-3.0. Build something cool, but keep it open!                      ║
- * ╚═══════════════════════════════════════════════════════════════════════════════════════╝
+ * ╔═════════════════════════════════════════════════════════════════════════════════════════════════════╗
+ * ║ File Dialog Logic for TabManager                                                                    ║
+ * ║ Code taken from Tobiazsh's Mod "MyWorld Traffic Addition" version 1.7.0, licensed under LGPL-3.0    ║
+ * ║ https://github.com/snackbag/TabManager                                                              ║
+ * ║ https://github.com/tobiazsh/MyWorld-Traffic-Addition                                                ║
+ * ║                                                                                                     ║
+ * ║ Licensed under LGPL-3.0. Build something cool, but keep it open!                                    ║
+ * ╚═════════════════════════════════════════════════════════════════════════════════════════════════════╝
  */
 
 
