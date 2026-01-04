@@ -72,7 +72,8 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Inject(method = "updateEntries", at = @At("TAIL"))
     private void updateEntries(ItemGroup.DisplayContext displayContext, CallbackInfo ci) {
         // Apply filters after update here
-        Config.reload();
+        this.tabmanager$displayStacks = new CopyOnWriteArrayList<>(this.displayStacks); // Reset to all items first
+        Config.reload(); // Then re-apply filters (reload the entire config)
     }
 
     /**
@@ -127,8 +128,6 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Override
     public void tabmanager$applyFilterDisplayItems(ItemFilter filter) {
         if (!filter.getApplicableGroups().contains((ItemGroup)(Object)this)) return;
-        tabmanager$displayStacks = new CopyOnWriteArrayList<>();
-        tabmanager$displayStacks.addAll(this.displayStacks);
         for (ItemStack istack : this.tabmanager$displayStacks) {
             if (!tabmanager$displayStacks.contains(istack)) continue; // Avoid removing non-existent
             String itemId = istack.getItem().toString();
