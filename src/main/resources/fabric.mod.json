@@ -21,7 +21,6 @@
       "net.snackbag.tabmanager.TabManagerClient"
     ]
   },
-  "accessWidener": "tabmanager.classtweaker",
   "mixins": [
     {
       "config": "tabmanager.client.mixins.json",

@@ -23,8 +23,6 @@ repositories {
 loom {
 	splitEnvironmentSourceSets()
 
-	accessWidenerPath = file("src/main/resources/tabmanager.classtweaker")
-
 	mods {
 		"tabmanager" {
 			sourceSet sourceSets.main
