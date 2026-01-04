@@ -8,8 +8,9 @@ import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import java.util.function.Consumer;
 
-// Straight up stole from my mod MyWorld Traffic Addition lmao
-// I do not care about the duplicates btw because it's simple enough and would be kind of dangerous with the memory management
+/**
+ * Utility class for native file dialogs using TinyFD.
+ */
 public class NativeFileDialogs {
 
     /**
