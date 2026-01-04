@@ -47,8 +47,7 @@ public class ConfigDirectory {
             try {
                 if (configFile.toFile().createNewFile())
                     TabManagerClient.LOGGER.info("Created new config file at {}", configFile.toAbsolutePath());
-                else
-                    TabManagerClient.LOGGER.error("File already exists at {}", configFile.toAbsolutePath());
+                // No else needed, as it would already exist if we are in this block
             } catch (Exception e) {
                 TabManagerClient.LOGGER.error("Failed to create config file: {}", e.getMessage());
                 return false;
@@ -68,8 +67,7 @@ public class ConfigDirectory {
             try {
                 if (bakConfigFile.createNewFile())
                     TabManagerClient.LOGGER.info("Created new bak config file at {}", bakConfigFile.toPath());
-                else
-                    TabManagerClient.LOGGER.error("File already exists at {}", bakConfigFile.toPath());
+                // No else needed, as it would already exist if we are in this block
             } catch (IOException e) {
                 TabManagerClient.LOGGER.error("Failed to create bak config file: {}", e.getMessage());
                 return false;
