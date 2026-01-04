@@ -16,6 +16,7 @@ public class ItemGroupUtility {
 
     public static final int SERIALIZE_VERSION = 1;
 
+    // Snapshot of all vanilla ItemGroups for resetting purposes
     public static List<VanillaSnapshot> VANILLA_GROUPS = null;
 
     /**
@@ -43,12 +44,18 @@ public class ItemGroupUtility {
                 .orElse(null);
     }
 
+    /**
+     * Populates all ItemGroups with their respective tab keys
+     */
     public static void populateItemGroups() {
         List<ItemGroup> allGroups = ItemGroups.getGroups();
 
         allGroups.forEach(igroup -> ((ItemGroupAccessor)igroup).tabmanager$setTabKey(Registries.ITEM_GROUP.getId(igroup)));
     }
 
+    /**
+     * Applies all filters from the config to all ItemGroups
+     */
     public static void applyFilters() {
         List<ItemGroup> allGroups = ItemGroups.getGroups();
 
@@ -63,6 +70,9 @@ public class ItemGroupUtility {
         });
     }
 
+    /**
+     * Reloads all ItemGroups from the config
+     */
     public static void reloadItemGroups() {
         if (VANILLA_GROUPS == null) { // First time initialization; snapshot current vanilla state
             VANILLA_GROUPS = ItemGroups.getGroups()
@@ -92,6 +102,9 @@ public class ItemGroupUtility {
         Config.INSTANCE.itemGroups.forEach(igroup -> ItemGroupUtility.applySerialized(igroup.getAsJsonObject()));
     }
 
+    /**
+     * Resets all ItemGroups to their vanilla state
+     */
     public static void resetItemGroups() {
         if (VANILLA_GROUPS == null) return;
 
@@ -117,6 +130,11 @@ public class ItemGroupUtility {
         });
     }
 
+    /**
+     * Serializes an ItemGroup into a JsonObject
+     * @param group the ItemGroup to serialize
+     * @return the serialized JsonObject
+     */
     public static JsonObject serialize(ItemGroup group) {
         JsonObject serialized = new JsonObject();
 
