@@ -154,11 +154,13 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
     private void exportConfig() {
         fileIOExecutor.submit(() -> {
             AtomicBoolean aborted = new AtomicBoolean(false);
-            String savePath = NativeFileDialogs.save(Text.translatable("tabmanager.gui.edit_screen.export_config_button").toString(), new NativeFileDialogs.FilterItem(
-                    "Tab Manager Config Files",
-                    new String[] {"*.json", "*.tmconfig"}),
+            String savePath = NativeFileDialogs.save(
+                    Text.translatable("tabmanager.gui.edit_screen.export_config_button").toString(),
+                    new NativeFileDialogs.FilterItem(
+                        "Tab Manager Config Files",
+                        new String[] {"*.json", "*.tmconfig"}),
                     ConfigDirectory.getConfigDirectory().toAbsolutePath().toString(),
-                     "config.tmconfig",
+                    "config.tmconfig",
                     (msg) -> aborted.set(true));
 
             if (aborted.get()) return;
@@ -178,9 +180,11 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
     private void importConfig() {
         fileIOExecutor.submit(() -> {
             AtomicBoolean aborted = new AtomicBoolean(false);
-            String loadPath = NativeFileDialogs.open(Text.translatable("tabmanager.gui.edit_screen.import_config_button").toString(), new NativeFileDialogs.FilterItem(
-                    "Tab Manager Config Files",
-                    new String[] {"*.json", "*.tmconfig"}),
+            String loadPath = NativeFileDialogs.open(
+                    Text.translatable("tabmanager.gui.edit_screen.import_config_button").toString(),
+                    new NativeFileDialogs.FilterItem(
+                        "Tab Manager Config Files",
+                        new String[] {"*.json", "*.tmconfig"}),
                     ConfigDirectory.getConfigDirectory().toAbsolutePath().toString(),
                     (msg) -> aborted.set(true));
 
