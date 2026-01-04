@@ -1,6 +1,5 @@
 package net.snackbag.tabmanager.ui.toast;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
