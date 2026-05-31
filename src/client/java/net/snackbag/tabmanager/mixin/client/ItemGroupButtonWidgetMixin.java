@@ -1,14 +1,7 @@
 package net.snackbag.tabmanager.mixin.client;
 
 import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.snackbag.tabmanager.mixin_interface.FabricCreativeGuiComponentsInterface;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -17,6 +10,13 @@ import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import static net.snackbag.tabmanager.util.CreativeMenuUtility.getPageCount;
 /*? } else if <1.21 {*/
 /*import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Text;
+import net.snackbag.tabmanager.mixin_interface.FabricCreativeGuiComponentsInterface;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Shadow;
 *//*?}*/
 
 @SuppressWarnings("UnstableApiUsage")
