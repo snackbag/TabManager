@@ -43,6 +43,8 @@ loom {
 			sourceSet(sourceSets.named("client").get())
 		}
 	}
+
+	fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
 }
 
 dependencies {
@@ -56,9 +58,17 @@ dependencies {
 
 tasks.processResources {
 	inputs.property("version", project.version)
+	inputs.property("loader_version", loaderVersion)
+	inputs.property("minecraft_version", minecraftVersion)
 
 	filesMatching("fabric.mod.json") {
-		expand(mapOf("version" to project.version))
+		expand(
+			mapOf(
+				"version" to project.version,
+				"loader_version" to loaderVersion,
+				"minecraft_version" to minecraftVersion,
+			)
+		)
 	}
 }
 
