@@ -62,17 +62,17 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
         componentLayout.surface(Surface.DARK_PANEL)
                 .padding(Insets.of(5));
 
-        this.groupSelectionLayout = Containers.horizontalFlow(Sizing.fill(), Sizing.content());
+        this.groupSelectionLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
 
-        this.groupLabelsLayout = Containers.grid(Sizing.fill(), Sizing.content(), 1, 2);
+        this.groupLabelsLayout = Containers.grid(Sizing.fill(100), Sizing.content(), 1, 2);
 
-        this.availableGroupsLayout = Containers.ltrTextFlow(Sizing.fill(), Sizing.fill());
+        this.availableGroupsLayout = Containers.ltrTextFlow(Sizing.fill(100), Sizing.fill(100));
 
         this.availableGroupsScroll = Containers.verticalScroll(Sizing.fill(50), Sizing.fixed(150), availableGroupsLayout);
         availableGroupsScroll.padding(Insets.of(2))
             .surface(Surface.PANEL_INSET);
 
-        this.appliedGroupsLayout = Containers.ltrTextFlow(Sizing.fill(), Sizing.fill());
+        this.appliedGroupsLayout = Containers.ltrTextFlow(Sizing.fill(100), Sizing.fill(100));
 
         this.appliedGroupsScroll = Containers.verticalScroll(Sizing.fill(50), Sizing.fixed(150), appliedGroupsLayout);
         appliedGroupsScroll.padding(Insets.of(2))
@@ -80,13 +80,13 @@ public class FilterEditComponent extends OverlayContainer<FlowLayout> {
 
         this.isRegexCheckbox = Components.checkbox(Text.translatable("tabmanager.gui.edit_screen.filter.use_regex"));
 
-        this.predicateInput = Components.textBox(Sizing.fill());
+        this.predicateInput = Components.textBox(Sizing.fill(100));
 
         this.saveButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.save_button"), button -> save.accept(this));
-        saveButton.sizing(Sizing.fill(), Sizing.content());
+        saveButton.sizing(Sizing.fill(100), Sizing.content());
 
         this.discardButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.discard_button"), button -> close());
-        discardButton.sizing(Sizing.fill(), Sizing.content());
+        discardButton.sizing(Sizing.fill(100), Sizing.content());
 
         this.availableGroupsLabel = Components.label(Text.translatable("tabmanager.gui.edit_screen.filter.available_groups"));
         this.appliedGroupsLabel = Components.label(Text.translatable("tabmanager.gui.edit_screen.filter.applied_groups"));

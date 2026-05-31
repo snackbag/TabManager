@@ -25,7 +25,7 @@ public class ItemSelectableComponent {
         componentLayout.padding(Insets.of(3));
 
         itemComponent = Components.item(item.getDefaultStack());
-        itemComponent.sizing(Sizing.fill(), Sizing.fill());
+        itemComponent.sizing(Sizing.fill(100), Sizing.fill(100));
 
         button = new InvisibleButtonComponent(Text.empty(), btn -> onPress.accept(this));
         button.sizing(horizontal, vertical)

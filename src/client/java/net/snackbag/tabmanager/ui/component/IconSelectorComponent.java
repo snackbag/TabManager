@@ -65,7 +65,7 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
         componentLayout.positioning(Positioning.absolute(0, 0))
                 .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
 
-        this.tabLayout = Containers.horizontalFlow(Sizing.fill(), Sizing.content());
+        this.tabLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
         tabLayout.padding(Insets.of(5))
                 .alignment(HorizontalAlignment.LEFT, VerticalAlignment.CENTER);
 
@@ -75,20 +75,20 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
                 .sizing(Sizing.content(), Sizing.content())
                 .margins(Insets.left(5));
 
-        this.itemResultLayout = Containers.ltrTextFlow(Sizing.fill(), Sizing.content());
+        this.itemResultLayout = Containers.ltrTextFlow(Sizing.fill(100), Sizing.content());
         itemResultLayout.padding(Insets.of(3));
 
-        this.itemResultScroll = Containers.verticalScroll(Sizing.fill(), Sizing.fixed(150), itemResultLayout);
+        this.itemResultScroll = Containers.verticalScroll(Sizing.fill(100), Sizing.fixed(150), itemResultLayout);
         itemResultScroll.surface(Surface.PANEL_INSET);
 
-        this.searchBar = Components.textBox(Sizing.fill());
+        this.searchBar = Components.textBox(Sizing.fill(100));
 
         this.closeButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.close_button"), btn -> close());
-        closeButton.sizing(Sizing.fill(), Sizing.content())
+        closeButton.sizing(Sizing.fill(100), Sizing.content())
                 .margins(Insets.top(5));
 
         this.searchButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.icon.search_item"), btn -> this.search());
-        searchButton.sizing(Sizing.fill(), Sizing.content())
+        searchButton.sizing(Sizing.fill(100), Sizing.content())
                 .margins(Insets.bottom(5));
 
         assemble();

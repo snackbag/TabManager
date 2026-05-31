@@ -51,10 +51,10 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 .horizontalAlignment(HorizontalAlignment.LEFT)
                 .verticalAlignment(VerticalAlignment.TOP);
 
-        FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(), Sizing.fill());
+        FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.fill(100));
 
         FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.content());
-        FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill());
+        FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill(100));
 
         IconSelectorComponent iconSelectorComponent = new IconSelectorComponent(
                 Component::remove, // on hide
@@ -128,7 +128,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 .child(saveConfigButton)
                 .child(newConfigButton);
 
-        confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(), Sizing.content()));
+        confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(100), Sizing.content()));
 
         rootComponent.child(confCtrlContainer);
     }
