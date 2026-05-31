@@ -24,13 +24,8 @@ abstract public class FabricCreativeGuiComponentsMixin implements FabricCreative
     // Mixin into getPageCount to allow for fake pages in the inventory
     @Inject(method = "getPageCount", at = @At("HEAD"), cancellable = true)
     private static void tabmanager$getPageCount(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(this.tabmanager$getInventoryPageCount());
+        cir.setReturnValue(FabricCreativeGuiComponentsInterface.tabmanager$getInventoryPageCount());
     }
     /*?}*/
-
-    @Unique
-    private static int getPageCount() {
-
-    }
 
 }
