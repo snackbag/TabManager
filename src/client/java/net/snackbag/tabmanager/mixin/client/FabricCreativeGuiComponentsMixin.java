@@ -10,22 +10,22 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 
 /*? if >=1.21 {*/
-import org.spongepowered.asm.mixin.injection.At;
+/*import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl.TABS_PER_PAGE;
-/*? }*/
+*//*? }*/
 
 @SuppressWarnings("UnstableApiUsage")
 @Mixin(FabricCreativeGuiComponents.class)
 abstract public class FabricCreativeGuiComponentsMixin implements FabricCreativeGuiComponentsInterface {
 
     /*? if >=1.21 {*/
-    // Mixin into getPageCount to allow for fake pages in the inventory
+    /*// Mixin into getPageCount to allow for fake pages in the inventory
     @Inject(method = "getPageCount", at = @At("HEAD"), cancellable = true)
     private static void tabmanager$getPageCount(CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue(FabricCreativeGuiComponentsInterface.tabmanager$getInventoryPageCount());
     }
-    /*?}*/
+    *//*?}*/
 
 }

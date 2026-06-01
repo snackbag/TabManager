@@ -1,13 +1,13 @@
 package net.snackbag.tabmanager.ui.vanilla;
 
 /*? if <1.20.3 {*/
-/*import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
-*//*?}*/
+/*?}*/
 
 //? if >=1.20.3
-import net.minecraft.client.gui.screen.ButtonTextures;
+//import net.minecraft.client.gui.screen.ButtonTextures;
 
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
@@ -19,7 +19,7 @@ public class EditInventoryButton extends TexturedButtonWidget {
     public static final int EDIT_BUTTON_WIDTH_HEIGHT = 20;
 
     /*?if >=1.20.3 {*/
-    private static final ButtonTextures BUTTON_TEXTURES =
+    /*private static final ButtonTextures BUTTON_TEXTURES =
             new ButtonTextures(
                     Identifier.of(TabManagerClient.MOD_ID, "widget/edit_button"),
                     Identifier.of(TabManagerClient.MOD_ID, "widget/edit_button_highlighted")
@@ -28,10 +28,10 @@ public class EditInventoryButton extends TexturedButtonWidget {
     public EditInventoryButton(int x, int y, PressAction pressAction) {
         super(x, y, EDIT_BUTTON_WIDTH_HEIGHT, EDIT_BUTTON_WIDTH_HEIGHT, BUTTON_TEXTURES, pressAction);
     }
-    /*?}*/
+    *//*?}*/
 
     /*?if <1.20.3 {*/
-    /*public EditInventoryButton(int x, int y, PressAction pressAction) {
+    public EditInventoryButton(int x, int y, PressAction pressAction) {
         super(x, y, EDIT_BUTTON_WIDTH_HEIGHT, EDIT_BUTTON_WIDTH_HEIGHT, 0, 0, Icon.ICON.texture, pressAction);
         this.setTooltip(Tooltip.of(Text.translatable("tabmanager.gui.edit_button.tooltip")));
     }
@@ -62,5 +62,5 @@ public class EditInventoryButton extends TexturedButtonWidget {
             this.texture = texture;
         }
     }
-    *//*?}*/
+    /*?}*/
 }
