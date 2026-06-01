@@ -212,7 +212,8 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 // Show system toast on error
                 ToastUtil.displayToast(
                         MinecraftClient.getInstance(),
-                        ZToast.ZToastType.WARNING,
+                        //? if =1.21.1
+                        /*ZToast.ZToastType.WARNING,*/
                         Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_title"),
                         Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_description"),
                         500f // Very high Z to ensure visibility
