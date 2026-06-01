@@ -19,6 +19,7 @@ public class ZToast extends SystemToast {
         this.z = z;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public Visibility draw(DrawContext context, ToastManager manager, long startTime) {
         context.push();
