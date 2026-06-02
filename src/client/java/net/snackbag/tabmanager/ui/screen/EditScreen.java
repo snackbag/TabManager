@@ -48,7 +48,14 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
         FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.fill(100));
 
         FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.content());
-        FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill(100));
+        FlowLayout canvasPanel = Containers.horizontalFlow(
+                /*? if >=1.20.3 {*/
+                /*Sizing.expand()
+                *//*?} else {*/
+                Sizing.fixed(100)
+                /*?}*/,
+                Sizing.fill(100)
+        );
 
         IconSelectorComponent iconSelectorComponent = new IconSelectorComponent(
                 Component::remove, // on hide
