@@ -5,10 +5,7 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
-import io.wispforest.owo.ui.util.UIErrorToast;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.config.Config;
@@ -26,10 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
