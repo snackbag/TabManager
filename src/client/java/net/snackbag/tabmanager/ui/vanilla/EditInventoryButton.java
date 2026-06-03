@@ -40,12 +40,18 @@ public class EditInventoryButton extends TexturedButtonWidget {
         Icon icon;
 
         if (this.isHovered())
-            icon = Icon.ICON;
-        else
             icon = Icon.ICON_HOVERED;
+        else
+            icon = Icon.ICON;
 
         // U and V 0 because each is its own file
-        context.drawTexture(icon.texture, this.getX(), this.getY(), 0, 0, this.width, this.height);
+        context.drawTexture(
+                icon.texture,
+                this.getX(), this.getY(),
+                0, 0,
+                this.width, this.height,
+                this.width, this.height
+        );
     }
 
 
