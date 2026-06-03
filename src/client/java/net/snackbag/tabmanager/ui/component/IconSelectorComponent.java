@@ -198,8 +198,14 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
             ClientPlayNetworkHandler clientPlayNetworkHandler = MinecraftClient.getInstance().getNetworkHandler();
             if (clientPlayNetworkHandler != null) {
                 display.clear();
-                SearchManager searchManager = clientPlayNetworkHandler.getSearchManager();
-                SearchProvider<ItemStack> searchProvider = searchManager.getItemTooltipReloadFuture();;
+                //? if =1.21.1
+                //SearchManager searchManager = clientPlayNetworkHandler.getSearchManager();
+                SearchProvider<ItemStack> searchProvider = /*? if =1.21.1 {*/
+                        /*searchManager.getItemTooltipReloadFuture();*/
+                        /*?} elif =1.20.1 {*/
+                        MinecraftClient.getInstance().getSearchProvider(SearchManager.ITEM_TOOLTIP);
+                        /*?}*/
+
                 display.addAll(searchProvider.findAll(term.toLowerCase(Locale.ROOT)).stream().map(ItemStack::getItem).toList());
             }
         }
