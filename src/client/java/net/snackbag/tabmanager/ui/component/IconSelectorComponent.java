@@ -59,6 +59,8 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
     private IconSelectorComponent(FlowLayout layout) {
         super(layout);
 
+        this.closeOnClick(false);
+
         this.componentLayout = layout;
         componentLayout.surface(Surface.DARK_PANEL);
         componentLayout.padding(Insets.of(5));
