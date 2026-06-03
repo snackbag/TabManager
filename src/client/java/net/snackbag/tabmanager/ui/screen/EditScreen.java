@@ -49,12 +49,20 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
         FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.fill(100));
 
-        FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.content());
+        FlowLayout controlPanel = Containers.verticalFlow(
+                /*? if >=1.20.3 {*/
+                /*Sizing.fixed(controlPanelWidth)
+                 *//*?} else {*/
+                Sizing.fill(20)
+                /*?}*/,
+                Sizing.content()
+        );
+
         FlowLayout canvasPanel = Containers.horizontalFlow(
                 /*? if >=1.20.3 {*/
                 /*Sizing.expand()
                 *//*?} else {*/
-                Sizing.fixed(100)
+                Sizing.fill(80)
                 /*?}*/,
                 Sizing.fill(100)
         );
