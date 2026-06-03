@@ -26,9 +26,9 @@ import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
 
 @SuppressWarnings("UnstableApiUsage")
 @Mixin(FabricCreativeGuiComponents.ItemGroupButtonWidget.class)
-public class FabricItemGroupButtonWidgetMixin /*? if >1.21 {*/extends ButtonWidget/*?}*/ {
+public class FabricItemGroupButtonWidgetMixin /*? if <1.21 {*/extends ButtonWidget/*?}*/ {
 
-    /*? if >1.21 {*/
+    /*? if <1.21 {*/
     @Shadow
     @Final
     CreativeGuiExtensions extensions;
@@ -42,7 +42,7 @@ public class FabricItemGroupButtonWidgetMixin /*? if >1.21 {*/extends ButtonWidg
     }
     /*?}*/
 
-    /*? if >1.21 {*/
+    /*? if >=1.21 {*/
     /*@Inject(
             method = "<init>",
             at = @At("TAIL")
