@@ -45,11 +45,35 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
         this.addDrawableChild(editInventoryButton);
     }
 
-    @Inject(method = "populateDisplay", at = @At("TAIL"))
+    /*? if =1.21.1 {*/
+    /*@Inject(method = "populateDisplay", at = @At("TAIL"))
     private void tabmanager$applyConfig(SearchManager searchManager, FeatureSet enabledFeatures, boolean showOperatorTab, RegistryWrapper.WrapperLookup registryLookup, CallbackInfoReturnable<Boolean> cir) {
         // Apply config on inventory open
         ItemGroupUtility.reloadItemGroups();
     }
+    *//*?} elif =1.20.1 {*/
+    @Inject(
+            method = "<init>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ItemGroups;updateDisplayContext(Lnet/minecraft/resource/featuretoggle/FeatureSet;ZLnet/minecraft/registry/RegistryWrapper$WrapperLookup;)Z"
+            )
+    )
+    private void tabmanager$onDisplayContext(CallbackInfo ci) {
+        ItemGroupUtility.reloadItemGroups();
+    }
+
+    @Inject(
+            method = "updateDisplayParameters",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ItemGroups;updateDisplayContext(Lnet/minecraft/resource/featuretoggle/FeatureSet;ZLnet/minecraft/registry/RegistryWrapper$WrapperLookup;)Z"
+            )
+    )
+    private void tabmanager$onUpdateDisplayParameters(CallbackInfo ci) {
+        ItemGroupUtility.reloadItemGroups();
+    }
+    /*?}*/
 
     @Unique
     private void tabmanager$openEditScreen() {
