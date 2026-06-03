@@ -72,7 +72,15 @@ public class FilterListComponent extends OverlayContainer<FlowLayout> {
             if (selected != null)
                 onEditAndAdd.accept(selected, false);
         });
-        editFilterButton.sizing(Sizing.expand(), Sizing.content());
+
+        editFilterButton.sizing(
+                /*? if >=1.20.3 {*/
+                /*Sizing.expand()
+                 *//*?} else {*/
+                Sizing.fixed(100)
+                /*?}*/,
+                Sizing.content()
+        );
 
         removeFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.filter.remove_filter"), button -> {
             ItemFilter selected = getSelectedFilter();
