@@ -1,6 +1,7 @@
 package net.snackbag.tabmanager.mixin.client;
 
 import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
+import net.snackbag.tabmanager.util.CreativeMenuUtility;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -48,7 +49,7 @@ abstract public class ItemGroupButtonWidgetMixin {
             )
     )
     private void redirectPageCountText(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y) {
-        int pageCount = FabricCreativeGuiComponentsInterface.tabmanager$getInventoryPageCount();
+        int pageCount = CreativeMenuUtility.getPageCount();
         instance.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.translatable("fabric.gui.creativeTabPage", extensions.fabric_currentPage() + 1, pageCount), x, y);
     }
     /*?}*/
