@@ -13,7 +13,7 @@ import net.snackbag.tabmanager.file_dialog.NativeFileDialogs;
 import net.snackbag.tabmanager.filesystem.ConfigDirectory;
 
 //? if >1.20.1
-//import net.snackbag.tabmanager.ui.toast.ZToast;
+import net.snackbag.tabmanager.ui.toast.ZToast;
 import net.snackbag.tabmanager.ui.component.FilterEditComponent;
 import net.snackbag.tabmanager.ui.component.FilterListComponent;
 import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
@@ -51,19 +51,19 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
         FlowLayout controlPanel = Containers.verticalFlow(
                 /*? if >=1.20.3 {*/
-                /*Sizing.fixed(controlPanelWidth)
-                 *//*?} else {*/
-                Sizing.fill(20)
-                /*?}*/,
+                Sizing.fixed(controlPanelWidth)
+                 /*?} else {*/
+                /*Sizing.fill(20)
+                *//*?}*/,
                 Sizing.content()
         );
 
         FlowLayout canvasPanel = Containers.horizontalFlow(
                 /*? if >=1.20.3 {*/
-                /*Sizing.expand()
-                *//*?} else {*/
-                Sizing.fill(80)
-                /*?}*/,
+                Sizing.expand()
+                /*?} else {*/
+                /*Sizing.fill(80)
+                *//*?}*/,
                 Sizing.fill(100)
         );
 
@@ -224,7 +224,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 ToastUtil.displayToast(
                         MinecraftClient.getInstance(),
                         //? if =1.21.1
-                        //ZToast.ZToastType.WARNING,
+                        ZToast.ZToastType.WARNING,
                         Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_title"),
                         Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_description"),
                         500f // Very high Z to ensure visibility

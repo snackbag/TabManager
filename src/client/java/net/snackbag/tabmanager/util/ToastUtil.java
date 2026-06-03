@@ -9,7 +9,7 @@ public class ToastUtil {
     public static void displayToast(
             MinecraftClient client,
             //? if =1.21.1
-            //ZToast.ZToastType type,
+            ZToast.ZToastType type,
             Text title,
             Text description,
             float z
@@ -17,7 +17,7 @@ public class ToastUtil {
         ZToast.show(
                 client.getToastManager(),
                 //? if =1.21.1
-                //type,
+                type,
                 title,
                 description,
                 z

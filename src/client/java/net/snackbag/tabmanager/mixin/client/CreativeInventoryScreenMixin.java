@@ -46,13 +46,13 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
     }
 
     /*? if =1.21.1 {*/
-    /*@Inject(method = "populateDisplay", at = @At("TAIL"))
+    @Inject(method = "populateDisplay", at = @At("TAIL"))
     private void tabmanager$applyConfig(SearchManager searchManager, FeatureSet enabledFeatures, boolean showOperatorTab, RegistryWrapper.WrapperLookup registryLookup, CallbackInfoReturnable<Boolean> cir) {
         // Apply config on inventory open
         ItemGroupUtility.reloadItemGroups();
     }
-    *//*?} elif =1.20.1 {*/
-    @Inject(
+    /*?} elif =1.20.1 {*/
+    /*@Inject(
             method = "<init>",
             at = @At(
                     value = "INVOKE",
@@ -73,7 +73,7 @@ abstract public class CreativeInventoryScreenMixin extends AbstractInventoryScre
     private void tabmanager$onUpdateDisplayParameters(CallbackInfo ci) {
         ItemGroupUtility.reloadItemGroups();
     }
-    /*?}*/
+    *//*?}*/
 
     @Unique
     private void tabmanager$openEditScreen() {

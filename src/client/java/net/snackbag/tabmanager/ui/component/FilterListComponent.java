@@ -75,10 +75,10 @@ public class FilterListComponent extends OverlayContainer<FlowLayout> {
 
         editFilterButton.sizing(
                 /*? if >=1.20.3 {*/
-                /*Sizing.expand()
-                 *//*?} else {*/
-                Sizing.fixed(100)
-                /*?}*/,
+                Sizing.expand()
+                 /*?} else {*/
+                /*Sizing.fixed(100)
+                *//*?}*/,
                 Sizing.content()
         );
 

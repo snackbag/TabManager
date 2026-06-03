@@ -17,14 +17,14 @@ public class InvisibleButtonComponent extends ButtonComponent {
     }
 
     //? if =1.21.1 {
-    /*@Override
+    @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
     }
-    *///?} else if =1.20.1 {
-    @Override
+    //?} else if =1.20.1 {
+    /*@Override
     public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderButton(context, mouseX, mouseY, delta);
     }
-    //?}
+    *///?}
 }

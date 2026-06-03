@@ -10,20 +10,20 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class MixinCreativeInventoryScreenMixin implements CreativeInventoryScreenAccessor {
 
     /*? if >=1.21 {*/
-    /*@Shadow(remap = false) // FAPI
+    @Shadow(remap = false) // FAPI
     private static int currentPage;
-    *//*?} else {*/
-    @Shadow(remap = false)
+    /*?} else {*/
+    /*@Shadow(remap = false)
     private static int fabric_currentPage;
-    /*?}*/
+    *//*?}*/
 
     @Override
     public void tabmanager$setCurrentPage(int page) {
         /*? if >=1.21 {*/
-        /*currentPage = page;
-        *//*?} else {*/
-        fabric_currentPage = page;
-        /*?}*/
+        currentPage = page;
+        /*?} else {*/
+        /*fabric_currentPage = page;
+        *//*?}*/
     }
 
 }

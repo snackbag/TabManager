@@ -17,19 +17,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /*? if >1.21 {*/
-/*import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.snackbag.tabmanager.mixin_interface.FabricCreativeGuiComponentsInterface;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-*//*?} else {*/
-import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
-/*?}*/
+/*?} else {*/
+/*import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
+*//*?}*/
 
 @SuppressWarnings("UnstableApiUsage")
 @Mixin(FabricCreativeGuiComponents.ItemGroupButtonWidget.class)
-public class FabricItemGroupButtonWidgetMixin /*? if <1.21 {*/extends ButtonWidget/*?}*/ {
+public class FabricItemGroupButtonWidgetMixin /*? if <1.21 {*//*extends ButtonWidget*//*?}*/ {
 
     /*? if <1.21 {*/
-    @Shadow
+    /*@Shadow
     @Final
     CreativeGuiExtensions extensions;
 
@@ -40,10 +40,10 @@ public class FabricItemGroupButtonWidgetMixin /*? if <1.21 {*/extends ButtonWidg
     protected FabricItemGroupButtonWidgetMixin(int x, int y, int width, int height, Text message, PressAction onPress, NarrationSupplier narrationSupplier) {
         super(x, y, width, height, message, onPress, narrationSupplier);
     }
-    /*?}*/
+    *//*?}*/
 
     /*? if >=1.21 {*/
-    /*@Inject(
+    @Inject(
             method = "<init>",
             at = @At("TAIL")
     )
@@ -59,8 +59,8 @@ public class FabricItemGroupButtonWidgetMixin /*? if <1.21 {*/extends ButtonWidg
             ((CreativeInventoryScreenAccessor) screen).tabmanager$setCurrentPage(toPage);
         });
     }
-    *//*? } else {*/
-    @Inject(
+    /*? } else {*/
+    /*@Inject(
             method = "<init>",
             at = @At("TAIL")
     )
@@ -136,5 +136,5 @@ public class FabricItemGroupButtonWidgetMixin /*? if <1.21 {*/extends ButtonWidg
             case PREVIOUS -> active = currentPage > 0;
         }
     }
-    /*?}*/
+    *//*?}*/
 }

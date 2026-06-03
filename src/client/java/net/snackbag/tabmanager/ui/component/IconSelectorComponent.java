@@ -201,12 +201,12 @@ public class IconSelectorComponent extends OverlayContainer<FlowLayout> {
             if (clientPlayNetworkHandler != null) {
                 display.clear();
                 //? if =1.21.1
-                //SearchManager searchManager = clientPlayNetworkHandler.getSearchManager();
+                SearchManager searchManager = clientPlayNetworkHandler.getSearchManager();
                 SearchProvider<ItemStack> searchProvider = /*? if =1.21.1 {*/
-                        /*searchManager.getItemTooltipReloadFuture();*/
+                        searchManager.getItemTooltipReloadFuture();
                         /*?} elif =1.20.1 {*/
-                        MinecraftClient.getInstance().getSearchProvider(SearchManager.ITEM_TOOLTIP);
-                        /*?}*/
+                        /*MinecraftClient.getInstance().getSearchProvider(SearchManager.ITEM_TOOLTIP);
+                        *//*?}*/
 
                 display.addAll(searchProvider.findAll(term.toLowerCase(Locale.ROOT)).stream().map(ItemStack::getItem).toList());
             }

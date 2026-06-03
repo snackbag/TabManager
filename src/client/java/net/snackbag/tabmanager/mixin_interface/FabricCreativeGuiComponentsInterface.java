@@ -5,8 +5,8 @@ import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.config.Config;
 
 /*? if >=1.21 {*/
-/*import static net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl.TABS_PER_PAGE;
-*//*? }*/
+import static net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl.TABS_PER_PAGE;
+/*? }*/
 
 public interface FabricCreativeGuiComponentsInterface {
     static int tabmanager$getInventoryPageCount() {
@@ -18,7 +18,7 @@ public interface FabricCreativeGuiComponentsInterface {
                                         !itemGroup.isSpecial())
                         .toList()
                         .size()
-                / /*? if >=1.21 {*//*TABS_PER_PAGE*//*?} else {*/ 10 /*?}*/ ) + Config.INSTANCE.fakePages);
+                / /*? if >=1.21 {*/TABS_PER_PAGE/*?} else {*/ /*10 *//*?}*/ ) + Config.INSTANCE.fakePages);
         // ↑ Prefer Fabric's Implementation, otherwise do your own thing ↑
     }
 }

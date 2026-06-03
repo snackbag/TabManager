@@ -29,7 +29,7 @@ public class ItemSelectableComponent {
         itemComponent = Components.item(item.getDefaultStack());
         itemComponent.sizing(Sizing.fill(100), Sizing.fill(100));
         //? if <1.20.3
-        itemComponent.positioning(Positioning.relative(50, 50));
+        //itemComponent.positioning(Positioning.relative(50, 50));
 
         button = new InvisibleButtonComponent(Text.empty(), btn -> onPress.accept(this));
         button.sizing(horizontal, vertical)

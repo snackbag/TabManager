@@ -7,10 +7,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 /*? if >=1.21 {*/
-/*import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import static net.snackbag.tabmanager.util.CreativeMenuUtility.getPageCount;
-*//*? } else if <1.21 {*/
-import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
+/*? } else if <1.21 {*/
+/*import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -18,14 +18,14 @@ import net.minecraft.text.Text;
 import net.snackbag.tabmanager.mixin_interface.FabricCreativeGuiComponentsInterface;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Shadow;
-/*?}*/
+*//*?}*/
 
 @SuppressWarnings("UnstableApiUsage")
 @Mixin(FabricCreativeGuiComponents.ItemGroupButtonWidget.class)
 abstract public class ItemGroupButtonWidgetMixin {
 
     /*? if >=1.21 {*/
-    /*// Allows the buttons to be displayed on fake pages.
+    // Allows the buttons to be displayed on fake pages.
     @Redirect(
             method = "renderWidget",
             at = @At(
@@ -36,8 +36,8 @@ abstract public class ItemGroupButtonWidgetMixin {
     private boolean tabmanager$redirectHasAdditionalPages(CreativeInventoryScreen creativeInventoryScreen) {
         return getPageCount() > 1;
     }
-    *//*?} else if <1.21 {*/
-    @Shadow
+    /*?} else if <1.21 {*/
+    /*@Shadow
     @Final
     CreativeGuiExtensions extensions;
 
@@ -52,6 +52,6 @@ abstract public class ItemGroupButtonWidgetMixin {
         int pageCount = CreativeMenuUtility.getPageCount();
         instance.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.translatable("fabric.gui.creativeTabPage", extensions.fabric_currentPage() + 1, pageCount), x, y);
     }
-    /*?}*/
+    *//*?}*/
 
 }
