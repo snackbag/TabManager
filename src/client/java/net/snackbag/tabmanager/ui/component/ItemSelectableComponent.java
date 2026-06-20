@@ -5,11 +5,13 @@ import io.wispforest.owo.ui.component.ItemComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.StackLayout;
 import io.wispforest.owo.ui.core.Insets;
+import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 
+import javax.swing.text.Position;
 import java.util.function.Consumer;
 
 public class ItemSelectableComponent {
@@ -25,7 +27,9 @@ public class ItemSelectableComponent {
         componentLayout.padding(Insets.of(3));
 
         itemComponent = Components.item(item.getDefaultStack());
-        itemComponent.sizing(Sizing.fill(), Sizing.fill());
+        itemComponent.sizing(Sizing.fill(100), Sizing.fill(100));
+        //? if <1.20.3
+        //itemComponent.positioning(Positioning.relative(50, 50));
 
         button = new InvisibleButtonComponent(Text.empty(), btn -> onPress.accept(this));
         button.sizing(horizontal, vertical)

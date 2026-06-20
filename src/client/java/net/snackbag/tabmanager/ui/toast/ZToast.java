@@ -19,6 +19,7 @@ public class ZToast extends SystemToast {
         this.z = z;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public Visibility draw(DrawContext context, ToastManager manager, long startTime) {
         context.push();
@@ -30,14 +31,27 @@ public class ZToast extends SystemToast {
 
     public static void show(
             @NotNull ToastManager manager,
+            //? if =1.21.1
             ZToastType type,
             Text title,
             Text description,
             float z
     ) {
-        manager.add(new ZToast(type, title, description, z));
+        manager.add(
+                new ZToast(
+                    //? if =1.21.1 {
+                    type,
+                    //?} else if =1.20.1 {
+                    /*Type.PERIODIC_NOTIFICATION,
+                    *///?}
+                    title,
+                    description,
+                    z
+                )
+        );
     }
 
+    //? if =1.21.1 {
     public static class ZToastType extends SystemToast.Type {
         public ZToastType(long duration) {
             super(duration);
@@ -51,4 +65,5 @@ public class ZToast extends SystemToast {
         public static final ZToast.ZToastType WARNING = new ZToastType();
         public static final ZToast.ZToastType ERROR = new ZToastType();
     }
+    //?}
 }

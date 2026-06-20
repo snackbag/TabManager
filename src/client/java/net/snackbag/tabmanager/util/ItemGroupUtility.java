@@ -4,13 +4,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
 import net.snackbag.tabmanager.config.Config;
+import net.snackbag.tabmanager.mixin_interface.SimpleDefaultedRegistryInterface;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ItemGroupUtility {
@@ -45,6 +48,20 @@ public class ItemGroupUtility {
                 .orElse(null);
     }
 
+    @SuppressWarnings("unchecked")
+    public static Optional<RegistryEntry.Reference<Item>> getDefaultItemEntries() {
+        return ((SimpleDefaultedRegistryInterface<Item>) Registries.ITEM).tabmanager$getDefaultEntry();
+    }
+
+    public static Item getDefaultItemOrFallback() {
+        var defaultEntries = getDefaultItemEntries();
+
+        if (defaultEntries.isEmpty())
+            return Items.BARRIER;
+
+        return getDefaultItemEntries().get().value();
+    }
+
     /**
      * Populates all ItemGroups with their respective tab keys
      */
@@ -75,7 +92,7 @@ public class ItemGroupUtility {
      * Reloads all ItemGroups from the config
      */
     public static void reloadItemGroups() {
-        if (VANILLA_GROUPS == null) { // First time initialization; snapshot current vanilla state
+        if (VANILLA_GROUPS == null) { // First time initialization; save current vanilla state
             VANILLA_GROUPS = ItemGroups.getGroups()
                     .stream()
                     .filter(igroup -> !igroup.isSpecial())
@@ -84,8 +101,9 @@ public class ItemGroupUtility {
                         Identifier iconId = null;
                         if (igroup.getIcon() != null) {
                             Item iconItem = igroup.getIcon().getItem();
-                            //noinspection OptionalGetWithoutIsPresent
-                            if (iconItem != Registries.ITEM.getDefaultEntry().get().value()) {
+
+                            // If iconItem is not the placeholder, set iconId to item, otherwise keep as null
+                            if (iconItem != getDefaultItemOrFallback()) {
                                 iconId = Registries.ITEM.getId(iconItem);
                             }
                         }
@@ -140,8 +158,7 @@ public class ItemGroupUtility {
                 match.tabmanager$setIcon(icon.getDefaultStack());
             } else {
                 // Set to default icon if null
-                //noinspection OptionalGetWithoutIsPresent
-                match.tabmanager$setIcon(Registries.ITEM.getDefaultEntry().get().value().getDefaultStack());
+                match.tabmanager$setIcon(getDefaultItemOrFallback().getDefaultStack());
             }
         });
     }
@@ -182,8 +199,7 @@ public class ItemGroupUtility {
             if (iconId != null) {
                 Item icon = Registries.ITEM.get(iconId);
 
-                //noinspection OptionalGetWithoutIsPresent
-                if (icon != Registries.ITEM.getDefaultEntry().get().value()) {
+                if (icon != getDefaultItemOrFallback()) {
                     accessor.tabmanager$setIcon(icon.getDefaultStack());
                 }
             }

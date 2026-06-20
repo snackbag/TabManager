@@ -55,14 +55,14 @@ public class FilterListComponent extends OverlayContainer<FlowLayout> {
         componentLayout.surface(Surface.DARK_PANEL)
                 .padding(Insets.of(5));
 
-        this.filterLayout = Containers.verticalFlow(Sizing.fill(), Sizing.content());
+        this.filterLayout = Containers.verticalFlow(Sizing.fill(100), Sizing.content());
         filterLayout.gap(2);
 
-        this.filterScroll = Containers.verticalScroll(Sizing.fill(), Sizing.fixed(150), filterLayout);
+        this.filterScroll = Containers.verticalScroll(Sizing.fill(100), Sizing.fixed(150), filterLayout);
         filterScroll.surface(Surface.PANEL_INSET)
                 .padding(Insets.of(2));
 
-        this.controlLayout = Containers.horizontalFlow(Sizing.fill(), Sizing.content());
+        this.controlLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
 
         addFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.filter.add_filter"), button -> onEditAndAdd.accept(null, true));
         addFilterButton.sizing(Sizing.fill(33), Sizing.content());
@@ -72,7 +72,15 @@ public class FilterListComponent extends OverlayContainer<FlowLayout> {
             if (selected != null)
                 onEditAndAdd.accept(selected, false);
         });
-        editFilterButton.sizing(Sizing.expand(), Sizing.content());
+
+        editFilterButton.sizing(
+                /*? if >=1.20.3 {*/
+                Sizing.expand()
+                 /*?} else {*/
+                /*Sizing.fixed(100)
+                *//*?}*/,
+                Sizing.content()
+        );
 
         removeFilterButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.filter.remove_filter"), button -> {
             ItemFilter selected = getSelectedFilter();
@@ -86,7 +94,7 @@ public class FilterListComponent extends OverlayContainer<FlowLayout> {
         removeFilterButton.sizing(Sizing.fill(33), Sizing.content());
 
         closeButton = Components.button(Text.translatable("tabmanager.gui.edit_screen.close_button"), button -> close());
-        closeButton.sizing(Sizing.fill(), Sizing.content());
+        closeButton.sizing(Sizing.fill(100), Sizing.content());
 
         updateFilters();
         updateButtonStates();
@@ -104,7 +112,7 @@ public class FilterListComponent extends OverlayContainer<FlowLayout> {
     }
 
     private ClickableFlowComponent createFilterComponent(ItemFilter filter) {
-        ClickableFlowComponent filterComponent = new ClickableFlowComponent(Sizing.fill(), Sizing.content(), FlowLayout.Algorithm.HORIZONTAL, btn -> {
+        ClickableFlowComponent filterComponent = new ClickableFlowComponent(Sizing.fill(100), Sizing.content(), FlowLayout.Algorithm.HORIZONTAL, btn -> {
             btn.toggleActive();
             filterComponents.stream().filter(c -> c != btn).forEach(c -> c.setActive(false));
             updateButtonStates();

@@ -1,18 +1,20 @@
 package net.snackbag.tabmanager.util;
 
-import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.snackbag.tabmanager.access.ItemGroupAccessor;
+import net.snackbag.tabmanager.mixin_interface.FabricCreativeGuiComponentsInterface;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class CreativeMenuUtility {
 
-    @SuppressWarnings("UnstableApiUsage")
+    /**
+     * @return Count of pages on Creative Menu Tab
+     */
     public static int getPageCount() {
-        return FabricCreativeGuiComponents.getPageCount();
+        return FabricCreativeGuiComponentsInterface.tabmanager$getInventoryPageCount();
     }
 
     // Copied from CreativeInventoryScreenMixin on Fabric's side and slightly modified

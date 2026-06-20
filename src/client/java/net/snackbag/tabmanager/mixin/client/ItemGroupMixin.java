@@ -1,6 +1,11 @@
 package net.snackbag.tabmanager.mixin.client;
 
+/*? if >=1.21 {*/
 import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupImpl;
+/*?} else if <1.21 {*/
+/*import net.fabricmc.fabric.impl.itemgroup.FabricItemGroup;
+*//*?}*/
+
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -144,13 +149,21 @@ abstract public class ItemGroupMixin implements ItemGroupAccessor {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public int tabmanager$getPage() {
+        //? if >=1.21 {
         return ((FabricItemGroupImpl) this).fabric_getPage();
+        //?} else if <1.21 {
+        /*return ((FabricItemGroup) this).getPage();
+        *///?}
     }
 
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void tabmanager$setPage(int page) {
+        //? if >=1.21 {
         ((FabricItemGroupImpl) this).fabric_setPage(page);
+        //?} else if <1.21 {
+        /*((FabricItemGroup) this).setPage(page);
+        *///?}
     }
 
     @Override

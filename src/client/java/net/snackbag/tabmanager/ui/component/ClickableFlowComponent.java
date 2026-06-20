@@ -18,7 +18,7 @@ public class ClickableFlowComponent extends FlowLayout {
         super(horizontalSizing, verticalSizing, flowDirection);
         this.button = new InvisibleButtonComponent(Text.empty(), btn -> onClick.accept(this));
 
-        this.button.sizing(Sizing.fill(), Sizing.fill())
+        this.button.sizing(Sizing.fill(100), Sizing.fill(100))
                 .positioning(io.wispforest.owo.ui.core.Positioning.relative(0, 0))
                 .zIndex(10);
 

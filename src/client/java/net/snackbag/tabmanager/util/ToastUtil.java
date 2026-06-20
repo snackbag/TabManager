@@ -6,9 +6,17 @@ import net.snackbag.tabmanager.ui.toast.ZToast;
 
 public class ToastUtil {
 
-    public static void displayToast(MinecraftClient client, ZToast.ZToastType type, Text title, Text description, float z) {
+    public static void displayToast(
+            MinecraftClient client,
+            //? if =1.21.1
+            ZToast.ZToastType type,
+            Text title,
+            Text description,
+            float z
+    ) {
         ZToast.show(
                 client.getToastManager(),
+                //? if =1.21.1
                 type,
                 title,
                 description,

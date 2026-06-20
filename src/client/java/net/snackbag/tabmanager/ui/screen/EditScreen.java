@@ -5,20 +5,19 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.core.*;
-import io.wispforest.owo.ui.util.UIErrorToast;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
 import net.snackbag.tabmanager.TabManagerClient;
 import net.snackbag.tabmanager.config.Config;
 import net.snackbag.tabmanager.file_dialog.NativeFileDialogs;
 import net.snackbag.tabmanager.filesystem.ConfigDirectory;
+
+//? if >1.20.1
+import net.snackbag.tabmanager.ui.toast.ZToast;
 import net.snackbag.tabmanager.ui.component.FilterEditComponent;
 import net.snackbag.tabmanager.ui.component.FilterListComponent;
 import net.snackbag.tabmanager.ui.component.IconSelectorComponent;
 import net.snackbag.tabmanager.ui.component.InventoryEditComponent;
-import net.snackbag.tabmanager.ui.toast.ZToast;
 import net.snackbag.tabmanager.util.ItemFilter;
 import net.snackbag.tabmanager.util.ItemGroupUtility;
 import net.snackbag.tabmanager.util.ToastUtil;
@@ -26,10 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class EditScreen extends BaseOwoScreen<FlowLayout> {
 
@@ -51,10 +47,25 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 .horizontalAlignment(HorizontalAlignment.LEFT)
                 .verticalAlignment(VerticalAlignment.TOP);
 
-        FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(), Sizing.fill());
+        FlowLayout stageLayout = Containers.horizontalFlow(Sizing.fill(100), Sizing.fill(100));
 
-        FlowLayout controlPanel = Containers.verticalFlow(Sizing.fixed(controlPanelWidth), Sizing.content());
-        FlowLayout canvasPanel = Containers.horizontalFlow(Sizing.expand(), Sizing.fill());
+        FlowLayout controlPanel = Containers.verticalFlow(
+                /*? if >=1.20.3 {*/
+                Sizing.fixed(controlPanelWidth)
+                 /*?} else {*/
+                /*Sizing.fill(20)
+                *//*?}*/,
+                Sizing.content()
+        );
+
+        FlowLayout canvasPanel = Containers.horizontalFlow(
+                /*? if >=1.20.3 {*/
+                Sizing.expand()
+                /*?} else {*/
+                /*Sizing.fill(80)
+                *//*?}*/,
+                Sizing.fill(100)
+        );
 
         IconSelectorComponent iconSelectorComponent = new IconSelectorComponent(
                 Component::remove, // on hide
@@ -128,7 +139,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 .child(saveConfigButton)
                 .child(newConfigButton);
 
-        confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(), Sizing.content()));
+        confCtrlContainer.forEachDescendant(c -> c.sizing(Sizing.fill(100), Sizing.content()));
 
         rootComponent.child(confCtrlContainer);
     }
@@ -212,6 +223,7 @@ public class EditScreen extends BaseOwoScreen<FlowLayout> {
                 // Show system toast on error
                 ToastUtil.displayToast(
                         MinecraftClient.getInstance(),
+                        //? if =1.21.1
                         ZToast.ZToastType.WARNING,
                         Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_title"),
                         Text.translatable("tabmanager.gui.edit_screen.filter.toast.error.invalid_predicate_description"),
